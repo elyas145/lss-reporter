@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+
+<Tab text="Untitled Tab" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.ExamController">
+   <content>
+      <HBox alignment="CENTER_LEFT" fillHeight="false">
+         <children>
+            <DatePicker fx:id="dpkExamDate" promptText="Exam Date" />
+            <RadioButton fx:id="rdbOriginal" mnemonicParsing="false" selected="true" text="Original">
+               <toggleGroup>
+                  <ToggleGroup fx:id="exam" />
+               </toggleGroup>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="rdbRecert" mnemonicParsing="false" text="Recert" toggleGroup="$exam">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin>
+            </RadioButton>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </content>
+</Tab>

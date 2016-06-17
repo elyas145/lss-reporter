@@ -1,0 +1,8 @@
+{
+	"courses": [
+		{"name":"Bronze Cross", "pdf":"/pdf/bronze-cross.pdf", "template":"/template/bronze-cross.json"},
+		{"name":"Standard First Aid", "pdf":"/pdf/sfa.pdf", "template":"/template/sfa.json"},
+		{"name":"Bronze Medallion", "pdf":"/pdf/bronzeMed-e.pdf", "template":"/template/bronzeMed.json"},
+		{"name":"Emergency First Aid", "pdf":"/pdf/efa-e.pdf", "template":"/template/efa.json"}
+	]
+}

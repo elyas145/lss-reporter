@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.CheckListView?>
+
+<Tab text="Untitled Tab" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.CourseMustSeesController">
+   <content>
+      <VBox>
+         <children>
+            <CheckBox fx:id="chkAllInst" mnemonicParsing="false" onAction="#chkAllInstructorAction" text="All pass instructor evaluated items">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="chkAllExam" mnemonicParsing="false" onAction="#chkAllExaminerAction" text="All pass examiner evaluated items">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <TitledPane collapsible="false" text="Clients" HBox.hgrow="ALWAYS">
+                     <content>
+                        <VBox>
+                           <children>
+                              <ListView fx:id="lstClients" onMouseClicked="#clientSelectAction" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </TitledPane>
+                  <TitledPane collapsible="false" text="Must-sees" HBox.hgrow="ALWAYS">
+                     <content>
+                        <VBox>
+                           <children>
+                              <CheckBox fx:id="chkInst" mnemonicParsing="false" onAction="#passInstructorAction" text="Pass instructor evaluated items" />
+                              <CheckBox fx:id="chkExam" mnemonicParsing="false" onAction="#passExaminerAction" text="Pass examiner evaluated items">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <CheckListView fx:id="chkLstMustSees" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </TitledPane>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </content>
+</Tab>
