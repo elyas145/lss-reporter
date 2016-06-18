@@ -117,7 +117,6 @@ public class ExaminerController extends Controller implements Initializable {
 		}
 		obsExaminers.add(selectedPerson);
 		obsPersons.remove(selectedPerson);
-		Model.getInstance().getCourse().getQualification(course).addExaminer(selectedPerson);
 	}
 
 	@FXML
@@ -128,7 +127,6 @@ public class ExaminerController extends Controller implements Initializable {
 
 		obsPersons.add(selectedPerson);
 		obsExaminers.remove(selectedPerson);
-		Model.getInstance().getCourse().getQualification(course).removeExaminer(selectedPerson);
 
 	}
 
@@ -170,12 +168,21 @@ public class ExaminerController extends Controller implements Initializable {
 
 	public void setCourse(String course) {
 		this.course = course;
+		List<Employee> employees = Model.getInstance().getExaminers(course);
+		if(employees != null){
+			obsExaminers = FXCollections.observableList(employees);
+			examinersView.setItems(obsExaminers);
+			for (Employee employee : obsExaminers) {
+				for (Employee employee2 : obsPersons) {
+					if(employee.equals(employee2)){
+						obsPersons.remove(employee);
+						break;
+					}
+				}
+			}
+		}
 	}
-	
-	@Override
-	public void finalize(){
-		
-	}
+
 	
 	@Override
 	public ViewState getViewState() {

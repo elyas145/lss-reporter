@@ -52,7 +52,7 @@ public class Qualification {
 			for (Employee employee : examiners) {
 				array.put(employee.toJSON());
 			}
-			object.put("instructors", array);
+			object.put("examiners", array);
 		}
 		if (exam != null) {
 			object.put("exam", exam.toJSON());
@@ -159,5 +159,9 @@ public class Qualification {
 
 	public List<Employee> getInstructors() {
 		return instructors;
+	}
+
+	public List<Employee> getExaminers() {
+		return examiners;
 	}
 }

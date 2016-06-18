@@ -211,4 +211,9 @@ public class Model {
 	public List<Employee> getInstructors(String qual) {
 		return course.getInstructors(qual);
 	}
+
+	public List<Employee> getExaminers(String qual) {
+		
+		return  course.getExaminers(qual);
+	}
 }

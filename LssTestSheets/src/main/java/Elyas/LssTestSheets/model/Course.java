@@ -274,4 +274,13 @@ public class Course {
 		}
 		return null;
 	}
+
+	public List<Employee> getExaminers(String qual) {
+		for (Qualification qualification : qualifications) {
+			if(qualification.getName().equals(qual)){
+				return qualification.getExaminers();
+			}
+		}
+		return null;
+	}
 }
