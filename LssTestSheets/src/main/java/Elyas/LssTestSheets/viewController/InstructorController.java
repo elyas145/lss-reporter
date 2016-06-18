@@ -129,7 +129,6 @@ public class InstructorController extends Controller implements Initializable {
 
 		obsPersons.add(selectedPerson);
 		obsInstructors.remove(selectedPerson);
-		//Model.getInstance().getCourse().getQualification(course).removeInstructor(selectedPerson);
 
 	}
 
@@ -181,10 +180,11 @@ public class InstructorController extends Controller implements Initializable {
 		if(employees != null){
 			obsInstructors = FXCollections.observableList(employees);
 			instructorsView.setItems(obsInstructors);
-			for (Employee employee : obsPersons) {
-				for (Employee employee2 : obsInstructors) {
+			for (Employee employee : obsInstructors) {
+				for (Employee employee2 : obsPersons) {
 					if(employee.equals(employee2)){
 						obsPersons.remove(employee);
+						break;
 					}
 				}
 			}

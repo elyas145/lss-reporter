@@ -108,7 +108,7 @@ public class PersonFactory {
 		JSONArray array = new JSONArray();
 		int i = 0;
 		for (Employee e : emps) {
-			array.put(employee.toJSON());
+			array.put(e.toJSON());
 		}
 		JSONObject object = new JSONObject();
 		object.put("employees", array);

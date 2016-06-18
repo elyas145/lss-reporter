@@ -95,8 +95,8 @@ public class Employee {
 
 	public boolean equals(Object other) {
 		if (other instanceof Employee) {
-			Employee employee = (Employee) other;
-			return this.toJSON().toString().equals(employee.toJSON().toString());
+			Employee e = (Employee) other;
+			return e.key.equals(key);
 		}
 		return false;
 	}
