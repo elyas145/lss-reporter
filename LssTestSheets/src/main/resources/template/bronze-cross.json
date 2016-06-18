@@ -21,7 +21,7 @@
 	"exam": {
 		"year": "R20",
 		"month": "R21",
-		"Day": "R22",
+		"day": "R22",
 		"type": {
 			"field": "R23",
 			"original": "0",

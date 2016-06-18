@@ -170,7 +170,7 @@ public class TestSheet {
 
 		public Host(JSONObject obj) {
 			payment = new Payment((JSONObject) obj.get("payment"));
-			name = (String) obj.get("name");
+			name = (String) obj.get("host-name");
 			areaCode = (String) obj.get("host-area-code");
 			phone = (String) obj.get("host-phone");
 			address = (String) obj.get("host-address");

@@ -78,6 +78,9 @@ public class ClientsController extends Controller implements Initializable{
 	@FXML
 	protected void onClientSelected(MouseEvent event){
 		Client c = table.getSelectionModel().getSelectedItem();
+		if(c == null)
+			return;
+		
 		if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
 			ViewFactoryResult result = ViewFactory.getView("/fxml/client.fxml");
 			final ClientController controller = (ClientController) result.controller;
@@ -94,11 +97,9 @@ public class ClientsController extends Controller implements Initializable{
 					Client client = controller.getClient();
 					if (preCheck(client)) {
 						Model.getInstance().updateClient(client);
-						List<Client> clients = Model.getInstance().getClients();
-						obsClients.removeAll(obsClients);
-						for(Client client2 : clients){
-							obsClients.add(client2);
-						}
+						//work around to update the table.
+						table.getColumns().get(0).setVisible(false);
+						table.getColumns().get(0).setVisible(true);
 						stage.close();
 					} else {
 						Alert alert = new Alert(AlertType.ERROR);

@@ -13,10 +13,10 @@ public class MustSee {
 	public boolean isCompleted;
 
 	public MustSee(JSONObject obj) {
-		field = obj.getString("field");
-		name = obj.getString("name");
-		item = obj.getString("item");
-		type = obj.getString("type");
+		field = obj.optString("field");
+		name = obj.optString("name");
+		item = obj.optString("item");
+		type = obj.optString("type");
 		instructorEvaluated = obj.has("instructor-evaluated");
 		appEvaluated = obj.has("app-evaluated");
 		examinerEvaluated = obj.has("examiner-evaluated");

@@ -178,7 +178,7 @@ public class Course {
 		if (clients == null)
 			return;
 		for (Client client : clients) {
-			if (client.getID() == c.getID()) {
+ 			if (client.getID() == c.getID()) {
 				client.update(c);
 				changeHandler.onChange();
 			}
