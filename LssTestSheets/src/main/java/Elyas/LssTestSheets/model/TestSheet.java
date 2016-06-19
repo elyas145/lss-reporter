@@ -3,6 +3,8 @@ package Elyas.LssTestSheets.model;
 import java.lang.reflect.Field;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.jar.Attributes.Name;
@@ -208,7 +210,25 @@ public class TestSheet {
 			awardNotIssued = (String) obj.get("award-not-issued");
 		}
 	}
-
+	/**
+	 * 
+	 * @return a list of prerequisites that do not belong to any student.
+	 */
+	public List<Prerequisite> getGenericPrerequisites(){
+		List<Prerequisite> prerequisites = students.get(0).prerequisites;
+		List<Prerequisite> pres = new ArrayList<>();
+		for (Prerequisite prerequisite : prerequisites) {
+			pres.add(new Prerequisite(prerequisite));
+		}
+		Collections.sort(pres, new Comparator<Prerequisite>(){
+		     public int compare(Prerequisite o1, Prerequisite o2){
+		         if(o1.key.equals(o2.key))
+		             return 0;
+		         return Integer.valueOf(o1.key) < Integer.valueOf(o2.key) ? -1 : 1;
+		     }
+		});
+		return pres;
+	}
 	public class Exam {
 
 		public class Type {

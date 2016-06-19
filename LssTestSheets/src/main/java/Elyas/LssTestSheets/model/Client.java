@@ -159,8 +159,8 @@ public class Client {
 		return prerequisites.get(course);
 	}
 
-	public void setPrerequisites(String course, ArrayList<Prerequisite> prerequisites) {
-		this.prerequisites.put(course, prerequisites);
+	public void setPrerequisites(String course, List<Prerequisite> list) {
+		this.prerequisites.put(course, list);
 	}
 
 	public String getID() {

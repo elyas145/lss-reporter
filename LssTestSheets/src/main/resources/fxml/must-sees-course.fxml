@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
@@ -47,6 +48,15 @@
                               <CheckListView fx:id="chkLstMustSees" />
                            </children>
                         </VBox>
+                     </content>
+                  </TitledPane>
+                  <TitledPane collapsible="false" text="Pre-requisites">
+                     <content>
+                        <ScrollPane>
+                           <content>
+                              <VBox fx:id="vbPreReqs" alignment="CENTER" />
+                           </content>
+                        </ScrollPane>
                      </content>
                   </TitledPane>
                </children>

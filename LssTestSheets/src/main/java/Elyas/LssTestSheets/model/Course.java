@@ -157,6 +157,7 @@ public class Course {
 		c.setID("" + clients.size());
 		for (Qualification qualification : qualifications) {
 			c.setMustSees(qualification.getName(), qualification.getMustSees());
+			c.setPrerequisites(qualification.getName(), qualification.getPrerequisites());
 		}
 
 		changeHandler.onChange();

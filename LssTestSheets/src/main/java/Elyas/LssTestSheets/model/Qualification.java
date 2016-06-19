@@ -164,4 +164,11 @@ public class Qualification {
 	public List<Employee> getExaminers() {
 		return examiners;
 	}
+
+	public List<Prerequisite> getPrerequisites() {
+		if (testSheet == null) {
+			testSheet = CourseFactory.getTestSheet(testSheetPath);
+		}
+		return testSheet.getGenericPrerequisites();
+	}
 }
