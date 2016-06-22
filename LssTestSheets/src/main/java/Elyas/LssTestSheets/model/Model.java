@@ -3,6 +3,7 @@ package Elyas.LssTestSheets.model;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -12,6 +13,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,7 +24,15 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import javax.xml.transform.Templates;
+
+import org.apache.commons.io.IOUtils;
+
+import Elyas.LssTestSheets.factory.CourseFactory;
 
 public class Model {
 	private static Model instance;
@@ -242,11 +254,11 @@ public class Model {
 	 * @param email
 	 *            of the receiver, receiving the message.
 	 */
-	public void sendInfo(boolean sendCourse, boolean sendTestSheet, String name, String email, ThreadCompleteListener onFinish)
-			throws AddressException, MessagingException, UnsupportedEncodingException {
-		
+	public void sendInfo(boolean sendCourse, boolean sendTestSheet, String name, String email,
+			ThreadCompleteListener onFinish) throws AddressException, MessagingException, UnsupportedEncodingException {
+
 		NotifyingThread thread = new NotifyingThread() {
-			
+
 			@Override
 			public void doRun() {
 				Properties props = new Properties();
@@ -259,37 +271,61 @@ public class Model {
 				Authenticator auth = new SMTPAuthenticator();
 				Session session = Session.getDefaultInstance(props, auth);
 
-				Message msg = new MimeMessage(session);
+				MimeMessage msg = new MimeMessage(session);
 				try {
-					msg.setFrom(new InternetAddress("no-reply-reporter@outlook.com", "Elyas Syoufi"));
-					msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse("elyas.syoufi@gmail.com"));
-					msg.setSubject("test email");
+					InputStream is = Model.class.getResourceAsStream("/html/email.html");
+					String template;
+
+					template = IOUtils.toString(is);
+
+					msg.setFrom(new InternetAddress("no-reply-reporter@outlook.com", name));
+					msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+					msg.setSubject("Advanced Course From " + name);
 					msg.setSentDate(new Date());
+					template = template.replace("%name%", name);
+					String content = "They sent you ";
+					if (sendCourse && sendTestSheet) {
+						content += "a course file as well as test sheets.";
+					} else if (sendCourse) {
+						content += "a course file.";
+					} else {
+						content += "the test sheets.";
+					}
+					template = template.replace("%content%", content);
+					msg.setText(template, "utf-8", "html");
 
+					MimeBodyPart body = new MimeBodyPart();
+					body.setText(template, "utf-8", "html");
 
-					/*
-					 * BodyPart body = new MimeBodyPart(); body.setContent("hello!",
-					 * "text/html");
-					 * 
-					 * Multipart multipart = new MimeMultipart();
-					 * multipart.addBodyPart(body); msg.setContent(multipart);
-					 */
-					msg.setText("helloooooo");
+					MimeMultipart multipart = new MimeMultipart();
+					multipart.addBodyPart(body);
+
+					if (sendCourse) {
+						MimeBodyPart attachmentPart = new MimeBodyPart();
+						DataSource source = new ByteArrayDataSource(course.toJSON().toString(4).getBytes("UTF-8"), "application/octet-stream");
+						attachmentPart.setDataHandler(new DataHandler(source));
+						attachmentPart.setFileName("course");
+						multipart.addBodyPart(attachmentPart);
+					}
+					msg.setContent(multipart);
+
 					msg.saveChanges();
 					Transport.send(msg);
-					System.out.println("done.");
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (MessagingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}				
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		};
 		thread.addListener(onFinish);
 		thread.start();
-		
+
 	}
 
 	private class SMTPAuthenticator extends javax.mail.Authenticator {

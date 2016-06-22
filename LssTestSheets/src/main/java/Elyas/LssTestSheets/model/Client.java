@@ -250,6 +250,8 @@ public class Client {
 		object.put("year", year);
 		object.put("month", month);
 		object.put("day", day);
+		object.put("id", id);
+		
 		for (String qual : prerequisites.keySet()) {
 			JSONArray pres = new JSONArray();
 			for (Prerequisite prerequisite : prerequisites.get(qual)) {
