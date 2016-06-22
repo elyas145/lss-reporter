@@ -1,5 +1,7 @@
 package Elyas.LssTestSheets.model;
 
+import java.util.Collection;
+
 import org.json.JSONObject;
 
 public class MustSee {
@@ -94,5 +96,12 @@ public class MustSee {
 	}
 
 	public MustSee() {
+	}
+
+	public JSONObject toJSON() {
+		JSONObject object = new JSONObject();
+		object.put("completed", isCompleted);
+		object.put("item", item);
+		return object;
 	}
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+
+<ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.ExportController">
+   <content>
+      <VBox>
+         <children>
+            <Label text="Export">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </Label>
+            <Hyperlink fx:id="lnkWarnings" onAction="#onWarningsAction" text="Warnings">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </Hyperlink>
+            <TitledPane animated="false" collapsible="false" text="Send">
+              <content>
+                  <VBox>
+                     <children>
+                        <TextField fx:id="txtEmail" promptText="Their Email" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="txtUserName" promptText="Your Name" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <CheckBox fx:id="chkSendCourseFile" mnemonicParsing="false" text="Send Course File">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="chkSendTestSheets" mnemonicParsing="false" text="Send Test Sheets as PDFs" />
+                        <HBox fx:id="hbSend" alignment="CENTER_LEFT" minHeight="0.0" minWidth="0.0" visible="false" VBox.vgrow="ALWAYS">
+                           <children>
+                              <ProgressIndicator fx:id="prgsSend" />
+                              <Label fx:id="lblSend" text="Sending ..." />
+                           </children>
+                        </HBox>
+                        <ButtonBar>
+                          <buttons>
+                            <Button defaultButton="true" mnemonicParsing="false" onAction="#onSendAction" text="Send" />
+                          </buttons>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
+                           </VBox.margin>
+                        </ButtonBar>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+              </content>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </TitledPane>
+            <TitledPane animated="false" collapsible="false" text="Export">
+               <content>
+                  <VBox>
+                     <children>
+                        <CheckBox mnemonicParsing="false" text="Export Course File">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" text="Export Test Sheets as PDFs" />
+                        <HBox VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" text="Browse" />
+                              <CustomTextField HBox.hgrow="ALWAYS" />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <CustomTextField promptText="Folder Name" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </CustomTextField>
+                        <Label text="Please choose a folder name" textFill="RED" />
+                        <ButtonBar>
+                          <buttons>
+                            <Button defaultButton="true" mnemonicParsing="false" text="Export" />
+                          </buttons>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </ButtonBar>
+                     </children>
+                  </VBox>
+               </content>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </TitledPane>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

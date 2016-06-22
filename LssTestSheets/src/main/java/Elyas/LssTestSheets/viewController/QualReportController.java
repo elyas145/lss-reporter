@@ -3,8 +3,11 @@ package Elyas.LssTestSheets.viewController;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.sun.javafx.runtime.VersionInfo;
+
 import Elyas.LssTestSheets.model.Client;
 import Elyas.LssTestSheets.model.Model;
+import Elyas.LssTestSheets.model.ReportDay;
 import Elyas.LssTestSheets.model.ReportQualification;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +25,8 @@ public class QualReportController extends Controller implements Initializable {
 	TextArea txtNotes;
 	private ObservableList<Client> obsClients;
 	private ReportQualification qualification;
+	private Client currentClient;
+	private ReportDay parent;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -29,13 +34,28 @@ public class QualReportController extends Controller implements Initializable {
 		lstClients.setItems(obsClients);
 	}
 
-	public void setQual(ReportQualification qualification) {
-		if (qualification != null)
+	public void setQual(ReportDay parent, ReportQualification qualification) {
+		if (qualification != null){
 			this.qualification = qualification;
+			this.parent = parent;
+		}
 	}
 
 	@FXML
 	protected void onClientSelect(MouseEvent event) {
+		Client client = lstClients.getSelectionModel().getSelectedItem();
+		if (client == null) {
+			return;
+		}
+		if (currentClient != null)
+			Model.getInstance().getReport().setQualNote(parent, qualification, currentClient, txtNotes.getText());
 
+		currentClient = client;
+		txtNotes.setText(Model.getInstance().getReport().getQualNote(parent, qualification, currentClient));
+	}
+	@Override
+	public void finalize(){
+		if (currentClient != null)
+			Model.getInstance().getReport().setQualNote(parent, qualification, currentClient, txtNotes.getText());
 	}
 }

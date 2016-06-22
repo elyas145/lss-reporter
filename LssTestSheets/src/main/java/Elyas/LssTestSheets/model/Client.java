@@ -1,17 +1,12 @@
 package Elyas.LssTestSheets.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.sun.media.jfxmedia.events.NewFrameEvent;
-
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,35 +21,17 @@ public class Client {
 	String year;
 	String month;
 	String day;
-	Map<String, Boolean> absence;
 	Map<String, List<Prerequisite>> prerequisites;
 	Map<String, List<MustSee>> mustSees;
-	Map<String, Map<String, SimpleBooleanProperty>> properties;
 	private String id;
 
 	public Client() {
-		absence = new HashMap<>();
 		prerequisites = new HashMap<>();
 		mustSees = new HashMap<>();
-		properties = new HashMap<>();
 	}
 
 	public List<MustSee> getMustSees(String course) {
 		return mustSees.get(course);
-	}
-
-	public JSONObject toJSON() {
-		JSONObject object = new JSONObject();
-		object.put("name", name);
-		object.put("address", address);
-		object.put("city", city);
-		object.put("postal-code", postalCode);
-		object.put("email", email);
-		object.put("phone", phone);
-		object.put("year", year);
-		object.put("month", month);
-		object.put("day", day);
-		return object;
 	}
 
 	public String getName() {
@@ -62,21 +39,8 @@ public class Client {
 	}
 
 	public Integer getAbsenceCount() {
-		int i = 0;
-		for (Boolean b : absence.values()) {
-			if (!b)
-				i++;
-		}
-		return i;
-	}
 
-	public String getPrerequisitesMet(String course) {
-		for (Prerequisite p : prerequisites.get(course)) {
-			if (!p.isMet()) {
-				return "No";
-			}
-		}
-		return "Yes";
+		return Model.getInstance().getReport().getAbsenceCount(id);
 	}
 
 	public void setName(String text) {
@@ -147,14 +111,6 @@ public class Client {
 		this.day = day;
 	}
 
-	public Map<String, Boolean> getAbsence() {
-		return absence;
-	}
-
-	public void setAbsence(Map<String, Boolean> absence) {
-		this.absence = absence;
-	}
-
 	public List<Prerequisite> getPrerequisites(String course) {
 		return prerequisites.get(course);
 	}
@@ -168,7 +124,6 @@ public class Client {
 	}
 
 	public void update(Client c) {
-		this.absence = c.absence;
 		this.address = c.address;
 		this.city = c.address;
 		this.day = c.day;
@@ -187,54 +142,129 @@ public class Client {
 
 	public void setMustSees(String course, List<MustSee> clientMustSees) {
 		this.mustSees.put(course, clientMustSees);
-		properties.put(course, new HashMap<>());
 		SimpleBooleanProperty inst = new SimpleBooleanProperty();
 		inst.addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				setInstructorItems(course, newValue);
-				
+
 			}
 		});
-		
+
 		SimpleBooleanProperty examiner = new SimpleBooleanProperty();
 		examiner.addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				setExaminerItems(course, newValue);
-				
+
 			}
 		});
-		properties.get(course).put("instructor", new SimpleBooleanProperty());
-		properties.get(course).put("examiner", new SimpleBooleanProperty());
 	}
 
-	public ObservableValue<Boolean> instructorItemsProperty(String course) {
-		
-		return properties.get(course).get("instructor");
-	}
-	
-	public void setInstructorItems(String course, boolean value){
+	public void setInstructorItems(String course, boolean value) {
 		List<MustSee> sees = mustSees.get(course);
-		for(MustSee see : sees){
-			if(see.instructorEvaluated){
+		for (MustSee see : sees) {
+			if (see.instructorEvaluated) {
 				see.isCompleted = value;
 			}
 		}
 	}
-	public void setExaminerItems(String course, boolean value){
+
+	public void setExaminerItems(String course, boolean value) {
 		List<MustSee> sees = mustSees.get(course);
-		for(MustSee see : sees){
-			if(see.examinerEvaluated){
+		for (MustSee see : sees) {
+			if (see.examinerEvaluated) {
 				see.isCompleted = value;
 			}
 		}
 	}
-	public ObservableValue<Boolean> examinerItemsProperty(String course) {
-		return properties.get(course).get("examiner");
+
+	public String getPrerequisitesMet() {
+		Map<String, Boolean> keys = new HashMap<>();
+
+		for (List<Prerequisite> pres : prerequisites.values()) {
+			for (Prerequisite pre : pres) {
+				if (keys.get(pre.key) == null) {
+					keys.put(pre.key, pre.isMet());
+				} else {
+					if (keys.get(pre.key) && !pre.isMet()) {
+						keys.put(pre.key, false);
+					}
+				}
+			}
+		}
+		for (String key : keys.keySet()) {
+			if (keys.get(key)) {
+				return "Checked";
+			}
+		}
+		return "Not checked";
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return this.getName();
+	}
+
+	public void validate(Warning warning) {
+		if (name == null || name.trim().equals("")) {
+			warning.add("Client name not specified.");
+		}
+		if (address == null || address.trim().equals("")) {
+			warning.add(name + " address name not specified.");
+		}
+		if (city == null || city.trim().equals("")) {
+			warning.add(name + " city not specified.");
+		}
+		if (postalCode == null || postalCode.trim().equals("")) {
+			warning.add(name + " postal code not specified.");
+		}
+		if (email == null || email.trim().equals("")) {
+			warning.add(name + " email not specified.");
+		}
+		if (phone == null || phone.trim().equals("")) {
+			warning.add(name + " phone not specified.");
+		}
+		if (year == null || year.trim().equals("")) {
+			warning.add(name + " year of birth not specified.");
+		}
+		if (month == null || month.trim().equals("")) {
+			warning.add(name + " month of birth not specified.");
+		}
+		if (day == null || day.trim().equals("")) {
+			warning.add(name + " day of birth not specified.");
+		}
+
+		if (getPrerequisitesMet().equals("Not checked")) {
+			warning.add(name + "prerequisites not checked / met");
+		}
+	}
+
+	public JSONObject toJSON() {
+		JSONObject object = new JSONObject();
+		object.put("name", name);
+		object.put("address", address);
+		object.put("city", city);
+		object.put("postal-code", postalCode);
+		object.put("email", email);
+		object.put("phone", phone);
+		object.put("year", year);
+		object.put("month", month);
+		object.put("day", day);
+		for (String qual : prerequisites.keySet()) {
+			JSONArray pres = new JSONArray();
+			for (Prerequisite prerequisite : prerequisites.get(qual)) {
+				pres.put(prerequisite.toJSON());
+			}
+			JSONArray sees = new JSONArray();
+			for (MustSee see : mustSees.get(qual)) {
+				sees.put(see.toJSON());
+			}
+			JSONObject obj = new JSONObject();
+			obj.put("prerequisites", pres);
+			obj.put("must-sees", sees);
+			object.put(qual, obj);
+		}
+
+		return object;
 	}
 }

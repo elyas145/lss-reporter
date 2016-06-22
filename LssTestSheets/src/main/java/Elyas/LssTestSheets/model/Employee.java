@@ -115,4 +115,23 @@ public class Employee {
 
 	}
 
+	public void validate(Warning warning) {
+		if (areaCode == null || areaCode.trim().equals("")) {
+			warning.add(name + " area code not specified.");
+		}
+		if (email == null || email.trim().equals("")) {
+			warning.add(name + " email not specified.");
+		}
+		if (id == null || id.trim().equals("")) {
+			warning.add(name + " id not specified.");
+		}
+		if (name == null || name.trim().equals("")) {
+			warning.add(name + " name not specified.");
+		}
+		if (phone == null || phone.trim().equals("")) {
+			warning.add(name + " phone not specified.");
+		}
+		
+	}
+
 }

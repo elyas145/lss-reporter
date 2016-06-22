@@ -4,12 +4,7 @@ import org.json.JSONObject;
 
 public class Prerequisite {
 
-	String key;
-	String name;
-	String dateEarned;
-	String location;
-	Type type;
-	boolean met;
+	
 
 	public enum Type {
 		DATE, CHECK
@@ -102,4 +97,18 @@ public class Prerequisite {
 		met = dateEarned != null && !dateEarned.trim().equals("") && location != null && !location.trim().equals("");
 	}
 
+	public JSONObject toJSON() {
+		JSONObject object = new JSONObject();
+		object.put("name", name);
+		object.put("dateEarned", dateEarned);
+		object.put("location", location);
+		object.put("met", met);
+		return object;
+	}
+	String key;
+	String name;
+	String dateEarned;
+	String location;
+	Type type;
+	boolean met;
 }

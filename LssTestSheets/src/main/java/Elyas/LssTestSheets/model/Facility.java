@@ -81,4 +81,21 @@ public class Facility {
 		object.put("host", host.toJSON());
 		return object;
 	}
+
+	public void validate(Warning warning) {
+		if(name == null || name.trim().equals("")){
+			warning.add("Name not specified.");
+		}
+		if(areaCode == null || areaCode.trim().equals("")){
+			warning.add("Area code not specified.");
+		}
+		if(phone == null || phone.trim().equals("")){
+			warning.add("Phone not specified.");
+		}
+		if(extension == null || extension.trim().equals("")){
+			warning.add("Extension not specified.");
+		}
+		host.validate(warning);
+		
+	}
 }

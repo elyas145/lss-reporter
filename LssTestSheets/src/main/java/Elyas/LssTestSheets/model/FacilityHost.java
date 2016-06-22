@@ -111,4 +111,31 @@ public class FacilityHost {
 		return object;
 	}
 
+	public void validate(Warning warning) {
+		if(name == null || name.trim().equals("")){
+			warning.add("Host name not specified.");
+		}
+		if(areaCode == null || areaCode.trim().equals("")){
+			warning.add("Host area Code not specified.");
+		}
+		if(phone == null || phone.trim().equals("")){
+			warning.add("Host phone not specified.");
+		}
+		if(extension == null || extension.trim().equals("")){
+			warning.add("Host extension not specified.");
+		}
+		if(postalCode == null || postalCode.trim().equals("")){
+			warning.add("Host postal code not specified.");
+		}
+		if(address == null || address.trim().equals("")){
+			warning.add("Host address not specified.");
+		}
+		if(city == null || city.trim().equals("")){
+			warning.add("Host city not specified.");
+		}
+		if(province == null || province.trim().equals("")){
+			warning.add("Host province not specified.");
+		}
+	}
+
 }

@@ -35,6 +35,8 @@ public class MainReportController extends Controller implements Initializable {
 	private ObservableList<Client> clients;
 	private Report report;
 	private List<DayReportController> dayControllers;
+	private Client currentClient;
+	private int dayNumber = 1;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -42,20 +44,24 @@ public class MainReportController extends Controller implements Initializable {
 		clients = FXCollections.observableList(Model.getInstance().getClients());
 		dayControllers = new ArrayList<>();
 		lstClients.setItems(clients);
+		for (ReportDay day : Model.getInstance().getReport().getDays()) {
+			addDay(day);
+		}
+		mainTab.getSelectionModel().selectedItemProperty().addListener((ov) -> finalize());
 
 	}
 
-	@FXML
-	protected void addNewDayAction(ActionEvent event) {
+	private void addDay(ReportDay day) {
 		FXMLLoader loader = new FXMLLoader(ViewFactory.class.getResource("/fxml/report-day.fxml"));
 		try {
 			Tab tab = (Tab) loader.load();
 			DayReportController controller = (DayReportController) loader.getController();
 			dayControllers.add(controller);
-			tab.setText("Day " + dayControllers.size());
-			ReportDay day = new ReportDay(dayControllers.size());
+			tab.setText("Day " + day.getNumber());
+
 			controller.setDay(day);
-			controller.setOnFinishHandler((state)->{
+
+			controller.setOnFinishHandler((state) -> {
 				report.removeDay(controller.getDay());
 				dayControllers.remove(controller);
 			});
@@ -67,13 +73,40 @@ public class MainReportController extends Controller implements Initializable {
 	}
 
 	@FXML
+	protected void addNewDayAction(ActionEvent event) {
+
+		ReportDay day = new ReportDay(dayNumber++);
+		Model.getInstance().getReport().addDay(day);
+		addDay(day);
+	}
+
+	@FXML
 	protected void onClientSelection(MouseEvent event) {
-		
+
+		Client client = lstClients.getSelectionModel().getSelectedItem();
+
+		if (client == null) {
+			return;
+		}
+		if (currentClient != null)
+			Model.getInstance().getReport().setGeneralNote(currentClient, txtGeneralNotes.getText());
+		currentClient = client;
+		String notes = Model.getInstance().getReport().getGeneralNote(client);
+		if (notes != null) {
+			txtGeneralNotes.setText(notes);
+		} else {
+			txtGeneralNotes.setText("");
+		}
 	}
 
 	@Override
 	public void finalize() {
-
+		for (DayReportController day : dayControllers) {
+			day.finalize();
+		}
+		if (currentClient != null) {
+			Model.getInstance().getReport().setGeneralNote(currentClient, txtGeneralNotes.getText());
+		}
 	}
 
 }

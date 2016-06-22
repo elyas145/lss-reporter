@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.PrimitiveIterator.OfDouble;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,14 +15,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 
 public class Qualification {
-	private SimpleStringProperty name;
-	private ArrayList<Employee> instructors;
-	private ArrayList<Employee> examiners;
-	private Exam exam;
-	private String testSheetPath;
-	private TestSheet testSheet;
-	private String pdfPath;
-	private ChangeHandler changeHandler;
 
 	public Qualification() {
 		name = new SimpleStringProperty();
@@ -38,7 +31,7 @@ public class Qualification {
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
 		object.put("name", name.get());
-		
+
 		if (instructors != null && !instructors.isEmpty()) {
 			JSONArray array = new JSONArray();
 			for (Employee employee : instructors) {
@@ -46,7 +39,7 @@ public class Qualification {
 			}
 			object.put("instructors", array);
 		}
-		
+
 		if (examiners != null && !examiners.isEmpty()) {
 			JSONArray array = new JSONArray();
 			for (Employee employee : examiners) {
@@ -102,7 +95,7 @@ public class Qualification {
 
 	public void setName(String name) {
 		this.name.set(name);
-		
+
 	}
 
 	public List<MustSee> getMustSees() {
@@ -171,4 +164,34 @@ public class Qualification {
 		}
 		return testSheet.getGenericPrerequisites();
 	}
+
+	public void validate(Warning warning) {
+		if (instructors.isEmpty()) {
+			warning.add("Instructor(s) not added");
+		}
+		if (examiners.isEmpty()) {
+			warning.add("Examiner(s) not added");
+		}
+		for (Employee employee : instructors) {
+			employee.validate(warning);
+		}
+		for (Employee employee : examiners) {
+			employee.validate(warning);
+		}
+		if (exam == null) {
+			warning.add("Exam not set.");
+		} else {
+			exam.validate(warning);
+		}
+
+	}
+
+	private SimpleStringProperty name;
+	private ArrayList<Employee> instructors;
+	private ArrayList<Employee> examiners;
+	private Exam exam;
+	private String testSheetPath;
+	private TestSheet testSheet;
+	private String pdfPath;
+	private ChangeHandler changeHandler;
 }

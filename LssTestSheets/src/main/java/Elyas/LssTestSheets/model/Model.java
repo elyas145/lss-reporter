@@ -3,11 +3,24 @@ package Elyas.LssTestSheets.model;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class Model {
 	private static Model instance;
@@ -172,7 +185,7 @@ public class Model {
 	public void setQualifications(Collection<Qualification> c) {
 		if (course == null) {
 			course = new Course(c);
-			course.setOnChange(()->{
+			course.setOnChange(() -> {
 				isChanged = true;
 			});
 		} else
@@ -213,7 +226,75 @@ public class Model {
 	}
 
 	public List<Employee> getExaminers(String qual) {
+
+		return course.getExaminers(qual);
+	}
+
+	/**
+	 * sends the course information to the given email address.
+	 * 
+	 * @param sendCourse
+	 *            whether or not to send the course file
+	 * @param sendTestSheet
+	 *            whether or not to send the generated test sheets
+	 * @param name
+	 *            of the client using the application
+	 * @param email
+	 *            of the receiver, receiving the message.
+	 */
+	public void sendInfo(boolean sendCourse, boolean sendTestSheet, String name, String email, ThreadCompleteListener onFinish)
+			throws AddressException, MessagingException, UnsupportedEncodingException {
 		
-		return  course.getExaminers(qual);
+		NotifyingThread thread = new NotifyingThread() {
+			
+			@Override
+			public void doRun() {
+				Properties props = new Properties();
+				props.put("mail.smtp.host", "smtp-mail.outlook.com");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "587");
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+				Authenticator auth = new SMTPAuthenticator();
+				Session session = Session.getDefaultInstance(props, auth);
+
+				Message msg = new MimeMessage(session);
+				try {
+					msg.setFrom(new InternetAddress("no-reply-reporter@outlook.com", "Elyas Syoufi"));
+					msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse("elyas.syoufi@gmail.com"));
+					msg.setSubject("test email");
+					msg.setSentDate(new Date());
+
+
+					/*
+					 * BodyPart body = new MimeBodyPart(); body.setContent("hello!",
+					 * "text/html");
+					 * 
+					 * Multipart multipart = new MimeMultipart();
+					 * multipart.addBodyPart(body); msg.setContent(multipart);
+					 */
+					msg.setText("helloooooo");
+					msg.saveChanges();
+					Transport.send(msg);
+					System.out.println("done.");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		};
+		thread.addListener(onFinish);
+		thread.start();
+		
+	}
+
+	private class SMTPAuthenticator extends javax.mail.Authenticator {
+		public PasswordAuthentication getPasswordAuthentication() {
+			return new PasswordAuthentication("no-reply-reporter@outlook.com", "WalterBaker2016");
+		}
 	}
 }

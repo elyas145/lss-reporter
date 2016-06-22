@@ -44,5 +44,12 @@ public class Exam {
 	public boolean isOriginal() {
 		return isOriginal;
 	}
+	public void validate(Warning warning) {
+		if(date == null || date.equals(LocalDate.MAX)){
+			warning.add("Exam date not set.");
+		}
+		
+		
+	}
 
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.apache.commons.io.IOUtils;
@@ -25,6 +26,7 @@ import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Exam;
 import Elyas.LssTestSheets.model.Qualification;
 import Elyas.LssTestSheets.model.TestSheet;
+import Elyas.LssTestSheets.model.Warning;
 
 public class CourseFactory {
 
@@ -139,6 +141,13 @@ public class CourseFactory {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static Warning getCourseWarnings(Course course) {
+		Warning warning = new Warning();
+		course.validate(warning);
+		
+		return warning;
 	}
 
 }

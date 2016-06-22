@@ -14,25 +14,12 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Course {
 
-	private SimpleStringProperty name;
-
-	private ArrayList<Client> clients;
-	private Facility facility;
-	private String barcode1;
-	private String barcode2;
-
-	private String filePath;
-	private ChangeHandler changeHandler;
-	private Long clientCount;
-	private List<Qualification> qualifications;
-
-	private Report report;
-
 	public Course() {
 		name = new SimpleStringProperty();
 		clients = new ArrayList<>();
 		qualifications = new ArrayList<>();
 		clientCount = 0L;
+		report = new Report();
 		changeHandler = new ChangeHandler() {
 			@Override
 			public void onChange() {
@@ -45,6 +32,7 @@ public class Course {
 		qualifications = new ArrayList<>(c);
 		clients = new ArrayList<>();
 		clientCount = 0L;
+		report = new Report();
 		changeHandler = new ChangeHandler() {
 			@Override
 			public void onChange() {
@@ -137,7 +125,7 @@ public class Course {
 			}
 			object.put("quals", array);
 		}
-		object.toString(4);
+		object.put("report", report.toJSON());
 		return object;
 	}
 
@@ -154,7 +142,9 @@ public class Course {
 			clients = new ArrayList<>();
 		}
 		clients.add(c);
-		c.setID("" + clients.size());
+		if(c.getID() == null || c.getID().equals(""))
+			c.setID("" + clientID++);
+		
 		for (Qualification qualification : qualifications) {
 			c.setMustSees(qualification.getName(), qualification.getMustSees());
 			c.setPrerequisites(qualification.getName(), qualification.getPrerequisites());
@@ -179,7 +169,7 @@ public class Course {
 		if (clients == null)
 			return;
 		for (Client client : clients) {
- 			if (client.getID() == c.getID()) {
+ 			if (client.getID().equals(c.getID())) {
 				client.update(c);
 				changeHandler.onChange();
 			}
@@ -284,4 +274,45 @@ public class Course {
 		}
 		return null;
 	}
+
+	/**
+	 * checks for user errors in the course fields.
+	 * @param warning the object to store the warnings in.
+	 */
+	public void validate(Warning warning) {
+		facility.validate(warning.newCategory("Facility"));
+		Warning clientWarnings = warning.newCategory("Clients");
+		if(clients.isEmpty()){
+			warning.add("Clients not specified.");
+		}
+		for (Client client : clients) {
+			client.validate(clientWarnings);
+		}
+		if(barcode1 == null || barcode1.trim().equals("")){
+			warning.add("Barcode one not specified.");
+		}
+		if(barcode2 == null || barcode2.trim().equals("")){
+			warning.add("Barcode two not specified.");
+		}
+		Warning qualWarnings = warning.newCategory("Qualifications");
+		for (Qualification qualification : qualifications) {
+			qualification.validate(qualWarnings);
+		}
+	}
+	
+	private SimpleStringProperty name;
+
+	private ArrayList<Client> clients;
+	private Facility facility;
+	private String barcode1;
+	private String barcode2;
+
+	private String filePath;
+	private ChangeHandler changeHandler;
+	private Long clientCount;
+	private List<Qualification> qualifications;
+
+	private Report report;
+
+	private int clientID;	
 }

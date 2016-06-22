@@ -1,6 +1,5 @@
 package Elyas.LssTestSheets.viewController;
 
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,9 +12,10 @@ import org.controlsfx.control.CheckListView;
 
 import Elyas.LssTestSheets.model.Client;
 import Elyas.LssTestSheets.model.Model;
-import Elyas.LssTestSheets.model.Qualification;
 import Elyas.LssTestSheets.model.ReportDay;
+import Elyas.LssTestSheets.model.ReportQualification;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -45,23 +45,29 @@ public class DayReportController extends Controller implements Initializable {
 		controllers = new ArrayList<>();
 		obsClients = FXCollections.observableList(Model.getInstance().getClients());
 		chkLstAttendance.setItems(obsClients);
-		for (Qualification qualification : Model.getInstance().getCourse().getQualifications()) {
-			FXMLLoader loader = new FXMLLoader(DayReportController.class.getResource("/fxml/report-qual.fxml"));
-			try {
-				Tab tab = loader.load();
-				QualReportController controller = (QualReportController) loader.getController();
-				controllers.add(controller);
-				tab.setText(qualification.getName());
-				mainTab.getTabs().add(tab);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
+		mainTab.getSelectionModel().selectedItemProperty().addListener((ov) -> finalize());
+		chkLstAttendance.getCheckModel().getCheckedItems().addListener(new ListChangeListener<Client>() {
+
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Client> c) {
+				c.next();
+				if (c.wasAdded())
+					Model.getInstance().getReport().setAttendance(day, c.getAddedSubList().get(0), c.wasAdded());
+				else {
+					Model.getInstance().getReport().setAttendance(day, c.getRemoved().get(0), c.wasAdded());
+				}
+
+			}
+		});
 	}
 
 	@Override
 	public void finalize() {
+		for (QualReportController controller : controllers) {
+			controller.finalize();
+		}
+		day.setGeneralNote(txtGeneralNotes.getText());
 	}
 
 	@FXML
@@ -88,13 +94,29 @@ public class DayReportController extends Controller implements Initializable {
 		Map<String, Boolean> att = day.getAttendace();
 		if (att != null) {
 			for (String id : att.keySet()) {
-				for (Client client : obsClients) {
-					if (client.getID().equals(id)) {
-						chkLstAttendance.getCheckModel().check(client);
+				if (att.get(id)) {
+					for (Client client : obsClients) {
+						if (client.getID().equals(id)) {
+							chkLstAttendance.getCheckModel().check(client);
+						}
 					}
 				}
 			}
 		}
+		for (ReportQualification qualification : day.getQualifications()) {
+			FXMLLoader loader = new FXMLLoader(DayReportController.class.getResource("/fxml/report-qual.fxml"));
+			try {
+				Tab tab = loader.load();
+				QualReportController controller = (QualReportController) loader.getController();
+				controller.setQual(day, qualification);
+				controllers.add(controller);
+				tab.setText(qualification.getName());
+				mainTab.getTabs().add(tab);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		txtGeneralNotes.setText(day.getGeneralNotes());
 	}
 
 	public ReportDay getDay() {
