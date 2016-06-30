@@ -134,4 +134,12 @@ public class Employee {
 		
 	}
 
+	public String getFinalPhone() {
+		String finalPhone = new String(phone);
+		if(extension != null && !extension.equals("")){
+			finalPhone += " ext."+extension;
+		}
+		return finalPhone;
+	}
+
 }

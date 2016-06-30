@@ -70,7 +70,12 @@ public class Facility {
 		}
 		return false;
 	}
-
+	public String getFinalPhone() {
+		if(this.extension == null || this.extension.equals("")){
+			return this.phone;
+		}
+		return phone + " ext." + extension;
+	}
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
 		object.put("default", isDefault);
@@ -98,4 +103,6 @@ public class Facility {
 		host.validate(warning);
 		
 	}
+
+	
 }

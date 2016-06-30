@@ -1070,74 +1070,92 @@
 	"must-sees": [{
 		"name": "Prerequisites Checked",
 		"app-evaluated": true,
+		"type": "1chk",
 		"item": "prereqs"
 	}, {
 		"name": "Rescue Drill",
 		"item": "1",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Fitness Challenge",
 		"item": "2",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Endurance Challenge",
 		"item": "3",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "First Aid Assessment",
 		"item": "4",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "One-rescuer CPR",
 		"item": "5",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Two-rescuer CPR",
 		"item": "6",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Obstructed Airway: conscious adult or child",
 		"item": "7a",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Obstructed Airway: conscious infant",
 		"item": "7b",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Obstructed Airway: unconscious victim",
 		"item": "7c",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Hypothermia",
 		"item": "8",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Walk, Spot & evaluate",
 		"item": "9",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Spinal Injury Management",
 		"item": "10",
+		"type": "2chk",
 		"examiner-evaluated": true
 	}, {
 		"name": "Team Search",
 		"item": "11",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Rescue 1: multiple Victims",
 		"item": "12",
+		"type": "2chk",
 		"examiner-evaluated": true
 	}, {
 		"name": "Rescue 2: submerged victim",
 		"item": "13",
+		"type": "2chk",
 		"examiner-evaluated": true
 	}, {
 		"name": "Rescue 3: two rescuers",
 		"item": "14",
+		"type": "2chk",
 		"instructor-evaluated": true
 	}, {
 		"name": "Rescue 4: injured victim",
 		"item": "15",
+		"type": "2chk",
 		"examiner-evaluated": true
 	}, {
 		"name": "Result",

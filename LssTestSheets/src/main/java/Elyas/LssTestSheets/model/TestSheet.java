@@ -127,6 +127,50 @@ public class TestSheet {
 			}
 		}
 
+		public String getName() {
+			return name;
+		}
+
+		public String getAddress() {
+			return address;
+		}
+
+		public String getCity() {
+			return city;
+		}
+
+		public String getPostalCode() {
+			return postalCode;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public String getPhone() {
+			return phone;
+		}
+
+		public String getYear() {
+			return year;
+		}
+
+		public String getMonth() {
+			return month;
+		}
+
+		public String getDay() {
+			return day;
+		}
+
+		public ArrayList<Prerequisite> getPrerequisites() {
+			return prerequisites;
+		}
+
+		public ArrayList<MustSee> getMustSees() {
+			return mustSees;
+		}
+
 	}
 
 	public class Examiner {
@@ -143,6 +187,26 @@ public class TestSheet {
 			email = (String) obj.get("email");
 			areaCode = (String) obj.get("area-code");
 			phone = (String) obj.get("phone");
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public String getAreaCode() {
+			return areaCode;
+		}
+
+		public String getPhone() {
+			return phone;
 		}
 
 	}
@@ -169,6 +233,7 @@ public class TestSheet {
 		String address;
 		String province;
 		String postalCode;
+		String city;
 
 		public Host(JSONObject obj) {
 			payment = new Payment((JSONObject) obj.get("payment"));
@@ -178,23 +243,88 @@ public class TestSheet {
 			address = (String) obj.get("host-address");
 			province = (String) obj.get("host-province");
 			postalCode = (String) obj.get("host-postal-code");
+			city = (String) obj.get("host-city");
+		}
+
+		public String getExamFeesField() {
+			return payment.field;
+		}
+
+		public String getExamFeesAttached() {
+			return payment.attached;
+		}
+
+		public String getExamFeesNotAttached() {
+			return payment.notAttached;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getAreaCode() {
+			return areaCode;
+		}
+
+		public String getPhone() {
+			return phone;
+		}
+
+		public String getStreet() {
+			return address;
+		}
+
+		public String getCity() {
+			return city;
+		}
+
+		public String getProvince() {
+			return province;
+		}
+
+		public String getPostalCode() {
+			return postalCode;
 		}
 
 	}
 
 	public class Instructor {
-		String name;
+		private String name;
 		String id;
 		String email;
 		String areaCode;
 		String phone;
 
 		public Instructor(JSONObject obj) {
-			name = (String) obj.get("name");
+			setName((String) obj.get("name"));
 			id = (String) obj.get("id");
 			email = (String) obj.get("email");
 			areaCode = (String) obj.get("area-code");
 			phone = (String) obj.get("phone");
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getID() {
+			return id;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public String getAreaCode() {
+			return areaCode;
+		}
+
+		public String getPhone() {
+			return phone;
 		}
 
 	}
@@ -209,26 +339,41 @@ public class TestSheet {
 			awardIssued = (String) obj.get("award-issued");
 			awardNotIssued = (String) obj.get("award-not-issued");
 		}
+
+		public String getField() {
+			return field;
+		}
+
+		public String getAwardIssued() {
+			return awardIssued;
+		}
+
+		public String getAwardNotIssued() {
+			return awardNotIssued;
+		}
+
 	}
+
 	/**
 	 * 
 	 * @return a list of prerequisites that do not belong to any student.
 	 */
-	public List<Prerequisite> getGenericPrerequisites(){
+	public List<Prerequisite> getGenericPrerequisites() {
 		List<Prerequisite> prerequisites = students.get(0).prerequisites;
 		List<Prerequisite> pres = new ArrayList<>();
 		for (Prerequisite prerequisite : prerequisites) {
 			pres.add(new Prerequisite(prerequisite));
 		}
-		Collections.sort(pres, new Comparator<Prerequisite>(){
-		     public int compare(Prerequisite o1, Prerequisite o2){
-		         if(o1.key.equals(o2.key))
-		             return 0;
-		         return Integer.valueOf(o1.key) < Integer.valueOf(o2.key) ? -1 : 1;
-		     }
+		Collections.sort(pres, new Comparator<Prerequisite>() {
+			public int compare(Prerequisite o1, Prerequisite o2) {
+				if (o1.key.equals(o2.key))
+					return 0;
+				return Integer.valueOf(o1.key) < Integer.valueOf(o2.key) ? -1 : 1;
+			}
 		});
 		return pres;
 	}
+
 	public class Exam {
 
 		public class Type {
@@ -260,6 +405,44 @@ public class TestSheet {
 			facilityAreaCode = (String) obj.get("facility-area-code");
 			facilityPhone = (String) obj.get("facility-phone");
 		}
+
+		public String getFacilityName() {
+			return facilityName;
+		}
+
+		public String getFacilityAreaCode() {
+			return facilityAreaCode;
+		}
+
+		public String getFacilityPhone() {
+			return facilityPhone;
+		}
+
+		public String getOriginal() {
+			return type.field;
+		}
+
+		public String getOriginalValue() {
+
+			return type.originalValue;
+		}
+
+		public String getRecertValue() {
+
+			return type.recertValue;
+		}
+
+		public String getYear() {
+			return year;
+		}
+
+		public String getMonth() {
+			return month;
+		}
+
+		public String getDay() {
+			return day;
+		}
 	}
 
 	public List<MustSee> getClientMustSees() {
@@ -278,6 +461,78 @@ public class TestSheet {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public int getStudentCapacity() {
+		return students.size();
+	}
+
+	public String barcodeOneField() {
+		return barcode1;
+	}
+
+	public String barcodeTwoField() {
+		return barcode2;
+	}
+
+	public Instructor getInstructor() {
+		return instructor;
+	}
+
+	public Exam getExam() {
+
+		return exam;
+	}
+
+	public Host getHost() {
+		return host;
+	}
+
+	public Award getAward() {
+		return award;
+	}
+
+	public Examiner getExaminer() {
+		return examiner;
+	}
+
+	public Iterator<Student> getStudentIterator() {
+		return students.iterator();
+	}
+
+	public String getPassValue(MustSee template) {
+		for (MustSee mustSee : mustSees) {
+			if (mustSee.getItem().equals(template.getItem())) {
+				switch (mustSee.getType()) {
+				case "2chk":
+				case "1chk":
+					return passValue;
+				case "txt":
+					return "Pass";
+				default:
+					return "";
+				}
+			}
+		}
+		return "";
+	}
+
+	public String getFailValue(MustSee template) {
+		for (MustSee mustSee : mustSees) {
+			if (mustSee.getItem().equals(template.getItem())) {
+				switch (mustSee.getType()) {
+				case "2chk":
+					return failValue;
+				case "1chk":
+					return "Off";
+				case "txt":
+					return "Fail";
+				default:
+					return "";
+				}
+			}
+		}
+		return "";
 	}
 
 }

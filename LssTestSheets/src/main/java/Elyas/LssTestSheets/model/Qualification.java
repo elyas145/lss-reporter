@@ -114,6 +114,10 @@ public class Qualification {
 		this.pdfPath = pdfPath;
 	}
 
+	public String getPdfPath() {
+		return pdfPath;
+	}
+
 	public LocalDate getExamDate() {
 		if (exam != null) {
 			return exam.getDate();
@@ -186,6 +190,72 @@ public class Qualification {
 
 	}
 
+	public TestSheet getTestSheet() {
+		if (this.testSheet == null)
+			testSheet = CourseFactory.getTestSheet(testSheetPath);
+		return testSheet;
+	}
+
+	public String getExaminersNames() {
+		String names = "";
+		int i = 0;
+		for (Employee employee : examiners) {
+			if (i++ == examiners.size() - 1) {
+				names += employee.getName();
+			} else {
+				names += employee.getName() + ", ";
+			}
+		}
+		return names;
+	}
+
+	public String getExaminersIDs() {
+		String ids = "";
+		int i = 0;
+		for (Employee employee : examiners) {
+			if (i++ == examiners.size() - 1) {
+				ids += employee.getId();
+			} else {
+				ids += employee.getId() + ", ";
+			}
+		}
+		return ids;
+	}
+
+	public String getExaminersEmails() {
+		String emails = "";
+		int i = 0;
+		for (Employee employee : examiners) {
+			if (i++ == examiners.size() - 1) {
+				emails += employee.getEmail();
+			} else {
+				emails += employee.getEmail() + ", ";
+			}
+		}
+		return emails;
+	}
+
+	public String getExaminersPhones() {
+		String phones = "";
+		int i = 0;
+		for (Employee employee : examiners) {
+			if (i++ == examiners.size() - 1) {
+				phones += employee.getFinalPhone();
+			} else {
+				phones += employee.getFinalPhone() + ", ";
+			}
+		}
+		return phones;
+	}
+
+	public String getExaminersAreaCode() {
+		if (examiners == null || examiners.isEmpty()) {
+			return "";
+		} else {
+			return examiners.get(0).getAreaCode();
+		}
+	}
+
 	private SimpleStringProperty name;
 	private ArrayList<Employee> instructors;
 	private ArrayList<Employee> examiners;
@@ -194,4 +264,5 @@ public class Qualification {
 	private TestSheet testSheet;
 	private String pdfPath;
 	private ChangeHandler changeHandler;
+
 }

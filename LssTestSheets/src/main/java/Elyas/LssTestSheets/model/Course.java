@@ -142,9 +142,9 @@ public class Course {
 			clients = new ArrayList<>();
 		}
 		clients.add(c);
-		if(c.getID() == null || c.getID().equals(""))
+		if (c.getID() == null || c.getID().equals(""))
 			c.setID("" + clientID++);
-		
+
 		for (Qualification qualification : qualifications) {
 			c.setMustSees(qualification.getName(), qualification.getMustSees());
 			c.setPrerequisites(qualification.getName(), qualification.getPrerequisites());
@@ -169,7 +169,7 @@ public class Course {
 		if (clients == null)
 			return;
 		for (Client client : clients) {
- 			if (client.getID().equals(c.getID())) {
+			if (client.getID().equals(c.getID())) {
 				client.update(c);
 				changeHandler.onChange();
 			}
@@ -259,7 +259,7 @@ public class Course {
 
 	public List<Employee> getInstructors(String qual) {
 		for (Qualification qualification : qualifications) {
-			if(qualification.getName().equals(qual)){
+			if (qualification.getName().equals(qual)) {
 				return qualification.getInstructors();
 			}
 		}
@@ -268,7 +268,7 @@ public class Course {
 
 	public List<Employee> getExaminers(String qual) {
 		for (Qualification qualification : qualifications) {
-			if(qualification.getName().equals(qual)){
+			if (qualification.getName().equals(qual)) {
 				return qualification.getExaminers();
 			}
 		}
@@ -277,21 +277,23 @@ public class Course {
 
 	/**
 	 * checks for user errors in the course fields.
-	 * @param warning the object to store the warnings in.
+	 * 
+	 * @param warning
+	 *            the object to store the warnings in.
 	 */
 	public void validate(Warning warning) {
 		facility.validate(warning.newCategory("Facility"));
 		Warning clientWarnings = warning.newCategory("Clients");
-		if(clients.isEmpty()){
+		if (clients.isEmpty()) {
 			warning.add("Clients not specified.");
 		}
 		for (Client client : clients) {
 			client.validate(clientWarnings);
 		}
-		if(barcode1 == null || barcode1.trim().equals("")){
+		if (barcode1 == null || barcode1.trim().equals("")) {
 			warning.add("Barcode one not specified.");
 		}
-		if(barcode2 == null || barcode2.trim().equals("")){
+		if (barcode2 == null || barcode2.trim().equals("")) {
 			warning.add("Barcode two not specified.");
 		}
 		Warning qualWarnings = warning.newCategory("Qualifications");
@@ -299,7 +301,99 @@ public class Course {
 			qualification.validate(qualWarnings);
 		}
 	}
+
+	public String getInstructorsNames(Qualification qual) {
+		String names = "";
+		int i = 0;
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
+		if(employees == null || employees.isEmpty())
+			return "";
+		for (Employee employee : employees) {
+			if (i == employees.size() - 1) {
+				names += employee.getName();
+			} else {
+				names += employee.getName() + ", ";
+			}
+			i++;
+		}
+		return names;
+	}
+
+	public String getExaminersNames(Qualification qual) {
+		String names = "";
+		int i = 0;
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getExaminers();
+		if(employees == null || employees.isEmpty())
+			return "";
+		for (Employee employee : employees) {
+			if (i == employees.size() - 1) {
+				names += employee.getName();
+			} else {
+				names += employee.getName() + ", ";
+			}
+			i++;
+		}
+		return names;
+	}
+
+	public String getInstructorsIDs(Qualification qual) {
+
+		String names = "";
+		int i = 0;
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
+		if(employees == null || employees.isEmpty())
+			return "";
+		for (Employee employee : employees) {
+			if (i == employees.size() - 1) {
+				names += employee.getId();
+			} else {
+				names += employee.getId() + ", ";
+			}
+			i++;
+		}
+		return names;
+	}
 	
+	public String getInstructorsEmails(Qualification qual) {
+		String names = "";
+		int i = 0;
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
+		if(employees == null || employees.isEmpty())
+			return "";
+		
+		for (Employee employee : employees) {
+			if (i == employees.size() - 1) {
+				names += employee.getEmail();
+			} else {
+				names += employee.getEmail() + ", ";
+			}
+			i++;
+		}
+		return names;
+	}
+	public String getInstructorsAreaCode(Qualification qual) {
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
+		if(employees == null || employees.isEmpty())
+			return "";
+		return employees.get(0).getAreaCode();
+	}
+	public String getInstructorsPhone(Qualification qual) {
+		String names = "";
+		int i = 0;
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
+		if(employees == null || employees.isEmpty())
+			return "";
+		
+		for (Employee employee : employees) {
+			if (i == employees.size() - 1) {
+				names += employee.getFinalPhone();
+			} else {
+				names += employee.getFinalPhone() + ", ";
+			}
+			i++;
+		}
+		return names;
+	}
 	private SimpleStringProperty name;
 
 	private ArrayList<Client> clients;
@@ -314,5 +408,12 @@ public class Course {
 
 	private Report report;
 
-	private int clientID;	
+	private int clientID;
+
+	
+
+	
+
+	
+
 }

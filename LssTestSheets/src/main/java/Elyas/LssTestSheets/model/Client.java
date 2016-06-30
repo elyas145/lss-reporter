@@ -269,4 +269,24 @@ public class Client {
 
 		return object;
 	}
+
+	public MustSee getMustSee(String course, String item) {
+		List<MustSee> sees = getMustSees(course);
+		for (MustSee mustSee : sees) {
+			if(mustSee.getItem().equals(item)){
+				return mustSee;
+			}
+		}
+		return null;
+	}
+
+	public Prerequisite getPrerequisite(String course, String name) {
+		List<Prerequisite> prerequisites = getPrerequisites(course);
+		for (Prerequisite prerequisite : prerequisites) {
+			if(prerequisite.getName().equals(name)){
+				return prerequisite;
+			}
+		}
+		return null;
+	}
 }

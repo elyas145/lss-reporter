@@ -105,6 +105,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 		for (MustSee see : obsCurrentMustSees) {
 			if (see.isCompleted())
 				chkLstMustSees.getCheckModel().check(see);
+			
 			if (see.isInstructorEvaluated() && !see.isCompleted()) {
 				passInstructor = false;
 			}
@@ -148,7 +149,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 			public void onChanged(ListChangeListener.Change<? extends MustSee> c) {
 				while (c.next()) {
 					c.getAddedSubList().get(0).setCompleted(c.wasAdded());
-					System.out.println("called");
+					
 				}
 			}
 		});

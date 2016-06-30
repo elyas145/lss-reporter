@@ -31,6 +31,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.xml.transform.Templates;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import Elyas.LssTestSheets.factory.CourseFactory;
 
@@ -261,7 +262,7 @@ public class Model {
 
 			@Override
 			public void doRun() {
-				Properties props = new Properties();
+				/*Properties props = new Properties();
 				props.put("mail.smtp.host", "smtp-mail.outlook.com");
 				props.put("mail.smtp.auth", "true");
 				props.put("mail.smtp.port", "587");
@@ -272,7 +273,8 @@ public class Model {
 				Session session = Session.getDefaultInstance(props, auth);
 
 				MimeMessage msg = new MimeMessage(session);
-				try {
+				*/try {
+					/*
 					InputStream is = Model.class.getResourceAsStream("/html/email.html");
 					String template;
 
@@ -302,12 +304,22 @@ public class Model {
 
 					if (sendCourse) {
 						MimeBodyPart attachmentPart = new MimeBodyPart();
-						DataSource source = new ByteArrayDataSource(course.toJSON().toString(4).getBytes("UTF-8"), "application/octet-stream");
+						DataSource source = new ByteArrayDataSource(course.toJSON().toString(4).getBytes("UTF-8"),
+								"application/octet-stream");
 						attachmentPart.setDataHandler(new DataHandler(source));
 						attachmentPart.setFileName("course");
 						multipart.addBodyPart(attachmentPart);
+					}*/
+					if (sendTestSheet) {
+						List<PDDocument> documents = CourseFactory.generateTestSheets(course);
+						int i = 0;
+						for (PDDocument document : documents) {
+							document.save("C:\\Users\\Elyas\\Desktop\\sample-" + i + ".pdf");
+							i++;
+						}
 					}
-					msg.setContent(multipart);
+				}
+					/*msg.setContent(multipart);
 
 					msg.saveChanges();
 					Transport.send(msg);
@@ -317,7 +329,7 @@ public class Model {
 				} catch (MessagingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (IOException e) {
+				}*/ catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

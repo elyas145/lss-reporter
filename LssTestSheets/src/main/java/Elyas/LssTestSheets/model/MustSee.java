@@ -1,6 +1,10 @@
 package Elyas.LssTestSheets.model;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sound.midi.MetaEventListener;
 
 import org.json.JSONObject;
 
@@ -103,5 +107,35 @@ public class MustSee {
 		object.put("completed", isCompleted);
 		object.put("item", item);
 		return object;
+	}
+
+	public void evaluate(Client client, String course) {
+		if (item.equals("result")) {
+			isCompleted = true;
+			for (MustSee see : client.getMustSees(course)) {
+				if (see.isExaminerEvaluated() || see.isInstructorEvaluated()) {
+					if (!see.isCompleted()) {
+						isCompleted = false;
+					}
+				}
+			}
+		} else if (item.equals("prereqs")) {
+			Map<String, Boolean> keys = new HashMap<>();
+			for (Prerequisite prerequisite : client.getPrerequisites(course)) {
+				if (!keys.containsKey(prerequisite.key)) {
+					keys.put(prerequisite.key, prerequisite.isMet());
+				} else {
+					if (!prerequisite.met) {
+						keys.put(prerequisite.key, prerequisite.isMet());
+					}
+				}
+			}
+			isCompleted = false;
+			for (Boolean key : keys.values()) {
+				if (key)
+					isCompleted = true;
+			}
+		}
+
 	}
 }
