@@ -12,6 +12,14 @@ public class Exam {
 	public Exam(){
 		date = LocalDate.MAX;
 	}
+	public Exam(JSONObject obj) {
+		isOriginal = obj.optBoolean("isOriginal");
+		String jsonDate = obj.optString("date");
+		if(jsonDate != null){
+			date = LocalDate.parse(jsonDate);
+		}
+		
+	}
 	public void setDate(LocalDate value) {
 		if(value != null)
 			this.date = value;

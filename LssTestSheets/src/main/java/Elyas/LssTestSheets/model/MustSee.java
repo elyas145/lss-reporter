@@ -23,10 +23,10 @@ public class MustSee {
 		name = obj.optString("name");
 		item = obj.optString("item");
 		type = obj.optString("type");
-		instructorEvaluated = obj.has("instructor-evaluated");
-		appEvaluated = obj.has("app-evaluated");
-		examinerEvaluated = obj.has("examiner-evaluated");
-		isCompleted = obj.has("completed");
+		instructorEvaluated = obj.optBoolean("instructor-evaluated");
+		appEvaluated = obj.optBoolean("app-evaluated");
+		examinerEvaluated = obj.optBoolean("examiner-evaluated");
+		isCompleted = obj.optBoolean("completed");
 	}
 
 	public String getField() {

@@ -10,6 +10,21 @@ public class Facility {
 	private FacilityHost host;
 	private boolean isDefault;
 
+	public Facility(JSONObject obj) {
+		if (obj != null) {
+			setName(obj.getString("name"));
+			setAreaCode(obj.getString("area-code"));
+			setPhone(obj.getString("phone"));
+			setExtension(obj.getString("extension"));
+			setHost(new FacilityHost(obj.getJSONObject("host")));
+			setDefault(obj.optBoolean("default"));
+		}
+
+	}
+
+	public Facility() {
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -65,17 +80,20 @@ public class Facility {
 	public boolean equals(Object other) {
 		if (other instanceof Facility) {
 			Facility facility = (Facility) other;
-			return facility.isDefault == isDefault && facility.name.equals(this.name) && facility.areaCode.equals(areaCode) && facility.phone.equals(phone)
+			return facility.isDefault == isDefault && facility.name.equals(this.name)
+					&& facility.areaCode.equals(areaCode) && facility.phone.equals(phone)
 					&& facility.extension.equals(extension) && facility.host.equals(host);
 		}
 		return false;
 	}
+
 	public String getFinalPhone() {
-		if(this.extension == null || this.extension.equals("")){
+		if (this.extension == null || this.extension.equals("")) {
 			return this.phone;
 		}
 		return phone + " ext." + extension;
 	}
+
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
 		object.put("default", isDefault);
@@ -88,21 +106,20 @@ public class Facility {
 	}
 
 	public void validate(Warning warning) {
-		if(name == null || name.trim().equals("")){
+		if (name == null || name.trim().equals("")) {
 			warning.add("Name not specified.");
 		}
-		if(areaCode == null || areaCode.trim().equals("")){
+		if (areaCode == null || areaCode.trim().equals("")) {
 			warning.add("Area code not specified.");
 		}
-		if(phone == null || phone.trim().equals("")){
+		if (phone == null || phone.trim().equals("")) {
 			warning.add("Phone not specified.");
 		}
-		if(extension == null || extension.trim().equals("")){
+		if (extension == null || extension.trim().equals("")) {
 			warning.add("Extension not specified.");
 		}
 		host.validate(warning);
-		
+
 	}
 
-	
 }

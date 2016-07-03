@@ -28,6 +28,34 @@ public class Qualification {
 		};
 	}
 
+	public Qualification(JSONObject obj) {
+		JSONObject jsonExam = obj.optJSONObject("exam");
+		if(jsonExam != null){
+			exam = new Exam(jsonExam);
+		}
+		name = new SimpleStringProperty(obj.getString("name"));
+		
+		JSONArray jsonInstructors = obj.optJSONArray("instructors");
+		instructors = new ArrayList<>();
+		if(jsonInstructors != null){
+			for (int i = 0; i < jsonInstructors.length(); i++) {
+				JSONObject jsonInstructor = jsonInstructors.getJSONObject(i);
+				instructors.add(new Employee(jsonInstructor));
+			}
+		}
+		
+		JSONArray jsonExaminers = obj.optJSONArray("examiners");
+		examiners = new ArrayList<>();
+		if(jsonExaminers != null){
+			for (int i = 0; i < jsonExaminers.length(); i++) {
+				JSONObject jsonExaminer = jsonExaminers.getJSONObject(i);
+				instructors.add(new Employee(jsonExaminer));
+			}
+		}
+		
+		testSheet = CourseFactory.getTestSheetByName(this);
+	}
+
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
 		object.put("name", name.get());

@@ -13,6 +13,21 @@ public class FacilityHost {
 	private String extension;
 	private boolean fees;
 
+	public FacilityHost(JSONObject obj) {
+		setExamFees(obj.optBoolean("fees"));
+		setName(obj.getString("name"));
+		setAddress(obj.getString("address"));
+		setCity(obj.getString("city"));
+		setProvince(obj.getString("province"));
+		setPostalCode(obj.getString("postal-code"));
+		setAreaCode(obj.getString("area-code"));
+		setPhone(obj.getString("phone"));
+		setExtension(obj.getString("extension"));
+	}
+
+	public FacilityHost() {
+	}
+
 	public String getName() {
 		return name;
 	}

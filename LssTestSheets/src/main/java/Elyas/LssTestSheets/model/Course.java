@@ -1,5 +1,6 @@
 package Elyas.LssTestSheets.model;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import Elyas.LssTestSheets.model.Model.ChangeHandler;
@@ -49,6 +51,34 @@ public class Course {
 			}
 		}
 		name = new SimpleStringProperty(n);
+	}
+
+	public Course(JSONObject obj) throws JSONException{
+		filePath = obj.getString("path");
+		name = new SimpleStringProperty(obj.getString("name"));
+		barcode1 = obj.optString("barcode1");
+		barcode2 = obj.optString("barcode2");
+		clientCount = obj.optLong("client-count");
+		
+		qualifications = new ArrayList<>();		
+		JSONArray jsonQuals = obj.getJSONArray("quals");
+		for (int i = 0; i < jsonQuals.length(); i++) {
+			JSONObject jsonQual = jsonQuals.getJSONObject(i);
+			qualifications.add(new Qualification(jsonQual));
+		}
+		
+		JSONArray jsonClients = obj.optJSONArray("clients");
+		clients = new ArrayList<>();
+		if(jsonClients != null){
+						
+			for (int i = 0; i < jsonClients.length(); i++) {
+				JSONObject jsonClient = jsonClients.getJSONObject(i);
+				clients.add(new Client(jsonClient, qualifications));
+			}
+		}
+		
+		facility = new Facility(obj.optJSONObject("facility"));
+		report = new Report(obj.optJSONObject("report"));
 	}
 
 	public Integer getClientsCount() {

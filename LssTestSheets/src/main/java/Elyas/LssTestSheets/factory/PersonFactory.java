@@ -29,14 +29,8 @@ public class PersonFactory {
 			JSONArray jsonPersons = obj.getJSONArray("employees");
 			for (Object object : jsonPersons) {
 				JSONObject jsonPerson = (JSONObject) object;
-				Employee p = new Employee();
-				p.setName(jsonPerson.getString("name"));
-				p.setAreaCode(jsonPerson.optString("area-code"));
-				p.setPhone(jsonPerson.optString("phone"));
-				p.setId(jsonPerson.optString("id"));
-				p.setEmail(jsonPerson.optString("email"));
-				p.setExtension(jsonPerson.optString("extension"));
-				p.setKey(jsonPerson.getLong("e-key"));
+				Employee p = new Employee(jsonPerson);
+				
 				persons.add(p);
 			}
 		} catch (IOException e) {

@@ -27,6 +27,23 @@ public class ReportDay {
 		}
 	}
 
+	public ReportDay(JSONObject obj) {
+		setGeneralNote(obj.getString("general"));
+		JSONObject jsonAttendance = obj.getJSONObject("attendance");
+		attendance = new HashMap<>();
+		for(String id : jsonAttendance.keySet()){
+			attendance.put(id, jsonAttendance.getBoolean(id));
+		}
+		dayNumber = obj.getInt("day");
+		JSONArray jsonQuals = obj.getJSONArray("quals");
+		qualifications = new ArrayList<>();
+		for(int i = 0; i < jsonQuals.length(); i++){
+			JSONObject jsonQual = jsonQuals.getJSONObject(i);
+			qualifications.add(new ReportQualification(jsonQual));
+		}
+		
+	}
+
 	public void setNumber(int dayNumber) {
 		this.dayNumber = dayNumber;		
 	}

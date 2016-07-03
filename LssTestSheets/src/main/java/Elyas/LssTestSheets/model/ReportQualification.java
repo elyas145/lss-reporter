@@ -18,6 +18,15 @@ public class ReportQualification {
 		this.notes = new HashMap<>();
 	}
 
+	public ReportQualification(JSONObject obj) {
+		name = obj.getString("name");
+		JSONObject jsonNotes = obj.getJSONObject("notes");
+		notes = new HashMap<>();
+		for (String id : jsonNotes.keySet()) {
+			notes.put(id, jsonNotes.getString(id));
+		}
+	}
+
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
 		object.put("name", name);

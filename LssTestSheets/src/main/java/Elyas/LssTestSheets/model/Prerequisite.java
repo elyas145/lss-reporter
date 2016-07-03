@@ -4,8 +4,6 @@ import org.json.JSONObject;
 
 public class Prerequisite {
 
-	
-
 	public enum Type {
 		DATE, CHECK
 	};
@@ -17,7 +15,7 @@ public class Prerequisite {
 	 * @param obj
 	 */
 	public Prerequisite(JSONObject obj) {
-		key = obj.getString("key");
+		key = obj.optString("key");
 		name = obj.getString("name");
 		dateEarned = obj.optString("date-earned");
 		location = obj.optString("location");
@@ -78,11 +76,13 @@ public class Prerequisite {
 	}
 
 	public void setDateEarned(String dateEarned) {
-		this.dateEarned = dateEarned;
+		if (dateEarned != null)
+			this.dateEarned = dateEarned;
 	}
 
 	public void setLocation(String location) {
-		this.location = location;
+		if (location != null)
+			this.location = location;
 	}
 
 	public void setType(Type type) {
@@ -105,6 +105,7 @@ public class Prerequisite {
 		object.put("met", met);
 		return object;
 	}
+
 	String key;
 	String name;
 	String dateEarned;

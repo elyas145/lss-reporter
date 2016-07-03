@@ -30,6 +30,57 @@ public class Client {
 		mustSees = new HashMap<>();
 	}
 
+	public Client(JSONObject obj, List<Qualification> qualifications) {
+		name = obj.getString("name");
+		address = obj.getString("address");
+		city = obj.getString("city");
+		postalCode = obj.getString("postal-code");
+		email = obj.getString("email");
+		phone = obj.getString("phone");
+		year = obj.getString("year");
+		month = obj.getString("month");
+		day = obj.getString("day");
+		id = obj.getString("id");
+		prerequisites = new HashMap<>();
+		mustSees = new HashMap<>();
+		for (Qualification qualification : qualifications) {
+			JSONObject jsonQual = obj.getJSONObject(qualification.getName());
+			JSONArray jsonPres = jsonQual.optJSONArray("prerequisites");
+			
+			prerequisites.put(qualification.getName(), qualification.getPrerequisites());
+			if(jsonPres != null){
+				for(int i = 0; i < jsonPres.length(); i++){
+					JSONObject pre = jsonPres.getJSONObject(i);
+					String name = pre.getString("name");
+					for(Prerequisite prerequisite : prerequisites.get(qualification.getName())){
+						if(prerequisite.getName().equals(name)){
+							prerequisite.setDateEarned(pre.optString("dateEarned"));
+							prerequisite.setMet(pre.optBoolean("met"));
+							prerequisite.setLocation(pre.optString("location"));
+							break;
+						}
+					}
+				}
+			}
+			
+			mustSees.put(qualification.getName(), qualification.getMustSees());
+			JSONArray jsonSees = jsonQual.getJSONArray("must-sees");
+			if(jsonSees != null){
+				for(int i = 0; i < jsonSees.length(); i++){
+					JSONObject see = jsonSees.getJSONObject(i);
+					String item = see.getString("item");
+					for (MustSee mustSee : mustSees.get(qualification.getName())) {
+						if(mustSee.getItem().equals(item)){
+							mustSee.setCompleted(see.optBoolean("completed"));
+						}
+					}
+				}
+			}			
+		}
+		
+		
+	}
+
 	public List<MustSee> getMustSees(String course) {
 		return mustSees.get(course);
 	}
@@ -125,7 +176,7 @@ public class Client {
 
 	public void update(Client c) {
 		this.address = c.address;
-		this.city = c.address;
+		this.city = c.city;
 		this.day = c.day;
 		this.email = c.email;
 		this.month = c.month;
@@ -251,7 +302,7 @@ public class Client {
 		object.put("month", month);
 		object.put("day", day);
 		object.put("id", id);
-		
+
 		for (String qual : prerequisites.keySet()) {
 			JSONArray pres = new JSONArray();
 			for (Prerequisite prerequisite : prerequisites.get(qual)) {
@@ -273,7 +324,7 @@ public class Client {
 	public MustSee getMustSee(String course, String item) {
 		List<MustSee> sees = getMustSees(course);
 		for (MustSee mustSee : sees) {
-			if(mustSee.getItem().equals(item)){
+			if (mustSee.getItem().equals(item)) {
 				return mustSee;
 			}
 		}
@@ -283,7 +334,7 @@ public class Client {
 	public Prerequisite getPrerequisite(String course, String name) {
 		List<Prerequisite> prerequisites = getPrerequisites(course);
 		for (Prerequisite prerequisite : prerequisites) {
-			if(prerequisite.getName().equals(name)){
+			if (prerequisite.getName().equals(name)) {
 				return prerequisite;
 			}
 		}

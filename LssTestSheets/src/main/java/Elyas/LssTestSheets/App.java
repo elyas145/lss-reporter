@@ -15,8 +15,10 @@ import javafx.stage.WindowEvent;
  */
 public class App extends Application
 {
+	private static Stage mainStage;
 	@Override
 	public void start(Stage stage) {
+		mainStage = stage;
 		try {
 			FXMLLoader ldr = new FXMLLoader(getClass()
 	                .getResource("/fxml/main.fxml"));
@@ -44,5 +46,8 @@ public class App extends Application
 	
 	public static void main(String[] args) {
 		launch(args);
+	}
+	public static Stage getMainStage(){
+		return mainStage;
 	}
 }

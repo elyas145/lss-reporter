@@ -135,8 +135,48 @@ public class CourseFactory {
 		return courses;
 	}
 
-	public static Course getFullCourse(Course c) {
+	/**
+	 * attempts to parse a course file. the file may exist in any directory in
+	 * the system.
+	 * 
+	 * @param file
+	 *            the object representing the course file
+	 * @return the parsed course object, or null if unable to parse.
+	 */
+	public static Course getFullCourse(File file) {
+		byte[] encoded;
+		try {
+			encoded = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+			String jsonTxt = new String(encoded, Charset.defaultCharset());
+			JSONObject obj = new JSONObject(jsonTxt);
+			Course course = new Course(obj);
+			return course;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return null;
+	}
+
+	/**
+	 * simple course must exist internally, and should not be an external
+	 * directory. i.e. it needs to exist in the resource directory.
+	 * 
+	 * @param simpleCourse
+	 *            the course to retrieve
+	 * @return the full course as stored in the file.
+	 */
+	public static Course getFullCourse(Course simpleCourse) {
+		URL url = CourseFactory.class.getResource("/jsoncourses/");
+		File f;
+
+		try {
+			f = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			f = new File(url.getPath());
+		}
+		String path = f.getAbsolutePath() + System.getProperty("file.separator") + simpleCourse.getFilePath();
+		File file = new File(path);
+		return getFullCourse(file);
 	}
 
 	public static TestSheet getTestSheet(String path) {
@@ -381,9 +421,9 @@ public class CourseFactory {
 
 	private static String getFontSize(PDField field, String value, int prefSize) {
 
-		if(value == null || value.isEmpty())
-			return ""+prefSize;
-		
+		if (value == null || value.isEmpty())
+			return "" + prefSize;
+
 		PDRectangle rectangle = getFieldArea(field);
 		float width = rectangle.getWidth();
 
@@ -399,5 +439,16 @@ public class CourseFactory {
 			return "" + prefSize;
 		}
 
+	}
+
+	public static TestSheet getTestSheetByName(Qualification qualification) {
+		List<Qualification> qualifications = getSupportedQualifications();
+		for (Qualification qual : qualifications) {
+			if (qual.getName().equals(qualification.getName())) {
+				qualification.setTestSheetPath(qual.getPdfPath(), qual.getTestSheetPath());
+				return getTestSheet(qualification.getTestSheetPath());
+			}
+		}
+		return null;
 	}
 }

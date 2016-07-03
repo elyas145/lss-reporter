@@ -102,11 +102,11 @@ public class CourseController extends Controller implements Initializable {
 		} else {
 			populate(facil);
 		}
-		if(Model.getInstance().getBarcodeOne() != null){
+		if (Model.getInstance().getBarcodeOne() != null) {
 			txtBarcode1.setText(Model.getInstance().getBarcodeOne());
 		}
-		if(Model.getInstance().getBarcodeTwo() != null){
-			txtBarcode1.setText(Model.getInstance().getBarcodeTwo());
+		if (Model.getInstance().getBarcodeTwo() != null) {
+			txtBarcode2.setText(Model.getInstance().getBarcodeTwo());
 		}
 		for (Qualification qual : Model.getInstance().getQualifications()) {
 			FXMLLoader loader = new FXMLLoader(CourseController.class.getResource("/fxml/exam.fxml"));
@@ -135,16 +135,17 @@ public class CourseController extends Controller implements Initializable {
 	private void populate(Facility facility) {
 		this.chkDefault.setSelected(facility.getDefault());
 		FacilityHost host = facility.getHost();
-		this.chkExamFees.setSelected(host.getExamFees());
-		this.txtHostName.setText(host.getName());
-		this.txtHostAddress.setText(host.getAddress());
-		this.txtHostCity.setText(host.getCity());
-		this.txtHostProvince.setText(host.getProvince());
-		this.txtHostPostalCode.setText(host.getPostalCode());
-		this.txtHostAreaCode.setText(host.getAreaCode());
-		this.txtHostPhone.setText(host.getPhone());
-		this.txtHostExtension.setText(host.getExtension());
-
+		if (host != null) {
+			this.chkExamFees.setSelected(host.getExamFees());
+			this.txtHostName.setText(host.getName());
+			this.txtHostAddress.setText(host.getAddress());
+			this.txtHostCity.setText(host.getCity());
+			this.txtHostProvince.setText(host.getProvince());
+			this.txtHostPostalCode.setText(host.getPostalCode());
+			this.txtHostAreaCode.setText(host.getAreaCode());
+			this.txtHostPhone.setText(host.getPhone());
+			this.txtHostExtension.setText(host.getExtension());
+		}
 		this.txtFacilityName.setText(facility.getName());
 		this.txtFacilityAreaCode.setText(facility.getAreaCode());
 		this.txtFacilityPhone.setText(facility.getPhone());
@@ -196,7 +197,7 @@ public class CourseController extends Controller implements Initializable {
 				updated = false;
 			}
 		}
-		if (updated && !chkNewPreset.isSelected()) {
+		if (updated && !chkNewPreset.isSelected() && cmbPreset.getSelectionModel().getSelectedItem() != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setContentText("Would you like to update the preset?");
 			Optional<ButtonType> result = alert.showAndWait();

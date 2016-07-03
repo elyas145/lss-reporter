@@ -12,6 +12,19 @@ public class Employee {
 	private String extension = "";
 	private Long key = null;
 
+	public Employee(JSONObject obj) {
+		setName(obj.getString("name"));
+		setAreaCode(obj.optString("area-code"));
+		setPhone(obj.optString("phone"));
+		setId(obj.optString("id"));
+		setEmail(obj.optString("email"));
+		setExtension(obj.optString("extension"));
+		setKey(obj.getLong("e-key"));
+	}
+
+	public Employee() {
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -131,13 +144,13 @@ public class Employee {
 		if (phone == null || phone.trim().equals("")) {
 			warning.add(name + " phone not specified.");
 		}
-		
+
 	}
 
 	public String getFinalPhone() {
 		String finalPhone = new String(phone);
-		if(extension != null && !extension.equals("")){
-			finalPhone += " ext."+extension;
+		if (extension != null && !extension.equals("")) {
+			finalPhone += " ext." + extension;
 		}
 		return finalPhone;
 	}

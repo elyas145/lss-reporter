@@ -67,8 +67,9 @@ public class ClientController extends Controller implements Initializable {
 			showError();
 			return;
 		}
-		if(currentClient == null)
-			Model.getInstance().addClient(c);			
+		if(currentClient == null){
+			Model.getInstance().addClient(c);	
+		}
 		this.finishHandler.onFinish(ViewState.STUDENTS);
 	}
 
