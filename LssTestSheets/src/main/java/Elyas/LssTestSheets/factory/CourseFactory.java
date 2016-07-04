@@ -272,6 +272,8 @@ public class CourseFactory {
 					while (mustSees.hasNext()) {
 						MustSee template = mustSees.next();
 						MustSee see = client.getMustSee(qualification.getName(), template.getItem());
+						try{
+						
 						if (see.isAppEvaluated()) {
 							see.evaluate(client, qualification.getName());
 						}
@@ -280,6 +282,12 @@ public class CourseFactory {
 							acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
 						} else {
 							acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+						}
+						}catch(IllegalArgumentException e){
+							System.out.println("---------------- must see set error -----------------");
+							System.out.println("name: " + template.getField());
+							
+							//e.printStackTrace();
 						}
 					}
 					Iterator<Prerequisite> prerequisites = student.getPrerequisites().iterator();
@@ -428,7 +436,7 @@ public class CourseFactory {
 		float width = rectangle.getWidth();
 
 		int numCharacters = value.length();
-		System.out.println("width / length: " + width / numCharacters);
+		//System.out.println("width / length: " + width / numCharacters);
 		if (width / numCharacters < 5) {
 			return "6";
 		} else if (width / numCharacters >= 5 && width / numCharacters < 6) {

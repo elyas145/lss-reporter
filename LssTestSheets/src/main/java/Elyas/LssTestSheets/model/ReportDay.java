@@ -101,6 +101,9 @@ public class ReportDay {
 	}
 
 	public boolean isPresent(String id) {
+		if(!attendance.containsKey(id)){
+			return false;
+		}
 		return attendance.get(id);
 	}
 }
