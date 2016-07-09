@@ -33,7 +33,7 @@ public class ExaminerController extends Controller implements Initializable {
 	private ObservableList<Employee> obsExaminers;
 	private ObservableList<Employee> obsPersons;
 	private String course;
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -46,12 +46,12 @@ public class ExaminerController extends Controller implements Initializable {
 
 		examinersView.setItems(obsExaminers);
 		examinersView.setOnMouseClicked(event -> {
-			if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+			if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 				employeeSelected(examinersView.getSelectionModel().getSelectedItem());
 			}
 		});
 		peopleView.setOnMouseClicked(event -> {
-			if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+			if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 				employeeSelected(peopleView.getSelectionModel().getSelectedItem());
 			}
 		});
@@ -59,9 +59,9 @@ public class ExaminerController extends Controller implements Initializable {
 	}
 
 	private void employeeSelected(Employee e) {
-		if(e == null)
+		if (e == null)
 			return;
-		
+
 		ViewFactoryResult result = ViewFactory.getView("/fxml/employee.fxml");
 		final EmployeeController controller = (EmployeeController) result.controller;
 		Scene scene = new Scene(result.parent);
@@ -83,12 +83,12 @@ public class ExaminerController extends Controller implements Initializable {
 					for (Employee e : persons) {
 						obsPersons.add(e);
 					}
-					
+
 					obsExaminers.removeAll(obsExaminers);
 					for (Employee e : examiners) {
 						obsExaminers.add(e);
 					}
-					
+
 					stage.close();
 				} else {
 					Alert alert = new Alert(AlertType.ERROR);
@@ -106,7 +106,7 @@ public class ExaminerController extends Controller implements Initializable {
 				return true;
 			}
 		});
-		
+
 	}
 
 	@FXML
@@ -169,21 +169,20 @@ public class ExaminerController extends Controller implements Initializable {
 	public void setCourse(String course) {
 		this.course = course;
 		List<Employee> employees = Model.getInstance().getExaminers(course);
-		if(employees != null){
-			obsExaminers = FXCollections.observableList(employees);
-			examinersView.setItems(obsExaminers);
-			for (Employee employee : obsExaminers) {
-				for (Employee employee2 : obsPersons) {
-					if(employee.equals(employee2)){
-						obsPersons.remove(employee);
-						break;
-					}
+
+		obsExaminers = FXCollections.observableList(employees);
+		examinersView.setItems(obsExaminers);
+		for (Employee employee : obsExaminers) {
+			for (Employee employee2 : obsPersons) {
+				if (employee.equals(employee2)) {
+					obsPersons.remove(employee);
+					break;
 				}
 			}
 		}
+
 	}
 
-	
 	@Override
 	public ViewState getViewState() {
 		return ViewState.EXAMINER;

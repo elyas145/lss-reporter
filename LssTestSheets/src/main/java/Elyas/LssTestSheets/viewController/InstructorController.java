@@ -177,7 +177,7 @@ public class InstructorController extends Controller implements Initializable {
 	public void setCourse(String course) {
 		this.course = course;
 		List<Employee> employees = Model.getInstance().getInstructors(course);
-		if(employees != null){
+		
 			obsInstructors = FXCollections.observableList(employees);
 			instructorsView.setItems(obsInstructors);
 			for (Employee employee : obsInstructors) {
@@ -188,6 +188,6 @@ public class InstructorController extends Controller implements Initializable {
 					}
 				}
 			}
-		}
+		
 	}
 }

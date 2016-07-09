@@ -10,7 +10,7 @@
 	"barcode1": "barcode1",
 	"barcode2": "barcode2",
 	"pass-value": "Yes",
-	"fail-value": "0",
+	"fail-value": "2",
 	"instructor": {
 		"name": "R6",
 		"id": "R7",
@@ -841,7 +841,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "10.10"
+			"field": "10.11"
 		}, {
 			"item": "1",
 			"field": "1011"

@@ -51,6 +51,7 @@ public class Model {
 
 	private Course course;
 	private boolean isChanged;
+	private boolean externalCourse;
 
 	public void setCourse(Course c) {
 		this.course = c;
@@ -112,14 +113,21 @@ public class Model {
 				return false;
 			}
 		} else {
-			URL url = this.getClass().getResource("/jsoncourses/");
-			File f;
 
-			try {
-				f = new File(url.toURI());
-			} catch (URISyntaxException e) {
-				f = new File(url.getPath());
+			File f;
+			if (!externalCourse) {
+				URL url = this.getClass().getResource("/jsoncourses/");
+				try {
+					f = new File(url.toURI());
+				} catch (URISyntaxException e) {
+					f = new File(url.getPath());
+				}
+			} else {
+
+				f = new File(course_path);
+
 			}
+
 			String path = f.getAbsolutePath() + System.getProperty("file.separator") + course_path;
 			file = new File(path);
 		}
@@ -262,7 +270,7 @@ public class Model {
 
 			@Override
 			public void doRun() {
-				/*Properties props = new Properties();
+				Properties props = new Properties();
 				props.put("mail.smtp.host", "smtp-mail.outlook.com");
 				props.put("mail.smtp.auth", "true");
 				props.put("mail.smtp.port", "587");
@@ -273,8 +281,8 @@ public class Model {
 				Session session = Session.getDefaultInstance(props, auth);
 
 				MimeMessage msg = new MimeMessage(session);
-				*/try {
-					/*
+				try {
+
 					InputStream is = Model.class.getResourceAsStream("/html/email.html");
 					String template;
 
@@ -309,7 +317,7 @@ public class Model {
 						attachmentPart.setDataHandler(new DataHandler(source));
 						attachmentPart.setFileName("course");
 						multipart.addBodyPart(attachmentPart);
-					}*/
+					}
 					if (sendTestSheet) {
 						List<PDDocument> documents = CourseFactory.generateTestSheets(course);
 						int i = 0;
@@ -318,18 +326,18 @@ public class Model {
 							i++;
 						}
 					}
-				}
-					/*msg.setContent(multipart);
+					msg.setContent(multipart);
 
 					msg.saveChanges();
 					Transport.send(msg);
+
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (MessagingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/ catch (IOException e) {
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -344,5 +352,10 @@ public class Model {
 		public PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication("no-reply-reporter@outlook.com", "WalterBaker2016");
 		}
+	}
+
+	public void setExternalCourse(boolean b) {
+		externalCourse = b;
+
 	}
 }

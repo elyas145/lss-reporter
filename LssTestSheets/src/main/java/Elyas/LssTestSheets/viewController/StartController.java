@@ -67,16 +67,14 @@ public class StartController extends Controller implements Initializable {
 
 	@FXML
 	protected void browseClicked(ActionEvent event) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Coming Soon...");
-		alert.setContentText("This feature is not implemented yet :(");
-		alert.showAndWait();
-		/**
-		 * FileChooser fileChooser = new FileChooser(); fileChooser.setTitle(
-		 * "Open Course File"); File file =
-		 * fileChooser.showOpenDialog(App.getMainStage()); Course course =
-		 * CourseFactory.getFullCourse(file);
-		 **/
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Course File");
+		File file = fileChooser.showOpenDialog(App.getMainStage());		
+		Course course = CourseFactory.getFullCourse(file);
+		Model.getInstance().setCourse(course);
+		finishHandler.onFinish(ViewState.COURSE_IMPORT);
+
 	}
 
 	@FXML

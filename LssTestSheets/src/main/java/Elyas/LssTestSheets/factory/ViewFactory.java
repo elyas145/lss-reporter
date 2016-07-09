@@ -47,6 +47,10 @@ public class ViewFactory {
 				break;
 			case TEST_SHEETS:
 				loader = new FXMLLoader(ViewFactory.class.getResource("/fxml/export.fxml"));
+				break;
+			case COURSE_IMPORT:
+				loader = new FXMLLoader(ViewFactory.class.getResource("/fxml/course-import.fxml"));
+				break;
 			default:
 				break;
 

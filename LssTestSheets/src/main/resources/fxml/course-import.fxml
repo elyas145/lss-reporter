@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.CourseImportController">
+   <children>
+      <Label text="Course Import">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Separator prefWidth="200.0" />
+      <CheckBox fx:id="chkImportCourse" mnemonicParsing="false" text="Import Class to this application">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin>
+      </CheckBox>
+      <CheckBox fx:id="chkImportEmployees" mnemonicParsing="false" text="Import Employees">
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
+      </CheckBox>
+      <CheckBox fx:id="chkUpdateEmployees" mnemonicParsing="false" text="Update Existing Employees">
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
+      </CheckBox>
+      <CheckBox fx:id="chkReplaceEmployees" mnemonicParsing="false" text="Replace Employees' Data with Existing Employees">
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
+      </CheckBox>
+      <ButtonBar prefHeight="40.0" prefWidth="200.0">
+        <buttons>
+          <Button defaultButton="true" mnemonicParsing="false" onAction="#okAction" text="OK" />
+        </buttons>
+      </ButtonBar>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" />
+   </padding>
+</VBox>

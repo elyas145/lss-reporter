@@ -39,6 +39,7 @@ import Elyas.LssTestSheets.Test;
 import Elyas.LssTestSheets.model.Client;
 import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Exam;
+import Elyas.LssTestSheets.model.Model;
 import Elyas.LssTestSheets.model.MustSee;
 import Elyas.LssTestSheets.model.Prerequisite;
 import Elyas.LssTestSheets.model.Prerequisite.Type;
@@ -254,7 +255,9 @@ public class CourseFactory {
 				// clients info.
 				Iterator<Student> iterator = testSheet.getStudentIterator();
 				while (iterator.hasNext() && !clients.isEmpty()) {
+					//System.out.println("-----begin iteration-----\nclients left: " + clients.size());
 					Student student = iterator.next();
+					//System.out.println("student number: " + student.getName());
 					Client client = clients.poll();
 					setPDFText(acroForm.getField(student.getName()), client.getName(), instructor_pref_size);
 					setPDFText(acroForm.getField(student.getAddress()), client.getAddress(), instructor_pref_size);
@@ -315,12 +318,12 @@ public class CourseFactory {
 						course.getInstructorsPhone(qualification), instructor_pref_size);
 
 				// exam info
-				System.out.println("facility name: ");
+				
 				setPDFText(acroForm.getField(testSheet.getExam().getFacilityName()), course.getFacility().getName(),
 						instructor_pref_size);
 				acroForm.getField(testSheet.getExam().getFacilityAreaCode())
 						.setValue(course.getFacility().getAreaCode());
-				System.out.println("facility phone: ");
+				
 				setPDFText(acroForm.getField(testSheet.getExam().getFacilityPhone()),
 						course.getFacility().getFinalPhone(), instructor_pref_size);
 
@@ -393,6 +396,7 @@ public class CourseFactory {
 						.setValue(course.getQualification(qualification.getName()).getExaminersAreaCode());
 				setPDFText(acroForm.getField(testSheet.getExaminer().getPhone()),
 						course.getQualification(qualification.getName()).getExaminersPhones(), instructor_pref_size);
+				acroForm.flatten();
 				documents.add(pdf);
 			}
 
@@ -436,7 +440,7 @@ public class CourseFactory {
 		float width = rectangle.getWidth();
 
 		int numCharacters = value.length();
-		//System.out.println("width / length: " + width / numCharacters);
+		//System.out.println(field.getFullyQualifiedName() + " width / length: " + width / numCharacters);
 		if (width / numCharacters < 5) {
 			return "6";
 		} else if (width / numCharacters >= 5 && width / numCharacters < 6) {
@@ -458,5 +462,11 @@ public class CourseFactory {
 			}
 		}
 		return null;
+	}
+
+	public static void importCourse() {
+		Model.getInstance().getCourse().setFilePath(null);
+		Model.getInstance().save();
+		
 	}
 }

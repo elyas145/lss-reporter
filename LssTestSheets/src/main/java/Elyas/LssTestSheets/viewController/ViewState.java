@@ -1,7 +1,7 @@
 package Elyas.LssTestSheets.viewController;
 
 public enum ViewState {
-	START, INSTRUCTOR, EXAMINER, STUDENTS, STUDENT, COURSE, COURSE_TYPE, MUST_SEES, REPORT, TEST_SHEETS;
+	START, INSTRUCTOR, EXAMINER, STUDENTS, STUDENT, COURSE, COURSE_TYPE, MUST_SEES, REPORT, TEST_SHEETS, COURSE_IMPORT;
 
 	public static boolean isMenuState(ViewState state) {
 		switch (state){

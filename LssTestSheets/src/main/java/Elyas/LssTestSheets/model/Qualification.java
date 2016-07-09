@@ -49,7 +49,7 @@ public class Qualification {
 		if(jsonExaminers != null){
 			for (int i = 0; i < jsonExaminers.length(); i++) {
 				JSONObject jsonExaminer = jsonExaminers.getJSONObject(i);
-				instructors.add(new Employee(jsonExaminer));
+				examiners.add(new Employee(jsonExaminer));
 			}
 		}
 		
