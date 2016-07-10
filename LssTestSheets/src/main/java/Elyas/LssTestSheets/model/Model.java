@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import javax.xml.transform.Templates;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.common.PDStream;
 
 import Elyas.LssTestSheets.factory.CourseFactory;
 
@@ -320,10 +322,20 @@ public class Model {
 					}
 					if (sendTestSheet) {
 						List<PDDocument> documents = CourseFactory.generateTestSheets(course);
-						int i = 0;
+						int i = 1;
+						PDStream pdStream;
 						for (PDDocument document : documents) {
-							document.save("C:\\Users\\Elyas\\Desktop\\sample-" + i + ".pdf");
-							i++;
+							pdStream = new PDStream(document);
+							MimeBodyPart attachmentPart = new MimeBodyPart();
+							DataSource source = new ByteArrayDataSource(pdStream.toByteArray(),
+									"application/pdf");
+							attachmentPart.setDataHandler(new DataHandler(source));
+							if(documents.size() > 1){
+								attachmentPart.setFileName("test sheet " + (i++));
+							}else{
+								attachmentPart.setFileName("test sheet");
+							}
+							multipart.addBodyPart(attachmentPart);
 						}
 					}
 					msg.setContent(multipart);
