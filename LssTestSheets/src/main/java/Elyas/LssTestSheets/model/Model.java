@@ -1,5 +1,7 @@
 package Elyas.LssTestSheets.model;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -325,10 +327,16 @@ public class Model {
 						int i = 1;
 						PDStream pdStream;
 						for (PDDocument document : documents) {
-							pdStream = new PDStream(document);
+							
+							ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+							document.save(byteArrayOutputStream);
+							document.close();
+							InputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+							
 							MimeBodyPart attachmentPart = new MimeBodyPart();
-							DataSource source = new ByteArrayDataSource(pdStream.toByteArray(),
+							DataSource source = new ByteArrayDataSource(inputStream,
 									"application/pdf");
+							
 							attachmentPart.setDataHandler(new DataHandler(source));
 							if(documents.size() > 1){
 								attachmentPart.setFileName("test sheet " + (i++));

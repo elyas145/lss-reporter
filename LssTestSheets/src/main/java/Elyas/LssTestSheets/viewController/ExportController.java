@@ -1,16 +1,25 @@
 package Elyas.LssTestSheets.viewController;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.controlsfx.control.textfield.CustomTextField;
+import org.json.JSONObject;
 
+import Elyas.LssTestSheets.App;
 import Elyas.LssTestSheets.Config;
 import Elyas.LssTestSheets.factory.CourseFactory;
+import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Model;
 import Elyas.LssTestSheets.model.Warning;
 import javafx.application.Platform;
@@ -26,6 +35,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
@@ -53,6 +63,14 @@ public class ExportController extends Controller implements Initializable {
 	ProgressIndicator prgsSend;
 	@FXML
 	HBox hbSend;
+	@FXML
+	CustomTextField txtDirectory;
+	@FXML
+	Label lblError;
+	@FXML
+	CheckBox chkExportCourse;
+	@FXML
+	CheckBox chkExportTestSheets;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -168,4 +186,89 @@ public class ExportController extends Controller implements Initializable {
 		button.setOnAction((e) -> stage.close());
 	}
 
+	@FXML
+	protected void browseAction(ActionEvent event) {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Choose Destination Folder.");
+		File file = directoryChooser.showDialog(App.getMainStage());
+
+		if (file != null) {
+			txtDirectory.setText(file.getAbsolutePath());
+		}
+	}
+
+	@FXML
+	protected void exportAction(ActionEvent event) {
+		if (txtDirectory.getText().trim().equals("")) {
+			lblError.setVisible(true);
+			return;
+		}
+
+		String directoryPath = txtDirectory.getText().trim();
+
+		if (chkExportCourse.isSelected()) {
+			JSONObject course = Model.getInstance().getCourse().toJSON();
+			File file = new File(
+					directoryPath + System.getProperty("file.separator") + Model.getInstance().getCourseName()+".json");
+			if (file.exists()) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Confirm Replacing a File.");
+				alert.setContentText("A file with the name \"" + Model.getInstance().getCourseName()
+						+ "\" already exists. Would you like to replace the existing file?");
+				Optional<ButtonType> btn = alert.showAndWait();
+				if (btn.get().equals(ButtonType.OK)) {
+					Course c = new Course(course);
+					c.setFilePath(file.getAbsolutePath());
+					FileWriter writer;
+					try {
+						writer = new FileWriter(file, false);
+						writer.write(c.toJSON().toString(4));
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}else{
+				FileWriter writer;
+				try {
+					Course c = new Course(course);
+					c.setFilePath(file.getAbsolutePath());
+					writer = new FileWriter(file, false);
+					writer.write(c.toJSON().toString(4));
+					writer.flush();
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		if (chkExportTestSheets.isSelected()) {
+			try {
+				List<PDDocument> docs = CourseFactory.generateTestSheets(Model.getInstance().getCourse());
+				int i = 1;
+				for (PDDocument doc : docs) {
+					String dir = directoryPath + System.getProperty("file.separator") + Model.getInstance().getCourseName()
+							+ " Testsheet " + (i++)+".pdf";
+					File file = new File(dir);
+					if(file.exists()){
+						Alert alert = new Alert(AlertType.CONFIRMATION);
+						alert.setTitle("Confirm Replacing a File.");
+						alert.setContentText("A file with the name \"" + Model.getInstance().getCourseName() + " Testsheet " + (i-1)
+								+ "\" already exists. Would you like to replace the existing file?");
+						Optional<ButtonType> btn = alert.showAndWait();
+						if (btn.get().equals(ButtonType.OK)) {
+							doc.save(file);
+						}
+					}else{
+						doc.save(file);
+					}
+					
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
 }

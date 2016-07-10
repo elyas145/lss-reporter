@@ -80,30 +80,25 @@
                <content>
                   <VBox>
                      <children>
-                        <CheckBox mnemonicParsing="false" text="Export Course File">
+                        <CheckBox mnemonicParsing="false" fx:id="chkExportCourse" text="Export Course File">
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" text="Export Test Sheets as PDFs" />
+                        <CheckBox mnemonicParsing="false" fx:id="chkExportTestSheets" text="Export Test Sheets as PDFs" />
                         <HBox VBox.vgrow="ALWAYS">
                            <children>
-                              <Button mnemonicParsing="false" text="Browse" />
-                              <CustomTextField HBox.hgrow="ALWAYS" />
+                              <Button mnemonicParsing="false" text="Browse" onAction="#browseAction"/>
+                              <CustomTextField HBox.hgrow="ALWAYS" fx:id="txtDirectory"/>
                            </children>
                            <VBox.margin>
                               <Insets top="5.0" />
                            </VBox.margin>
                         </HBox>
-                        <CustomTextField promptText="Folder Name" VBox.vgrow="ALWAYS">
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                        </CustomTextField>
-                        <Label text="Please choose a folder name" textFill="RED" />
+                        <Label fx:id="lblError" text="Please choose a folder name" textFill="RED" visible="false"/>
                         <ButtonBar>
                           <buttons>
-                            <Button defaultButton="true" mnemonicParsing="false" text="Export" />
+                            <Button defaultButton="true" mnemonicParsing="false" text="Export" onAction="#exportAction"/>
                           </buttons>
                            <VBox.margin>
                               <Insets top="10.0" />
