@@ -106,6 +106,13 @@ public class MainController implements Initializable {
 		case TEST_SHEETS:
 			nextState = ViewState.TEST_SHEETS;
 			break;
+		case SAVE_EXIT:
+			Model.getInstance().save();
+			System.exit(0);
+			return;
+		case SAVE:
+			Model.getInstance().save();
+			return;
 		default:
 			return;
 		}

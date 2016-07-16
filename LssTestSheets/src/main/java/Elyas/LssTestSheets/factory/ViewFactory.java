@@ -51,6 +51,7 @@ public class ViewFactory {
 			case COURSE_IMPORT:
 				loader = new FXMLLoader(ViewFactory.class.getResource("/fxml/course-import.fxml"));
 				break;
+			
 			default:
 				break;
 

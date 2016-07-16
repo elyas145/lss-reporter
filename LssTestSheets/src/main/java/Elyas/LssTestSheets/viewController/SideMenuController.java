@@ -39,7 +39,13 @@ public class SideMenuController extends Controller implements Initializable {
 
 	@FXML
 	HBox testSheets;
+	
+	@FXML
+	HBox saveAndExit;
 
+	@FXML
+	HBox save;
+	
 	private Node currentlySelected;
 	private List<HBox> items;
 
@@ -108,7 +114,12 @@ public class SideMenuController extends Controller implements Initializable {
 		if(selectedItem.equals(this.testSheets)){
 			return SideMenuAction.TEST_SHEETS;
 		}
-		
+		if(selectedItem.equals(this.saveAndExit)){
+			return SideMenuAction.SAVE_EXIT;
+		}
+		if(selectedItem.equals(this.save)){
+			return SideMenuAction.SAVE;
+		}
 		return null;
 	}
 
