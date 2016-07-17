@@ -33,6 +33,9 @@ public class ClientController extends Controller implements Initializable {
 	@FXML
 	CustomTextField txtPhone;
 	@FXML
+	CustomTextField txtApt;
+	
+	@FXML
 	CustomTextField txtYear;
 	@FXML
 	CustomTextField txtMonth;
@@ -105,6 +108,7 @@ public class ClientController extends Controller implements Initializable {
 		this.txtPhone.setText("");
 		this.txtPostalCode.setText("");
 		this.txtYear.setText("");
+		this.txtApt.setText("");
 	}
 
 	Client getClient() {
@@ -124,6 +128,7 @@ public class ClientController extends Controller implements Initializable {
 		c.setPhone(txtPhone.getText());
 		c.setPostalCode(txtPostalCode.getText());
 		c.setYear(txtYear.getText());
+		c.setApartment(txtApt.getText());
 		return c;
 	}
 

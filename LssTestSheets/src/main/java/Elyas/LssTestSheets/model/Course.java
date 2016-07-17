@@ -49,6 +49,7 @@ public class Course {
 			} else {
 				n += qualification.getName() + " and ";
 			}
+			i++;
 		}
 		name = new SimpleStringProperty(n);
 	}
@@ -251,6 +252,7 @@ public class Course {
 			} else {
 				string += localDate.toString() + ", ";
 			}
+			i++;
 		}
 		return string;
 	}

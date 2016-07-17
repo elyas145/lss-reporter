@@ -196,6 +196,9 @@ public class CourseMustSeesController extends Controller implements Initializabl
 
 	@FXML
 	protected void passInstructorAction(ActionEvent event) {
+		if(currentClient == null){
+			return;
+		}
 		for (MustSee see : currentClient.getMustSees(course)) {
 			if (see.isInstructorEvaluated()) {
 				see.isCompleted = chkInst.isSelected();
@@ -206,6 +209,9 @@ public class CourseMustSeesController extends Controller implements Initializabl
 
 	@FXML
 	protected void passExaminerAction(ActionEvent event) {
+		if(currentClient == null){
+			return;
+		}
 		for (MustSee see : currentClient.getMustSees(course)) {
 			if (see.isExaminerEvaluated()) {
 				see.isCompleted = chkExam.isSelected();

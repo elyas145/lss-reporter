@@ -18,7 +18,12 @@
                   <VBox>
                      <children>
                         <CustomTextField fx:id="txtName" promptText="Name" />
-                        <CustomTextField fx:id="txtAddress" promptText="Address" />
+                        <HBox>
+                           <children>
+                              <CustomTextField fx:id="txtAddress" promptText="Address" HBox.hgrow="ALWAYS" />
+                              <CustomTextField fx:id="txtApt" prefColumnCount="4" promptText="Apartment" />
+                           </children>
+                        </HBox>
                         <HBox>
                            <children>
                               <CustomTextField fx:id="txtCity" promptText="City" />

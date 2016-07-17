@@ -24,6 +24,7 @@ public class Client {
 	Map<String, List<Prerequisite>> prerequisites;
 	Map<String, List<MustSee>> mustSees;
 	private String id;
+	private String apartment;
 
 	public Client() {
 		prerequisites = new HashMap<>();
@@ -101,6 +102,13 @@ public class Client {
 	public String getAddress() {
 		return address;
 	}
+	public String getFinalAddress(){
+		String finalAddress = address;
+		if(apartment != null && !apartment.trim().equals("")){
+			finalAddress += " apt. " + apartment;
+		}
+		return finalAddress;
+	}
 
 	public void setAddress(String address) {
 		this.address = address;
@@ -173,6 +181,9 @@ public class Client {
 	public String getID() {
 		return this.id;
 	}
+	public String getApartment() {
+		return this.apartment;
+	}
 
 	public void update(Client c) {
 		this.address = c.address;
@@ -185,6 +196,7 @@ public class Client {
 		this.postalCode = c.postalCode;
 		this.prerequisites = c.prerequisites;
 		this.year = c.year;
+		this.apartment = c.apartment;
 	}
 
 	public void setID(String id) {
@@ -339,5 +351,10 @@ public class Client {
 			}
 		}
 		return null;
+	}
+
+	public void setApartment(String text) {
+		this.apartment = text;
+		
 	}
 }

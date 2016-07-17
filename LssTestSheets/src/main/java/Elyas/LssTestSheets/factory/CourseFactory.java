@@ -2,6 +2,7 @@ package Elyas.LssTestSheets.factory;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.function.Consumer;
 
@@ -41,11 +43,17 @@ import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Exam;
 import Elyas.LssTestSheets.model.Model;
 import Elyas.LssTestSheets.model.MustSee;
+import Elyas.LssTestSheets.model.NotifyingThread;
 import Elyas.LssTestSheets.model.Prerequisite;
 import Elyas.LssTestSheets.model.Prerequisite.Type;
 import Elyas.LssTestSheets.model.Qualification;
 import Elyas.LssTestSheets.model.TestSheet;
+import Elyas.LssTestSheets.model.ThreadCompleteListener;
 import Elyas.LssTestSheets.model.TestSheet.Student;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import Elyas.LssTestSheets.model.Warning;
 
 public class CourseFactory {
@@ -255,12 +263,19 @@ public class CourseFactory {
 				// clients info.
 				Iterator<Student> iterator = testSheet.getStudentIterator();
 				while (iterator.hasNext() && !clients.isEmpty()) {
-					//System.out.println("-----begin iteration-----\nclients left: " + clients.size());
+					// System.out.println("-----begin iteration-----\nclients
+					// left: " + clients.size());
 					Student student = iterator.next();
-					//System.out.println("student number: " + student.getName());
+					// System.out.println("student number: " +
+					// student.getName());
 					Client client = clients.poll();
 					setPDFText(acroForm.getField(student.getName()), client.getName(), instructor_pref_size);
-					setPDFText(acroForm.getField(student.getAddress()), client.getAddress(), instructor_pref_size);
+					if(testSheet.hasApartment()){
+						setPDFText(acroForm.getField(student.getAddress()), client.getAddress(), instructor_pref_size);
+						setPDFText(acroForm.getField(student.getApartment()), client.getApartment(), instructor_pref_size);
+					}else{
+						setPDFText(acroForm.getField(student.getAddress()), client.getFinalAddress(), instructor_pref_size);
+					}
 					setPDFText(acroForm.getField(student.getCity()), client.getCity(), instructor_pref_size);
 					setPDFText(acroForm.getField(student.getPostalCode()), client.getPostalCode(),
 							instructor_pref_size);
@@ -275,22 +290,22 @@ public class CourseFactory {
 					while (mustSees.hasNext()) {
 						MustSee template = mustSees.next();
 						MustSee see = client.getMustSee(qualification.getName(), template.getItem());
-						try{
-						
-						if (see.isAppEvaluated()) {
-							see.evaluate(client, qualification.getName());
-						}
+						try {
 
-						if (see.isCompleted()) {
-							acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
-						} else {
-							acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
-						}
-						}catch(IllegalArgumentException e){
+							if (see.isAppEvaluated()) {
+								see.evaluate(client, qualification.getName());
+							}
+
+							if (see.isCompleted()) {
+								acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
+							} else {
+								acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+							}
+						} catch (IllegalArgumentException e) {
 							System.out.println("---------------- must see set error -----------------");
 							System.out.println("name: " + template.getField());
-							
-							//e.printStackTrace();
+
+							// e.printStackTrace();
 						}
 					}
 					Iterator<Prerequisite> prerequisites = student.getPrerequisites().iterator();
@@ -318,12 +333,12 @@ public class CourseFactory {
 						course.getInstructorsPhone(qualification), instructor_pref_size);
 
 				// exam info
-				
+
 				setPDFText(acroForm.getField(testSheet.getExam().getFacilityName()), course.getFacility().getName(),
 						instructor_pref_size);
 				acroForm.getField(testSheet.getExam().getFacilityAreaCode())
 						.setValue(course.getFacility().getAreaCode());
-				
+
 				setPDFText(acroForm.getField(testSheet.getExam().getFacilityPhone()),
 						course.getFacility().getFinalPhone(), instructor_pref_size);
 
@@ -359,8 +374,9 @@ public class CourseFactory {
 				} // end exam if statement
 
 				// award info
-				acroForm.getField(testSheet.getAward().getField()).setValue(testSheet.getAward().getAwardIssued());
-
+				if(testSheet.getAward() != null){
+					acroForm.getField(testSheet.getAward().getField()).setValue(testSheet.getAward().getAwardIssued());
+				}
 				// host info
 				if (course.getFacility().getHost().getExamFees()) {
 					acroForm.getField(testSheet.getHost().getExamFeesField())
@@ -440,7 +456,8 @@ public class CourseFactory {
 		float width = rectangle.getWidth();
 
 		int numCharacters = value.length();
-		//System.out.println(field.getFullyQualifiedName() + " width / length: " + width / numCharacters);
+		// System.out.println(field.getFullyQualifiedName() + " width / length:
+		// " + width / numCharacters);
 		if (width / numCharacters < 5) {
 			return "6";
 		} else if (width / numCharacters >= 5 && width / numCharacters < 6) {
@@ -467,6 +484,71 @@ public class CourseFactory {
 	public static void importCourse() {
 		Model.getInstance().getCourse().setFilePath(null);
 		Model.getInstance().save();
-		
+
+	}
+
+	public static void exportInfo(boolean exportCourse, boolean exportTestSheets, String directoryPath,
+			ThreadCompleteListener onFinish) {
+
+		NotifyingThread thread = new NotifyingThread() {
+
+			@Override
+			public void doRun() {
+				if (exportCourse) {
+					JSONObject course = Model.getInstance().getCourse().toJSON();
+					File file = new File(directoryPath + System.getProperty("file.separator")
+							+ Model.getInstance().getCourseName() + ".json");
+					FileWriter writer;
+					try {
+						Course c = new Course(course);
+						c.setFilePath(file.getAbsolutePath());
+						writer = new FileWriter(file, false);
+						writer.write(c.toJSON().toString(4));
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				}
+				if (exportTestSheets) {
+					try {
+						List<PDDocument> docs = CourseFactory.generateTestSheets(Model.getInstance().getCourse());
+						int i = 1;
+						for (PDDocument doc : docs) {
+							String dir = directoryPath + System.getProperty("file.separator")
+									+ Model.getInstance().getCourseName() + " Testsheet " + (i++) + ".pdf";
+							File file = new File(dir);
+							if (file.exists()) {
+								final String name = Model.getInstance().getCourseName() + " Testsheet " + (i - 1);
+								Platform.runLater(() -> {
+									Alert alert = new Alert(AlertType.CONFIRMATION);
+									alert.setTitle("Confirm Replacing a File.");
+									alert.setContentText("A file with the name \"" + name
+											+ "\" already exists. Would you like to replace the existing file?");
+									Optional<ButtonType> btn = alert.showAndWait();
+									if (btn.get().equals(ButtonType.OK)) {
+										try {
+											doc.save(file);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+									}
+								});
+
+							} else {
+								doc.save(file);
+							}
+
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+		};
+		thread.addListener(onFinish);
+		thread.start();
 	}
 }

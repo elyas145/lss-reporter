@@ -63,7 +63,10 @@ public class TestSheet {
 		name = (String) obj.get("course-name");
 		instructor = new Instructor((JSONObject) obj.get("instructor"));
 		exam = new Exam((JSONObject) obj.get("exam"));
-		award = new Award((JSONObject) obj.get("award"));
+		JSONObject jsonAward = obj.optJSONObject("award");
+		if(jsonAward != null){
+			award = new Award(jsonAward);
+		}
 		host = new Host((JSONObject) obj.get("host"));
 		examiner = new Examiner((JSONObject) obj.get("examiner"));
 		JSONArray jsonStudents = obj.getJSONArray("students");
@@ -97,6 +100,8 @@ public class TestSheet {
 		String year;
 		String month;
 		String day;
+		String apartment;
+		
 		private ArrayList<Prerequisite> prerequisites;
 		private ArrayList<MustSee> mustSees;
 
@@ -110,7 +115,7 @@ public class TestSheet {
 			year = (String) obj.get("year");
 			month = (String) obj.get("month");
 			day = (String) obj.get("day");
-
+			apartment = obj.optString("apartment");
 			JSONArray pres = obj.getJSONArray("prerequisites");
 			prerequisites = new ArrayList<>();
 			for (Object object : pres) {
@@ -169,6 +174,10 @@ public class TestSheet {
 
 		public ArrayList<MustSee> getMustSees() {
 			return mustSees;
+		}
+
+		public String getApartment() {
+			return apartment;
 		}
 
 	}
@@ -533,6 +542,11 @@ public class TestSheet {
 			}
 		}
 		return "";
+	}
+
+	public boolean hasApartment() {
+		
+		return students.get(0).apartment != null;
 	}
 
 }

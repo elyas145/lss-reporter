@@ -71,6 +71,12 @@ public class ExportController extends Controller implements Initializable {
 	CheckBox chkExportCourse;
 	@FXML
 	CheckBox chkExportTestSheets;
+	@FXML
+	ProgressIndicator prgsExport;
+	@FXML
+	Label lblExport;
+	@FXML
+	HBox hbExport;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -109,6 +115,7 @@ public class ExportController extends Controller implements Initializable {
 			hbSend.setVisible(true);
 			lblSend.setText("Sending ...");
 			((Button) event.getSource()).setDisable(true);
+			prgsSend.setProgress(-1);
 			Model.getInstance().sendInfo(sendCourse, sendTestSheet, name, email, (thread) -> {
 				Platform.runLater(() -> {
 					prgsSend.setProgress(1);
@@ -205,70 +212,30 @@ public class ExportController extends Controller implements Initializable {
 		}
 
 		String directoryPath = txtDirectory.getText().trim();
-
 		if (chkExportCourse.isSelected()) {
-			JSONObject course = Model.getInstance().getCourse().toJSON();
-			File file = new File(
-					directoryPath + System.getProperty("file.separator") + Model.getInstance().getCourseName()+".json");
+			File file = new File(directoryPath + System.getProperty("file.separator")
+					+ Model.getInstance().getCourseName() + ".json");
 			if (file.exists()) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Confirm Replacing a File.");
 				alert.setContentText("A file with the name \"" + Model.getInstance().getCourseName()
 						+ "\" already exists. Would you like to replace the existing file?");
 				Optional<ButtonType> btn = alert.showAndWait();
-				if (btn.get().equals(ButtonType.OK)) {
-					Course c = new Course(course);
-					c.setFilePath(file.getAbsolutePath());
-					FileWriter writer;
-					try {
-						writer = new FileWriter(file, false);
-						writer.write(c.toJSON().toString(4));
-						writer.flush();
-						writer.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}else{
-				FileWriter writer;
-				try {
-					Course c = new Course(course);
-					c.setFilePath(file.getAbsolutePath());
-					writer = new FileWriter(file, false);
-					writer.write(c.toJSON().toString(4));
-					writer.flush();
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (!btn.get().equals(ButtonType.OK)) {
+					return;
 				}
 			}
 		}
-		if (chkExportTestSheets.isSelected()) {
-			try {
-				List<PDDocument> docs = CourseFactory.generateTestSheets(Model.getInstance().getCourse());
-				int i = 1;
-				for (PDDocument doc : docs) {
-					String dir = directoryPath + System.getProperty("file.separator") + Model.getInstance().getCourseName()
-							+ " Testsheet " + (i++)+".pdf";
-					File file = new File(dir);
-					if(file.exists()){
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Confirm Replacing a File.");
-						alert.setContentText("A file with the name \"" + Model.getInstance().getCourseName() + " Testsheet " + (i-1)
-								+ "\" already exists. Would you like to replace the existing file?");
-						Optional<ButtonType> btn = alert.showAndWait();
-						if (btn.get().equals(ButtonType.OK)) {
-							doc.save(file);
-						}
-					}else{
-						doc.save(file);
-					}
-					
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		hbExport.setVisible(true);
+		prgsExport.setProgress(-1);
+		CourseFactory.exportInfo(chkExportCourse.isSelected(), chkExportTestSheets.isSelected(), directoryPath,
+				(Thread) -> {
+					Platform.runLater(() -> {
+						prgsExport.setProgress(1);
+						lblExport.setText("Successfully exported the file(s)");
+						((Button) event.getSource()).setDisable(false);
+					});
+				});
 
-		}
 	}
 }
