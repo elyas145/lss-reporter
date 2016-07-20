@@ -284,6 +284,7 @@ public class Qualification {
 		}
 	}
 
+
 	private SimpleStringProperty name;
 	private ArrayList<Employee> instructors;
 	private ArrayList<Employee> examiners;
@@ -292,5 +293,6 @@ public class Qualification {
 	private TestSheet testSheet;
 	private String pdfPath;
 	private ChangeHandler changeHandler;
+	
 
 }

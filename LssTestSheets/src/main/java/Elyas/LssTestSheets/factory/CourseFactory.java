@@ -12,12 +12,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Queue;
 import java.util.function.Consumer;
 
@@ -26,6 +28,7 @@ import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSString;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDResources;
@@ -50,6 +53,7 @@ import Elyas.LssTestSheets.model.Qualification;
 import Elyas.LssTestSheets.model.TestSheet;
 import Elyas.LssTestSheets.model.ThreadCompleteListener;
 import Elyas.LssTestSheets.model.TestSheet.Student;
+import Elyas.LssTestSheets.model.TestSheetProperties;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -224,9 +228,10 @@ public class CourseFactory {
 	 * @param course
 	 *            the course to generate test sheets for. the testsheet should
 	 *            be set inside the course.
+	 * @param properties
 	 * @throws IOException
 	 */
-	public static List<PDDocument> generateTestSheets(Course course) throws IOException {
+	public static List<PDDocument> generateTestSheets(Course course, Properties properties) throws IOException {
 
 		final int instructor_pref_size = 12;
 		final int pre_pref_size = 8;
@@ -237,8 +242,16 @@ public class CourseFactory {
 		for (Qualification qualification : course.getQualifications()) {
 			TestSheet testSheet = qualification.getTestSheet();
 			int number_of_testsheets = 1;
-			// figure out how many copies of the pdf we need.
 
+			// total pass and fail.
+			int totalPass = 0;
+			int totalFail = 0;
+			if (properties.getProperty(TestSheetProperties.TOTAL_PASS_FAIL.name()).equals(true + "")) {
+				totalPass = course.getTotalPass(qualification);
+				totalFail = course.getTotalFail(qualification);
+
+			}
+			// figure out how many copies of the pdf we need.
 			while (course.getClientsCount() > (testSheet.getStudentCapacity() * number_of_testsheets)) {
 				number_of_testsheets++;
 			}
@@ -250,15 +263,56 @@ public class CourseFactory {
 			} catch (URISyntaxException e) {
 				file = new File(url.getPath());
 			}
-
+			int pageNumber = 1;
 			for (int i = 0; i < number_of_testsheets; i++) {
 				PDDocument pdf = PDDocument.load(file);
 				PDDocumentCatalog docCatalog = pdf.getDocumentCatalog();
 				PDAcroForm acroForm = docCatalog.getAcroForm();
-				PDResources res = acroForm.getDefaultResources();
+				acroForm.getDefaultResources();
+
 				// barcodes
-				acroForm.getField(testSheet.barcodeOneField()).setValue(course.getBarcode1());
-				acroForm.getField(testSheet.barcodeTwoField()).setValue(course.getBarcode2());
+				if (properties.getProperty(TestSheetProperties.INCLUDE_BARCODES.name()).equals(true + "")) {
+					acroForm.getField(testSheet.barcodeOneField()).setValue(course.getBarcode1());
+					acroForm.getField(testSheet.barcodeTwoField()).setValue(course.getBarcode2());
+				}
+				// page number
+				if (properties.getProperty(TestSheetProperties.INCLUDE_PAGE_NUMBERS.name()).equals(true + "")) {
+					for (String page : testSheet.getPageNumbers()) {
+						acroForm.getField(page).setValue(pageNumber + "");
+						pageNumber++;
+					}
+					acroForm.getField(testSheet.getPageTotal())
+							.setValue((number_of_testsheets * testSheet.getNumberOfPages()) + "");
+				}
+				// double sided
+				if (properties.getProperty(TestSheetProperties.DOUBLE_SIDED.name()).equals(true + "")) {
+					// if even number of pages, all double sided. if odd, last
+					// one is not double sided.
+					int pages = number_of_testsheets * testSheet.getNumberOfPages();
+					if (pages % 2 == 0) { // even
+						for (String page : testSheet.getDoubleSided()) {
+							acroForm.getField(page).setValue("Yes");
+						}
+					} else { // odd
+						int currentPages = (i + 1) * testSheet.getNumberOfPages();
+						if (currentPages == pages) { // last document.
+							for (int j = 0; j < testSheet.getNumberOfPages(); j++) {
+								if (j < testSheet.getNumberOfPages() - 1) {
+									acroForm.getField(testSheet.getDoubleSided().get(j)).setValue("Yes");
+								}
+							}
+						} else {
+							for (String page : testSheet.getDoubleSided()) {
+								acroForm.getField(page).setValue("Yes");
+							}
+						}
+					}
+				}
+				// total pass and fail.
+				if (properties.getProperty(TestSheetProperties.TOTAL_PASS_FAIL.name()).equals(true + "")) {
+					acroForm.getField(testSheet.getTotalFail()).setValue(totalFail + "");
+					acroForm.getField(testSheet.getTotalPass()).setValue(totalPass + "");
+				}
 
 				// clients info.
 				Iterator<Student> iterator = testSheet.getStudentIterator();
@@ -270,11 +324,13 @@ public class CourseFactory {
 					// student.getName());
 					Client client = clients.poll();
 					setPDFText(acroForm.getField(student.getName()), client.getName(), instructor_pref_size);
-					if(testSheet.hasApartment()){
+					if (testSheet.hasApartment()) {
 						setPDFText(acroForm.getField(student.getAddress()), client.getAddress(), instructor_pref_size);
-						setPDFText(acroForm.getField(student.getApartment()), client.getApartment(), instructor_pref_size);
-					}else{
-						setPDFText(acroForm.getField(student.getAddress()), client.getFinalAddress(), instructor_pref_size);
+						setPDFText(acroForm.getField(student.getApartment()), client.getApartment(),
+								instructor_pref_size);
+					} else {
+						setPDFText(acroForm.getField(student.getAddress()), client.getFinalAddress(),
+								instructor_pref_size);
 					}
 					setPDFText(acroForm.getField(student.getCity()), client.getCity(), instructor_pref_size);
 					setPDFText(acroForm.getField(student.getPostalCode()), client.getPostalCode(),
@@ -297,9 +353,31 @@ public class CourseFactory {
 							}
 
 							if (see.isCompleted()) {
-								acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
+								if (see.getName().toLowerCase().equals("result") && properties
+										.getProperty(TestSheetProperties.PASSED_RESULT.name()).equals(true + "")) {
+									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+								}
+								if (!see.getName().toLowerCase().equals("result")) {
+									acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
+								}
 							} else {
-								acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+								// mark incomplete instructor items.
+								if (see.isInstructorEvaluated()
+										&& properties.getProperty(TestSheetProperties.INCOMPLETE_INST_ITEMS.name())
+												.equals(true + "")) {
+									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+								}
+								// mark incomplete examiner items.
+								if (see.isExaminerEvaluated()
+										&& properties.getProperty(TestSheetProperties.INCOMPLETE_EXAM_ITEMS.name())
+												.equals(true + "")) {
+									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+								}
+								// mark failed results.
+								if (see.getName().toLowerCase().equals("result") && properties
+										.getProperty(TestSheetProperties.FAILED_RESULT.name()).equals(true + "")) {
+									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+								}
 							}
 						} catch (IllegalArgumentException e) {
 							System.out.println("---------------- must see set error -----------------");
@@ -374,7 +452,7 @@ public class CourseFactory {
 				} // end exam if statement
 
 				// award info
-				if(testSheet.getAward() != null){
+				if (testSheet.getAward() != null) {
 					acroForm.getField(testSheet.getAward().getField()).setValue(testSheet.getAward().getAwardIssued());
 				}
 				// host info
@@ -412,10 +490,27 @@ public class CourseFactory {
 						.setValue(course.getQualification(qualification.getName()).getExaminersAreaCode());
 				setPDFText(acroForm.getField(testSheet.getExaminer().getPhone()),
 						course.getQualification(qualification.getName()).getExaminersPhones(), instructor_pref_size);
-				acroForm.flatten();
+
+				if (properties.getProperty(TestSheetProperties.FLATTEN.name(), true + "").equals(true + "")
+						|| properties.getProperty(TestSheetProperties.GENERATE_SINGLE_FILE.name(), true + "")
+								.equals(true + "")) {
+					acroForm.flatten();
+				}
+
 				documents.add(pdf);
 			}
 
+		}
+		//merge documents into one document.
+		if (properties.getProperty(TestSheetProperties.GENERATE_SINGLE_FILE.name(), true + "").equals(true + "")) {
+			PDDocument destination = documents.get(0);
+			PDFMergerUtility utility = new PDFMergerUtility();
+			for (PDDocument pdDocument : documents) {
+				if (pdDocument != destination) {
+					utility.appendDocument(destination, pdDocument);
+				}
+			}
+			return Arrays.asList(destination);
 		}
 		return documents;
 	}
@@ -487,8 +582,8 @@ public class CourseFactory {
 
 	}
 
-	public static void exportInfo(boolean exportCourse, boolean exportTestSheets, String directoryPath,
-			ThreadCompleteListener onFinish) {
+	public static void exportInfo(boolean exportCourse, boolean exportTestSheets, Properties properties,
+			String directoryPath, ThreadCompleteListener onFinish) {
 
 		NotifyingThread thread = new NotifyingThread() {
 
@@ -513,7 +608,8 @@ public class CourseFactory {
 				}
 				if (exportTestSheets) {
 					try {
-						List<PDDocument> docs = CourseFactory.generateTestSheets(Model.getInstance().getCourse());
+						List<PDDocument> docs = CourseFactory.generateTestSheets(Model.getInstance().getCourse(),
+								properties);
 						int i = 1;
 						for (PDDocument doc : docs) {
 							String dir = directoryPath + System.getProperty("file.separator")

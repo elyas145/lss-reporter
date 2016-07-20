@@ -426,6 +426,29 @@ public class Course {
 		}
 		return names;
 	}
+	public int getTotalPass(Qualification qualification) {
+		int i = 0;
+		for(Client client : clients){
+			MustSee see = client.getMustSee(qualification.getName(), "result");
+			see.evaluate(client, qualification.getName());
+			if(see.isCompleted()){
+				i++;
+			}
+		}
+		return i;
+	}
+	public int getTotalFail(Qualification qualification) {
+		int i = 0;
+		for(Client client : clients){
+			MustSee see = client.getMustSee(qualification.getName(), "result");
+			see.evaluate(client, qualification.getName());
+			if(!see.isCompleted()){
+				i++;
+			}
+		}
+		return i;
+	}
+	
 	private SimpleStringProperty name;
 
 	private ArrayList<Client> clients;
@@ -441,6 +464,10 @@ public class Course {
 	private Report report;
 
 	private int clientID;
+
+	
+
+	
 
 	
 

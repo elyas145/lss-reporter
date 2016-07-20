@@ -549,4 +549,28 @@ public class TestSheet {
 		return students.get(0).apartment != null;
 	}
 
+	public List<String> getPageNumbers() {
+		return this.pageNumbers;
+	}
+
+	public String getPageTotal() {
+		return this.pageTotal;
+	}
+
+	public int getNumberOfPages() {
+		return pageNumbers.size();
+	}
+
+	public List<String> getDoubleSided() {
+		return this.doubleSided;
+	}
+
+	public String getTotalFail() {
+		return this.totalFail;
+	}
+
+	public String getTotalPass() {
+		return this.totalPass;
+	}
+
 }

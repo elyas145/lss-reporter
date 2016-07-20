@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.mail.MessagingException;
@@ -19,6 +20,8 @@ import org.json.JSONObject;
 import Elyas.LssTestSheets.App;
 import Elyas.LssTestSheets.Config;
 import Elyas.LssTestSheets.factory.CourseFactory;
+import Elyas.LssTestSheets.factory.ViewFactory;
+import Elyas.LssTestSheets.factory.ViewFactoryResult;
 import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Model;
 import Elyas.LssTestSheets.model.Warning;
@@ -27,6 +30,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -36,7 +40,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Hyperlink;
@@ -112,11 +118,19 @@ public class ExportController extends Controller implements Initializable {
 			return;
 		}
 		try {
+			Properties properties = null;
+			if(sendTestSheet){
+				properties = getTestSheetProperties();
+				if (properties == null) {	//canceled
+					return;
+				}
+			}
+			
 			hbSend.setVisible(true);
 			lblSend.setText("Sending ...");
 			((Button) event.getSource()).setDisable(true);
 			prgsSend.setProgress(-1);
-			Model.getInstance().sendInfo(sendCourse, sendTestSheet, name, email, (thread) -> {
+			Model.getInstance().sendInfo(sendCourse, sendTestSheet, properties, name, email, (thread) -> {
 				Platform.runLater(() -> {
 					prgsSend.setProgress(1);
 					lblSend.setText("Successfully sent the message!");
@@ -226,9 +240,16 @@ public class ExportController extends Controller implements Initializable {
 				}
 			}
 		}
+		Properties properties = null;
+		if(chkExportTestSheets.isSelected()){
+			properties = getTestSheetProperties();
+			if(properties == null){	//canceled.
+				return;
+			}
+		}
 		hbExport.setVisible(true);
 		prgsExport.setProgress(-1);
-		CourseFactory.exportInfo(chkExportCourse.isSelected(), chkExportTestSheets.isSelected(), directoryPath,
+		CourseFactory.exportInfo(chkExportCourse.isSelected(), chkExportTestSheets.isSelected(), properties, directoryPath,
 				(Thread) -> {
 					Platform.runLater(() -> {
 						prgsExport.setProgress(1);
@@ -237,5 +258,24 @@ public class ExportController extends Controller implements Initializable {
 					});
 				});
 
+	}
+	
+	private Properties getTestSheetProperties(){
+		Stage stage = new Stage(StageStyle.UNDECORATED);
+		stage.initModality(Modality.WINDOW_MODAL);
+		ViewFactoryResult result = ViewFactory.getView("/fxml/testsheet-properties.fxml");
+		TestSheetExportController controller = (TestSheetExportController) result.controller;
+		controller.setStage(stage);
+		Scene scene = new Scene(result.parent);
+		stage.setScene(scene);
+		stage.sizeToScene();
+		stage.showAndWait();
+		
+		if(controller.wasCanceled()){
+			return null;
+		}
+		
+		Properties properties = controller.getChosenProperties();
+		return properties;
 	}
 }

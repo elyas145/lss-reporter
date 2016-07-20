@@ -267,7 +267,7 @@ public class Model {
 	 * @param email
 	 *            of the receiver, receiving the message.
 	 */
-	public void sendInfo(boolean sendCourse, boolean sendTestSheet, String name, String email,
+	public void sendInfo(boolean sendCourse, boolean sendTestSheet, Properties properties, String name, String email,
 			ThreadCompleteListener onFinish) throws AddressException, MessagingException, UnsupportedEncodingException {
 
 		NotifyingThread thread = new NotifyingThread() {
@@ -323,7 +323,7 @@ public class Model {
 						multipart.addBodyPart(attachmentPart);
 					}
 					if (sendTestSheet) {
-						List<PDDocument> documents = CourseFactory.generateTestSheets(course);
+						List<PDDocument> documents = CourseFactory.generateTestSheets(course, properties);
 						int i = 1;
 						PDStream pdStream;
 						for (PDDocument document : documents) {
