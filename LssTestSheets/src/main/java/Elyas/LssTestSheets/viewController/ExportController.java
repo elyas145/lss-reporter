@@ -247,6 +247,7 @@ public class ExportController extends Controller implements Initializable {
 				return;
 			}
 		}
+		lblExport.setText("Exporting File(s) ..."); 
 		hbExport.setVisible(true);
 		prgsExport.setProgress(-1);
 		CourseFactory.exportInfo(chkExportCourse.isSelected(), chkExportTestSheets.isSelected(), properties, directoryPath,

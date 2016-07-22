@@ -12,19 +12,19 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 public class Client {
-	String name;
-	String address;
-	String city;
-	String postalCode;
-	String email;
-	String phone;
-	String year;
-	String month;
-	String day;
+	String name = "";
+	String address = "";
+	String city = "";
+	String postalCode = "";
+	String email = "";
+	String phone = "";
+	String year = "";
+	String month = "";
+	String day = "";
 	Map<String, List<Prerequisite>> prerequisites;
 	Map<String, List<MustSee>> mustSees;
-	private String id;
-	private String apartment;
+	private String id = "";
+	private String apartment = "";
 
 	public Client() {
 		prerequisites = new HashMap<>();
@@ -47,14 +47,14 @@ public class Client {
 		for (Qualification qualification : qualifications) {
 			JSONObject jsonQual = obj.getJSONObject(qualification.getName());
 			JSONArray jsonPres = jsonQual.optJSONArray("prerequisites");
-			
+
 			prerequisites.put(qualification.getName(), qualification.getPrerequisites());
-			if(jsonPres != null){
-				for(int i = 0; i < jsonPres.length(); i++){
+			if (jsonPres != null) {
+				for (int i = 0; i < jsonPres.length(); i++) {
 					JSONObject pre = jsonPres.getJSONObject(i);
 					String name = pre.getString("name");
-					for(Prerequisite prerequisite : prerequisites.get(qualification.getName())){
-						if(prerequisite.getName().equals(name)){
+					for (Prerequisite prerequisite : prerequisites.get(qualification.getName())) {
+						if (prerequisite.getName().equals(name)) {
 							prerequisite.setDateEarned(pre.optString("dateEarned"));
 							prerequisite.setMet(pre.optBoolean("met"));
 							prerequisite.setLocation(pre.optString("location"));
@@ -63,23 +63,22 @@ public class Client {
 					}
 				}
 			}
-			
+
 			mustSees.put(qualification.getName(), qualification.getMustSees());
 			JSONArray jsonSees = jsonQual.getJSONArray("must-sees");
-			if(jsonSees != null){
-				for(int i = 0; i < jsonSees.length(); i++){
+			if (jsonSees != null) {
+				for (int i = 0; i < jsonSees.length(); i++) {
 					JSONObject see = jsonSees.getJSONObject(i);
 					String item = see.getString("item");
 					for (MustSee mustSee : mustSees.get(qualification.getName())) {
-						if(mustSee.getItem().equals(item)){
+						if (mustSee.getItem().equals(item)) {
 							mustSee.setCompleted(see.optBoolean("completed"));
 						}
 					}
 				}
-			}			
+			}
 		}
-		
-		
+
 	}
 
 	public List<MustSee> getMustSees(String course) {
@@ -102,9 +101,10 @@ public class Client {
 	public String getAddress() {
 		return address;
 	}
-	public String getFinalAddress(){
+
+	public String getFinalAddress() {
 		String finalAddress = address;
-		if(apartment != null && !apartment.trim().equals("")){
+		if (apartment != null && !apartment.trim().equals("")) {
 			finalAddress += " apt. " + apartment;
 		}
 		return finalAddress;
@@ -181,6 +181,7 @@ public class Client {
 	public String getID() {
 		return this.id;
 	}
+
 	public String getApartment() {
 		return this.apartment;
 	}
@@ -355,6 +356,17 @@ public class Client {
 
 	public void setApartment(String text) {
 		this.apartment = text;
-		
+
+	}
+
+	public boolean equals(Object other) {
+		if (other instanceof Client) {
+			Client client = (Client) other;
+			return client.address.equals(address) && client.apartment.equals(apartment) && client.city.equals(city)
+					&& client.day.equals(day) && client.email.equals(email) && client.id.equals(id)
+					&& client.month.equals(month) && client.name.equals(name) && client.phone.equals(phone)
+					&& client.postalCode.equals(postalCode) && client.year.equals(year);
+		}
+		return false;
 	}
 }

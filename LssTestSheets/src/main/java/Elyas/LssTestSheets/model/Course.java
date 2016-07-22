@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class Course {
 
 	public Course() {
-		name = new SimpleStringProperty();
+		name = new SimpleStringProperty("");
 		clients = new ArrayList<>();
 		qualifications = new ArrayList<>();
 		clientCount = 0L;
@@ -54,30 +54,30 @@ public class Course {
 		name = new SimpleStringProperty(n);
 	}
 
-	public Course(JSONObject obj) throws JSONException{
+	public Course(JSONObject obj) throws JSONException {
 		filePath = obj.getString("path");
 		name = new SimpleStringProperty(obj.getString("name"));
 		barcode1 = obj.optString("barcode1");
 		barcode2 = obj.optString("barcode2");
 		clientCount = obj.optLong("client-count");
-		
-		qualifications = new ArrayList<>();		
+
+		qualifications = new ArrayList<>();
 		JSONArray jsonQuals = obj.getJSONArray("quals");
 		for (int i = 0; i < jsonQuals.length(); i++) {
 			JSONObject jsonQual = jsonQuals.getJSONObject(i);
 			qualifications.add(new Qualification(jsonQual));
 		}
-		
+
 		JSONArray jsonClients = obj.optJSONArray("clients");
 		clients = new ArrayList<>();
-		if(jsonClients != null){
-						
+		if (jsonClients != null) {
+
 			for (int i = 0; i < jsonClients.length(); i++) {
 				JSONObject jsonClient = jsonClients.getJSONObject(i);
 				clients.add(new Client(jsonClient, qualifications));
 			}
 		}
-		
+
 		facility = new Facility(obj.optJSONObject("facility"));
 		report = new Report(obj.optJSONObject("report"));
 	}
@@ -96,8 +96,10 @@ public class Course {
 	}
 
 	public void setName(String name) {
-		this.name.set(name);
-		changeHandler.onChange();
+		if (!this.name.get().equals(name)) {
+			this.name.set(name);
+			changeHandler.onChange();
+		}
 	}
 
 	public String toString() {
@@ -106,19 +108,25 @@ public class Course {
 	}
 
 	public void setFacility(Facility f) {
-		this.facility = f;
-		changeHandler.onChange();
+		if (!this.facility.equals(f)) {
+			this.facility = f;
+			changeHandler.onChange();
+		}
 
 	}
 
 	public void setBarcodeOne(String text) {
-		this.barcode1 = text;
-		changeHandler.onChange();
+		if (this.barcode1 == null || !this.barcode1.equals(text)) {
+			this.barcode1 = text;
+			changeHandler.onChange();
+		}
 	}
 
 	public void setBarcodeTwo(String text) {
-		this.barcode2 = text;
-		changeHandler.onChange();
+		if (this.barcode2 == null || !this.barcode2.equals(text)) {
+			this.barcode2 = text;
+			changeHandler.onChange();
+		}
 	}
 
 	public ArrayList<Client> getClients() {
@@ -201,8 +209,10 @@ public class Course {
 			return;
 		for (Client client : clients) {
 			if (client.getID().equals(c.getID())) {
-				client.update(c);
-				changeHandler.onChange();
+				if (!client.equals(c)) {
+					client.update(c);
+					changeHandler.onChange();
+				}
 			}
 		}
 
@@ -338,7 +348,7 @@ public class Course {
 		String names = "";
 		int i = 0;
 		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
-		if(employees == null || employees.isEmpty())
+		if (employees == null || employees.isEmpty())
 			return "";
 		for (Employee employee : employees) {
 			if (i == employees.size() - 1) {
@@ -355,7 +365,7 @@ public class Course {
 		String names = "";
 		int i = 0;
 		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getExaminers();
-		if(employees == null || employees.isEmpty())
+		if (employees == null || employees.isEmpty())
 			return "";
 		for (Employee employee : employees) {
 			if (i == employees.size() - 1) {
@@ -373,7 +383,7 @@ public class Course {
 		String names = "";
 		int i = 0;
 		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
-		if(employees == null || employees.isEmpty())
+		if (employees == null || employees.isEmpty())
 			return "";
 		for (Employee employee : employees) {
 			if (i == employees.size() - 1) {
@@ -385,14 +395,14 @@ public class Course {
 		}
 		return names;
 	}
-	
+
 	public String getInstructorsEmails(Qualification qual) {
 		String names = "";
 		int i = 0;
 		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
-		if(employees == null || employees.isEmpty())
+		if (employees == null || employees.isEmpty())
 			return "";
-		
+
 		for (Employee employee : employees) {
 			if (i == employees.size() - 1) {
 				names += employee.getEmail();
@@ -403,19 +413,21 @@ public class Course {
 		}
 		return names;
 	}
+
 	public String getInstructorsAreaCode(Qualification qual) {
 		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
-		if(employees == null || employees.isEmpty())
+		if (employees == null || employees.isEmpty())
 			return "";
 		return employees.get(0).getAreaCode();
 	}
+
 	public String getInstructorsPhone(Qualification qual) {
 		String names = "";
 		int i = 0;
 		List<Employee> employees = qualifications.get(qualifications.indexOf(qual)).getInstructors();
-		if(employees == null || employees.isEmpty())
+		if (employees == null || employees.isEmpty())
 			return "";
-		
+
 		for (Employee employee : employees) {
 			if (i == employees.size() - 1) {
 				names += employee.getFinalPhone();
@@ -426,29 +438,31 @@ public class Course {
 		}
 		return names;
 	}
+
 	public int getTotalPass(Qualification qualification) {
 		int i = 0;
-		for(Client client : clients){
+		for (Client client : clients) {
 			MustSee see = client.getMustSee(qualification.getName(), "result");
 			see.evaluate(client, qualification.getName());
-			if(see.isCompleted()){
+			if (see.isCompleted()) {
 				i++;
 			}
 		}
 		return i;
 	}
+
 	public int getTotalFail(Qualification qualification) {
 		int i = 0;
-		for(Client client : clients){
+		for (Client client : clients) {
 			MustSee see = client.getMustSee(qualification.getName(), "result");
 			see.evaluate(client, qualification.getName());
-			if(!see.isCompleted()){
+			if (!see.isCompleted()) {
 				i++;
 			}
 		}
 		return i;
 	}
-	
+
 	private SimpleStringProperty name;
 
 	private ArrayList<Client> clients;
@@ -464,15 +478,5 @@ public class Course {
 	private Report report;
 
 	private int clientID;
-
-	
-
-	
-
-	
-
-	
-
-	
 
 }

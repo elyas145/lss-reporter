@@ -546,7 +546,7 @@ public class TestSheet {
 
 	public boolean hasApartment() {
 		
-		return students.get(0).apartment != null;
+		return !students.get(0).apartment.equals("");
 	}
 
 	public List<String> getPageNumbers() {

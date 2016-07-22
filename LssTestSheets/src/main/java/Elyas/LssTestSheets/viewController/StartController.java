@@ -73,6 +73,7 @@ public class StartController extends Controller implements Initializable {
 		File file = fileChooser.showOpenDialog(App.getMainStage());		
 		Course course = CourseFactory.getFullCourse(file);
 		Model.getInstance().setCourse(course);
+		
 		finishHandler.onFinish(ViewState.COURSE_IMPORT);
 
 	}

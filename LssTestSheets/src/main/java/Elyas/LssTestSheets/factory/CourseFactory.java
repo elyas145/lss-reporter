@@ -237,9 +237,9 @@ public class CourseFactory {
 		final int pre_pref_size = 8;
 
 		List<PDDocument> documents = new ArrayList<>();
-		Queue<Client> clients = new LinkedList<>(course.getClients());
-
+		Queue<Client> clients;
 		for (Qualification qualification : course.getQualifications()) {
+			clients = new LinkedList<>(course.getClients());
 			TestSheet testSheet = qualification.getTestSheet();
 			int number_of_testsheets = 1;
 
@@ -255,6 +255,10 @@ public class CourseFactory {
 			while (course.getClientsCount() > (testSheet.getStudentCapacity() * number_of_testsheets)) {
 				number_of_testsheets++;
 			}
+			// students per sheet, assuming each sheet fits the same amount of
+			// students.
+			int studentsPerSheet = testSheet.getStudentCapacity() / testSheet.getNumberOfPages();
+			int numberOfPages = (int) Math.ceil((double) clients.size() / studentsPerSheet);
 
 			URL url = CourseFactory.class.getResource(qualification.getPdfPath());
 			File file;
@@ -263,7 +267,7 @@ public class CourseFactory {
 			} catch (URISyntaxException e) {
 				file = new File(url.getPath());
 			}
-			int pageNumber = 1;
+			int pageNumber = 0;
 			for (int i = 0; i < number_of_testsheets; i++) {
 				PDDocument pdf = PDDocument.load(file);
 				PDDocumentCatalog docCatalog = pdf.getDocumentCatalog();
@@ -278,11 +282,13 @@ public class CourseFactory {
 				// page number
 				if (properties.getProperty(TestSheetProperties.INCLUDE_PAGE_NUMBERS.name()).equals(true + "")) {
 					for (String page : testSheet.getPageNumbers()) {
+						if (pageNumber < numberOfPages) {
+							pageNumber++;
+						}
 						acroForm.getField(page).setValue(pageNumber + "");
-						pageNumber++;
+						
 					}
-					acroForm.getField(testSheet.getPageTotal())
-							.setValue((number_of_testsheets * testSheet.getNumberOfPages()) + "");
+					acroForm.getField(testSheet.getPageTotal()).setValue(numberOfPages + "");
 				}
 				// double sided
 				if (properties.getProperty(TestSheetProperties.DOUBLE_SIDED.name()).equals(true + "")) {
@@ -355,7 +361,7 @@ public class CourseFactory {
 							if (see.isCompleted()) {
 								if (see.getName().toLowerCase().equals("result") && properties
 										.getProperty(TestSheetProperties.PASSED_RESULT.name()).equals(true + "")) {
-									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+									acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
 								}
 								if (!see.getName().toLowerCase().equals("result")) {
 									acroForm.getField(template.getField()).setValue(testSheet.getPassValue(template));
@@ -444,9 +450,9 @@ public class CourseFactory {
 					int month = course.getQualification(qualification.getName()).getExamDate().getMonthValue();
 					String finalMonth = "";
 					if (month < 10) {
-						finalMonth = "0" + day;
+						finalMonth = "0" + month;
 					} else {
-						finalMonth = "" + day;
+						finalMonth = "" + month;
 					}
 					acroForm.getField(testSheet.getExam().getMonth()).setValue(finalMonth);
 				} // end exam if statement
@@ -496,18 +502,27 @@ public class CourseFactory {
 								.equals(true + "")) {
 					acroForm.flatten();
 				}
+				// do we need to remove the last page.
+				if (pageNumber == numberOfPages) { // last page of
+														// testsheets
+					int maxPages = testSheet.getNumberOfPages() * number_of_testsheets;
+					if (numberOfPages < maxPages) { // we need to remove a page.
+						pdf.removePage(pdf.getPages().get(pdf.getPages().getCount() - 1));
+					}
+				}
 
 				documents.add(pdf);
 			}
 
 		}
-		//merge documents into one document.
+		// merge documents into one document.
 		if (properties.getProperty(TestSheetProperties.GENERATE_SINGLE_FILE.name(), true + "").equals(true + "")) {
 			PDDocument destination = documents.get(0);
 			PDFMergerUtility utility = new PDFMergerUtility();
 			for (PDDocument pdDocument : documents) {
 				if (pdDocument != destination) {
 					utility.appendDocument(destination, pdDocument);
+					pdDocument.close();
 				}
 			}
 			return Arrays.asList(destination);
@@ -634,6 +649,7 @@ public class CourseFactory {
 
 							} else {
 								doc.save(file);
+								doc.close();
 							}
 
 						}
