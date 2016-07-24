@@ -1,63 +1,72 @@
 package Elyas.LssTestSheets;
 
-import java.util.Date;
-import java.util.Properties;
+import java.time.LocalDate;
+import java.util.List;
 
-import javax.activation.CommandMap;
-import javax.activation.MailcapCommandMap;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import Elyas.LssTestSheets.factory.CourseFactory;
+import Elyas.LssTestSheets.factory.FacilityFactory;
+import Elyas.LssTestSheets.factory.PersonFactory;
+import Elyas.LssTestSheets.model.Client;
+import Elyas.LssTestSheets.model.Course;
+import Elyas.LssTestSheets.model.Model;
+import Elyas.LssTestSheets.model.Prerequisite;
+import Elyas.LssTestSheets.model.Prerequisite.Type;
+import Elyas.LssTestSheets.model.Qualification;
+import Elyas.LssTestSheets.model.TestSheet;
 
 public class Test {
 	public static void main(String args[]) {
-		Properties props = new Properties();
-		// props.put("mail.smtp.user", "no-reply-reporter@outlook.com");
-		props.put("mail.smtp.host", "smtp-mail.outlook.com");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "587");
-		props.put("mail.smtp.starttls.enable", "true");
-
-		// props.put("mail.smtp.debug", "true");
-		// props.put("mail.smtp.socketFactory.port", "587");
-		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		// props.put("mail.smtp.socketFactory.fallback", "false");
-
-		// SecurityManager security = System.getSecurityManager();
-		try {
-			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getDefaultInstance(props, auth);
-
-			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress("no-reply-reporter@outlook.com", "Elyas Syoufi"));
-			msg.addRecipients(Message.RecipientType.TO, InternetAddress.parse("elyas.syoufi@gmail.com"));
-			msg.setSubject("test email");
-			msg.setSentDate(new Date());
-
-
-			/*
-			 * BodyPart body = new MimeBodyPart(); body.setContent("hello!",
-			 * "text/html");
-			 * 
-			 * Multipart multipart = new MimeMultipart();
-			 * multipart.addBodyPart(body); msg.setContent(multipart);
-			 */
-			msg.setText("helloooooo");
-			msg.saveChanges();
-			Transport.send(msg);
-			System.out.println("done.");
-		} catch (Exception mex) {
-			mex.printStackTrace();
+		Course course = new Course();
+		List<Qualification> qualifications = CourseFactory.getSupportedQualifications();
+		TestSheet testSheet = null;
+		Qualification qual = null;
+		for (Qualification qualification : qualifications) {
+			if (qualification.getName().equals("Bronze Medallion")) {
+				course.addQualification(qualification);
+				qualification.addExaminer(PersonFactory.getKnownEmployees().get(0));
+				qualification.addInstructor(PersonFactory.getKnownEmployees().get(1));
+				qualification.setExamDate(LocalDate.parse("2007-12-13"));
+				qual = qualification;
+				qual.setTestSheetPath("C:\\Users\\Elyas\\Desktop\\bronze-med.pdf", "/template/bronze-med.json");
+				testSheet = qual.getTestSheet();
+			}
 		}
-	}
 
-	private static class SMTPAuthenticator extends javax.mail.Authenticator {
-		public PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication("no-reply-reporter@outlook.com", "WalterBaker2016");
+		course.setFacility(FacilityFactory.getKnownFacilities().get(0));
+		course.setBarcodeOne("barcode1");
+		course.setBarcodeTwo("barcode2");
+		for (int i = 0; i < 16; i++) {
+			Client client = new Client();
+			client.setAddress("address " + i);
+			client.setApartment("apt " + i);
+			client.setCity("city " + i);
+			client.setDay("d" + i);
+			client.setEmail("email " + i);
+			client.setMustSees(qual.getName(), testSheet.getClientMustSees());
+			client.setID(i + "");
+			client.setMonth("m" + i);
+			client.setName("name " + i);
+			client.setPhone("phone " + i);
+			client.setPostalCode("postal " + i);
+			course.addClient(client);
+
+			for (Prerequisite prerequisite : client.getPrerequisites(qual.getName())) {
+				if (prerequisite.getType().equals(Type.DATE)) {
+					if(i<10){
+						prerequisite.setDateEarned("2007-08-0" + i);
+					}else{
+						prerequisite.setDateEarned("2007-08-" + i);
+					}
+					prerequisite.setLocation("location " + i);
+				}
+
+			}
+			client.setYear("y" + i);
+			client.setExaminerItems(qual.getName(), true);
+			client.setInstructorItems(qual.getName(), true);
+
 		}
+		course.setName("Med");
+		CourseFactory.exportInfo(true, false, null, "C:\\Users\\Elyas\\Desktop", null, course);
 	}
 }

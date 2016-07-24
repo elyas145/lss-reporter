@@ -55,7 +55,7 @@ public class Course {
 	}
 
 	public Course(JSONObject obj) throws JSONException {
-		filePath = obj.getString("path");
+		filePath = obj.optString("path");
 		name = new SimpleStringProperty(obj.getString("name"));
 		barcode1 = obj.optString("barcode1");
 		barcode2 = obj.optString("barcode2");
@@ -108,7 +108,7 @@ public class Course {
 	}
 
 	public void setFacility(Facility f) {
-		if (!this.facility.equals(f)) {
+		if (this.facility == null || !this.facility.equals(f)) {
 			this.facility = f;
 			changeHandler.onChange();
 		}

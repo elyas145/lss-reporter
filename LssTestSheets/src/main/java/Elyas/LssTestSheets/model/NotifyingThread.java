@@ -16,7 +16,9 @@ public abstract class NotifyingThread extends Thread {
 
 	private final void notifyListeners() {
 		for (ThreadCompleteListener listener : listeners) {
-			listener.notifyOfThreadComplete(this);
+			if (listener != null) {
+				listener.notifyOfThreadComplete(this);
+			}
 		}
 	}
 

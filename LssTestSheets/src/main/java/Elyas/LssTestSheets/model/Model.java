@@ -38,6 +38,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 
 import Elyas.LssTestSheets.factory.CourseFactory;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 
 public class Model {
 	private static Model instance;
@@ -377,5 +379,9 @@ public class Model {
 	public void setExternalCourse(boolean b) {
 		externalCourse = b;
 
+	}
+
+	public void setChanged() {
+		this.isChanged = true;
 	}
 }

@@ -598,21 +598,22 @@ public class CourseFactory {
 	}
 
 	public static void exportInfo(boolean exportCourse, boolean exportTestSheets, Properties properties,
-			String directoryPath, ThreadCompleteListener onFinish) {
+			String directoryPath, ThreadCompleteListener onFinish, Course course) {
 
 		NotifyingThread thread = new NotifyingThread() {
 
 			@Override
 			public void doRun() {
 				if (exportCourse) {
-					JSONObject course = Model.getInstance().getCourse().toJSON();
+					JSONObject cor = course.toJSON();
 					File file = new File(directoryPath + System.getProperty("file.separator")
-							+ Model.getInstance().getCourseName() + ".json");
+							+ course.getName() + ".json");
 					FileWriter writer;
 					try {
-						Course c = new Course(course);
+						Course c = new Course(cor);
 						c.setFilePath(file.getAbsolutePath());
 						writer = new FileWriter(file, false);
+						
 						writer.write(c.toJSON().toString(4));
 						writer.flush();
 						writer.close();

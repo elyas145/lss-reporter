@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import javax.jws.WebParam.Mode;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
@@ -257,7 +258,7 @@ public class ExportController extends Controller implements Initializable {
 						lblExport.setText("Successfully exported the file(s)");
 						((Button) event.getSource()).setDisable(false);
 					});
-				});
+				}, Model.getInstance().getCourse());
 
 	}
 	

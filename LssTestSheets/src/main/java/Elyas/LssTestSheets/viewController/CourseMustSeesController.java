@@ -149,7 +149,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 			public void onChanged(ListChangeListener.Change<? extends MustSee> c) {
 				while (c.next()) {
 					c.getAddedSubList().get(0).setCompleted(c.wasAdded());
-					
+					Model.getInstance().setChanged();
 				}
 			}
 		});
@@ -177,6 +177,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 		if (currentClient != null) {
 			setCurrentClient(currentClient);
 		}
+		Model.getInstance().setChanged();
 	}
 
 	@FXML
@@ -192,6 +193,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 		if (currentClient != null) {
 			setCurrentClient(currentClient);
 		}
+		Model.getInstance().setChanged();
 	}
 
 	@FXML
@@ -205,6 +207,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 			}
 		}
 		setCurrentClient(currentClient);
+		Model.getInstance().setChanged();
 	}
 
 	@FXML
@@ -218,6 +221,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 			}
 		}
 		setCurrentClient(currentClient);
+		Model.getInstance().setChanged();
 	}
 
 	@Override
