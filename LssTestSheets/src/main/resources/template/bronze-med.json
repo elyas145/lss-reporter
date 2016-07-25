@@ -83,7 +83,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "109A"
+			"field": "109"
 		}, {
 			"item": "1",
 			"field": "110"
@@ -435,7 +435,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "509A"
+			"field": "509"
 		}, {
 			"item": "1",
 			"field": "510"
@@ -611,7 +611,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "709A"
+			"field": "709"
 		}, {
 			"item": "1",
 			"field": "710"
@@ -699,7 +699,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "809A"
+			"field": "809"
 		}, {
 			"item": "1",
 			"field": "810"
@@ -787,7 +787,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "909A"
+			"field": "909"
 		}, {
 			"item": "1",
 			"field": "910"
@@ -875,7 +875,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "1009A"
+			"field": "1009"
 		}, {
 			"item": "1",
 			"field": "1010"
@@ -963,7 +963,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "1109A"
+			"field": "1109"
 		}, {
 			"item": "1",
 			"field": "1110"
@@ -1051,7 +1051,7 @@
 		}],
 		"must-sees": [{
 			"item": "prereqs",
-			"field": "1209A"
+			"field": "1209"
 		}, {
 			"item": "1",
 			"field": "1210"

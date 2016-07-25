@@ -286,7 +286,7 @@ public class CourseFactory {
 							pageNumber++;
 						}
 						acroForm.getField(page).setValue(pageNumber + "");
-						
+
 					}
 					acroForm.getField(testSheet.getPageTotal()).setValue(numberOfPages + "");
 				}
@@ -355,7 +355,9 @@ public class CourseFactory {
 						try {
 
 							if (see.isAppEvaluated()) {
+
 								see.evaluate(client, qualification.getName());
+								//System.out.println(client.getName() + " " + see.getItem() + ": " + see.isCompleted());
 							}
 
 							if (see.isCompleted()) {
@@ -385,7 +387,7 @@ public class CourseFactory {
 									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
 								}
 							}
-						} catch (IllegalArgumentException e) {
+						} catch (Exception e) {
 							System.out.println("---------------- must see set error -----------------");
 							System.out.println("name: " + template.getField());
 
@@ -504,7 +506,7 @@ public class CourseFactory {
 				}
 				// do we need to remove the last page.
 				if (pageNumber == numberOfPages) { // last page of
-														// testsheets
+													// testsheets
 					int maxPages = testSheet.getNumberOfPages() * number_of_testsheets;
 					if (numberOfPages < maxPages) { // we need to remove a page.
 						pdf.removePage(pdf.getPages().get(pdf.getPages().getCount() - 1));
@@ -606,14 +608,14 @@ public class CourseFactory {
 			public void doRun() {
 				if (exportCourse) {
 					JSONObject cor = course.toJSON();
-					File file = new File(directoryPath + System.getProperty("file.separator")
-							+ course.getName() + ".json");
+					File file = new File(
+							directoryPath + System.getProperty("file.separator") + course.getName() + ".json");
 					FileWriter writer;
 					try {
 						Course c = new Course(cor);
 						c.setFilePath(file.getAbsolutePath());
 						writer = new FileWriter(file, false);
-						
+
 						writer.write(c.toJSON().toString(4));
 						writer.flush();
 						writer.close();
@@ -642,6 +644,7 @@ public class CourseFactory {
 									if (btn.get().equals(ButtonType.OK)) {
 										try {
 											doc.save(file);
+											doc.close();
 										} catch (Exception e) {
 											e.printStackTrace();
 										}

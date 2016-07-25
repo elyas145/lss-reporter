@@ -40,6 +40,12 @@ public class Prerequisite {
 	}
 
 	public boolean isMet() {
+		if (type.equals(Type.DATE)) {
+			if (dateEarned != null && !dateEarned.trim().equals("") && location != null
+					&& !location.trim().equals("")) {
+				return true;
+			}
+		}
 		return met;
 	}
 
