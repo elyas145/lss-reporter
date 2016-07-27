@@ -27,7 +27,7 @@ public class Test {
 				qualification.addInstructor(PersonFactory.getKnownEmployees().get(1));
 				qualification.setExamDate(LocalDate.parse("2007-12-13"));
 				qual = qualification;
-				qual.setTestSheetPath("C:\\Users\\Elyas\\Desktop\\bronze-med.pdf", "/template/bronze-med.json");
+				qual.setTestSheetPath("/pdf/bronze-med.pdf", "/template/bronze-med.json");
 				testSheet = qual.getTestSheet();
 			}
 		}
@@ -53,11 +53,13 @@ public class Test {
 			for (Prerequisite prerequisite : client.getPrerequisites(qual.getName())) {
 				if (prerequisite.getType().equals(Type.DATE)) {
 					if(i<10){
-						prerequisite.setDateEarned("2007-08-0" + i);
+						prerequisite.setDateEarned("2007-08-0" + (i+1));
 					}else{
-						prerequisite.setDateEarned("2007-08-" + i);
+						prerequisite.setDateEarned("2007-08-" + (i+1));
 					}
 					prerequisite.setLocation("location " + i);
+				}else{
+					prerequisite.setMet(true);
 				}
 
 			}
@@ -67,6 +69,6 @@ public class Test {
 
 		}
 		course.setName("Med");
-		CourseFactory.exportInfo(true, false, null, "C:\\Users\\Elyas\\Desktop", null, course);
+		CourseFactory.exportInfo(true, false, null, "/Users/elyas/Desktop", null, course);
 	}
 }

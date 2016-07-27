@@ -105,10 +105,11 @@ public class Prerequisite {
 
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
+		
 		object.put("name", name);
 		object.put("dateEarned", dateEarned);
 		object.put("location", location);
-		object.put("met", met);
+		object.put("met", isMet());
 		return object;
 	}
 
