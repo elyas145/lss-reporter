@@ -294,16 +294,14 @@ public class CourseFactory {
 				if (properties.getProperty(TestSheetProperties.DOUBLE_SIDED.name()).equals(true + "")) {
 					// if even number of pages, all double sided. if odd, last
 					// one is not double sided.
-					int pages = number_of_testsheets * testSheet.getNumberOfPages();
-					if (pages % 2 == 0) { // even
+					if (numberOfPages % 2 == 0) { // even
 						for (String page : testSheet.getDoubleSided()) {
 							acroForm.getField(page).setValue("Yes");
 						}
 					} else { // odd
-						int currentPages = (i + 1) * testSheet.getNumberOfPages();
-						if (currentPages == pages) { // last document.
+						if (i == number_of_testsheets - 1) { // last document.
 							for (int j = 0; j < testSheet.getNumberOfPages(); j++) {
-								if (j < testSheet.getNumberOfPages() - 1) {
+								if (j < testSheet.getNumberOfPages() - 2) {
 									acroForm.getField(testSheet.getDoubleSided().get(j)).setValue("Yes");
 								}
 							}
