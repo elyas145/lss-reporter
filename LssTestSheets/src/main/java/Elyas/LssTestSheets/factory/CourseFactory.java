@@ -323,10 +323,12 @@ public class CourseFactory {
 				while (iterator.hasNext() && !clients.isEmpty()) {
 					// System.out.println("-----begin iteration-----\nclients
 					// left: " + clients.size());
+					
 					Student student = iterator.next();
-					// System.out.println("student number: " +
-					// student.getName());
 					Client client = clients.poll();
+					try{
+					// System.out.println("student number: " +
+					// student.getName());					
 					setPDFText(acroForm.getField(student.getName()), client.getName(), instructor_pref_size);
 					if (testSheet.hasApartment()) {
 						setPDFText(acroForm.getField(student.getAddress()), client.getAddress(), instructor_pref_size);
@@ -345,7 +347,12 @@ public class CourseFactory {
 					acroForm.getField(student.getYear()).setValue(client.getYear());
 					acroForm.getField(student.getMonth()).setValue(client.getMonth());
 					acroForm.getField(student.getDay()).setValue(client.getDay());
+					}catch (Exception e) {
+						System.out.println("---------------- client info set error -----------------");
+						System.out.println("name: " + student.getName());
 
+						// e.printStackTrace();
+					}
 					Iterator<MustSee> mustSees = student.getMustSees().iterator();
 					while (mustSees.hasNext()) {
 						MustSee template = mustSees.next();

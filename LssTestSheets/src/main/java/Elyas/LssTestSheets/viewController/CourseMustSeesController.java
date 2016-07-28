@@ -24,6 +24,7 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -46,6 +47,8 @@ public class CourseMustSeesController extends Controller implements Initializabl
 	CheckListView<MustSee> chkLstMustSees;
 	@FXML
 	VBox vbPreReqs;
+	@FXML
+	TitledPane titlePrereqs;
 
 	private ObservableList<Client> obsClients;
 	private ObservableList<MustSee> obsCurrentMustSees;
@@ -70,6 +73,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 		boolean passAllInstructor = true;
 		boolean passAllExaminer = true;
 		for (Client client : obsClients) {
+			
 			for (MustSee see : client.getMustSees(course)) {
 				if (see.isInstructorEvaluated() && !see.isCompleted()) {
 					passAllInstructor = false;
@@ -80,6 +84,11 @@ public class CourseMustSeesController extends Controller implements Initializabl
 				if (!passAllExaminer && !passAllInstructor) {
 					break;
 				}
+			}
+		}
+		if(obsClients.size() > 0){
+			if(obsClients.get(0).getPrerequisites(name).size() == 0){
+				titlePrereqs.setVisible(false);
 			}
 		}
 		chkAllInst.setSelected(passAllInstructor);

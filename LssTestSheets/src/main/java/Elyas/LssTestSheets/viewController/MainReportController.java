@@ -66,7 +66,7 @@ public class MainReportController extends Controller implements Initializable {
 				dayControllers.remove(controller);
 			});
 			mainTab.getTabs().add(tab);
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,6 +77,7 @@ public class MainReportController extends Controller implements Initializable {
 
 		ReportDay day = new ReportDay(dayNumber++);
 		Model.getInstance().getReport().addDay(day);
+		Model.getInstance().setChanged();
 		addDay(day);
 	}
 

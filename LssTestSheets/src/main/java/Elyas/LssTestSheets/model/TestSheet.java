@@ -64,7 +64,7 @@ public class TestSheet {
 		instructor = new Instructor((JSONObject) obj.get("instructor"));
 		exam = new Exam((JSONObject) obj.get("exam"));
 		JSONObject jsonAward = obj.optJSONObject("award");
-		if(jsonAward != null){
+		if (jsonAward != null) {
 			award = new Award(jsonAward);
 		}
 		host = new Host((JSONObject) obj.get("host"));
@@ -101,7 +101,7 @@ public class TestSheet {
 		String month;
 		String day;
 		String apartment;
-		
+
 		private ArrayList<Prerequisite> prerequisites;
 		private ArrayList<MustSee> mustSees;
 
@@ -116,12 +116,14 @@ public class TestSheet {
 			month = (String) obj.get("month");
 			day = (String) obj.get("day");
 			apartment = obj.optString("apartment");
-			JSONArray pres = obj.getJSONArray("prerequisites");
+			JSONArray pres = obj.optJSONArray("prerequisites");
 			prerequisites = new ArrayList<>();
-			for (Object object : pres) {
-				JSONObject jsonObject = (JSONObject) object;
-				Prerequisite prerequisite = new Prerequisite(jsonObject);
-				prerequisites.add(prerequisite);
+			if (pres != null) {
+				for (Object object : pres) {
+					JSONObject jsonObject = (JSONObject) object;
+					Prerequisite prerequisite = new Prerequisite(jsonObject);
+					prerequisites.add(prerequisite);
+				}
 			}
 			mustSees = new ArrayList<>();
 			JSONArray jsonSees = (JSONArray) obj.get("must-sees");
@@ -545,7 +547,7 @@ public class TestSheet {
 	}
 
 	public boolean hasApartment() {
-		
+
 		return !students.get(0).apartment.equals("");
 	}
 

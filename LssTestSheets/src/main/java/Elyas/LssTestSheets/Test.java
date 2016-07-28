@@ -21,13 +21,13 @@ public class Test {
 		TestSheet testSheet = null;
 		Qualification qual = null;
 		for (Qualification qualification : qualifications) {
-			if (qualification.getName().equals("Bronze Medallion")) {
+			if (qualification.getName().equals("Emergency First Aid")) {
 				course.addQualification(qualification);
 				qualification.addExaminer(PersonFactory.getKnownEmployees().get(0));
 				qualification.addInstructor(PersonFactory.getKnownEmployees().get(1));
 				qualification.setExamDate(LocalDate.parse("2007-12-13"));
 				qual = qualification;
-				qual.setTestSheetPath("/pdf/bronze-med.pdf", "/template/bronze-med.json");
+				qual.setTestSheetPath("/pdf/efa.pdf", "/template/efa.json");
 				testSheet = qual.getTestSheet();
 			}
 		}
@@ -68,7 +68,7 @@ public class Test {
 			client.setInstructorItems(qual.getName(), true);
 
 		}
-		course.setName("Med");
+		course.setName("Emergency First Aid");
 		CourseFactory.exportInfo(true, false, null, "/Users/elyas/Desktop", null, course);
 	}
 }

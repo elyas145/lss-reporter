@@ -262,6 +262,14 @@ public class Client {
 				return "Checked";
 			}
 		}
+		boolean isEmpty = true;
+		for(List<Prerequisite> pres : prerequisites.values()){
+			if(!pres.isEmpty())
+				isEmpty = false;
+		}
+		if(isEmpty){
+			return "N/A";
+		}
 		return "Not checked";
 	}
 

@@ -50,9 +50,9 @@
                         </VBox>
                      </content>
                   </TitledPane>
-                  <TitledPane collapsible="false" text="Pre-requisites">
+                  <TitledPane fx:id="titlePrereqs" collapsible="false" text="Pre-requisites" HBox.hgrow="ALWAYS">
                      <content>
-                        <ScrollPane>
+                        <ScrollPane pannable="true">
                            <content>
                               <VBox fx:id="vbPreReqs" alignment="CENTER" />
                            </content>
