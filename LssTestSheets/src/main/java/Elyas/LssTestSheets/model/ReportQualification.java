@@ -1,32 +1,42 @@
 package Elyas.LssTestSheets.model;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONObject;
 
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
+
 public class ReportQualification {
-	private Map<String, String> notes;
+	private ObservableMap<String, String> notes;
 	private String name;
 
 	public ReportQualification() {
-		notes = new HashMap<>();
+		init(null);
 	}
 
-	public ReportQualification(String name) {
+	public ReportQualification(String name, MapChangeListener<String, String> changeListener) {
 		this.name = name;
-		this.notes = new HashMap<>();
+		init(changeListener);
+		
 	}
 
-	public ReportQualification(JSONObject obj) {
+	public ReportQualification(JSONObject obj, MapChangeListener<String, String> changeListener) {
 		name = obj.getString("name");
 		JSONObject jsonNotes = obj.getJSONObject("notes");
-		notes = new HashMap<>();
+		init(changeListener);
 		for (String id : jsonNotes.keySet()) {
 			notes.put(id, jsonNotes.getString(id));
 		}
 	}
-
+	
+	private void init(MapChangeListener<String, String> changeListener){
+		this.notes = FXCollections.observableHashMap();
+		if(changeListener != null){
+			notes.addListener(changeListener);
+		}
+	}
+	
 	public JSONObject toJSON() {
 		JSONObject object = new JSONObject();
 		object.put("name", name);
@@ -51,5 +61,9 @@ public class ReportQualification {
 		if (notes.get(client.getID()) != null)
 			return notes.get(client.getID());
 		return "";
+	}
+	
+	public void addChangeListener(MapChangeListener<String, String> changeListener){
+		notes.addListener(changeListener);
 	}
 }
