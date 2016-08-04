@@ -72,9 +72,17 @@ public class StartController extends Controller implements Initializable {
 		fileChooser.setTitle("Open Course File");
 		File file = fileChooser.showOpenDialog(App.getMainStage());		
 		Course course = CourseFactory.getFullCourse(file);
-		Model.getInstance().setCourse(course);
+		if(course != null){
+			Model.getInstance().setCourse(course);			
+			finishHandler.onFinish(ViewState.COURSE_IMPORT);			
+		}else{
+			//something went wrong.
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText("Oops! it looks like the app cannot read the course you tried to open!");
+			alert.setTitle("Error Opening File");
+			alert.showAndWait();
+		}
 		
-		finishHandler.onFinish(ViewState.COURSE_IMPORT);
 
 	}
 

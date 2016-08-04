@@ -1,10 +1,13 @@
 package Elyas.LssTestSheets.model;
 
 import java.io.IOException;
+import java.text.Collator;
 import java.time.LocalDate;
+import java.time.chrono.JapaneseChronology;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -130,6 +133,12 @@ public class Course {
 	}
 
 	public ArrayList<Client> getClients() {
+		Collections.sort(clients, new Comparator<Client>() {
+			@Override
+			public int compare(Client o1, Client o2) {				
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
 		return this.clients;
 	}
 

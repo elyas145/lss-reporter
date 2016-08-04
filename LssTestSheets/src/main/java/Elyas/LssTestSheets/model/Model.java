@@ -38,6 +38,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 
 import Elyas.LssTestSheets.factory.CourseFactory;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 
@@ -271,7 +272,8 @@ public class Model {
 	 */
 	public void sendInfo(boolean sendCourse, boolean sendTestSheet, Properties properties, String name, String email,
 			ThreadCompleteListener onFinish) throws AddressException, MessagingException, UnsupportedEncodingException {
-
+		
+		
 		NotifyingThread thread = new NotifyingThread() {
 
 			@Override
@@ -353,15 +355,9 @@ public class Model {
 					msg.saveChanges();
 					Transport.send(msg);
 
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
 				}
 			}
 		};

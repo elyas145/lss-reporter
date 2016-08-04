@@ -44,8 +44,12 @@ public class MainReportController extends Controller implements Initializable {
 		clients = FXCollections.observableList(Model.getInstance().getClients());
 		dayControllers = new ArrayList<>();
 		lstClients.setItems(clients);
-		for (ReportDay day : Model.getInstance().getReport().getDays()) {
+		for (ReportDay day : Model.getInstance().getReport().getDays()) {			
 			addDay(day);
+			if(dayNumber <= day.getNumber()){
+				dayNumber = day.getNumber();
+			}
+			dayNumber++;
 		}
 		mainTab.getSelectionModel().selectedItemProperty().addListener((ov) -> finalize());
 

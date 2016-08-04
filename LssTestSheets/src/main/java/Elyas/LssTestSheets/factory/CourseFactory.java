@@ -140,7 +140,7 @@ public class CourseFactory {
 				}
 
 				courses.add(course);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -164,7 +164,7 @@ public class CourseFactory {
 			JSONObject obj = new JSONObject(jsonTxt);
 			Course course = new Course(obj);
 			return course;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
