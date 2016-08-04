@@ -18,7 +18,7 @@ public class PrerequisiteController extends Controller implements Initializable 
 	@FXML
 	CheckBox chkCheck;
 	@FXML
-	DatePicker dteDate;
+	CustomTextField dteDate;
 	@FXML
 	CustomTextField txtLocation;
 	@FXML
@@ -38,7 +38,7 @@ public class PrerequisiteController extends Controller implements Initializable 
 			chkCheck.setSelected(prerequisite.isMet());
 		} else {
 			if (prerequisite.getDate() != null && !prerequisite.getDate().equals(""))
-				dteDate.setValue(LocalDate.parse(prerequisite.getDate()));
+				dteDate.setText(prerequisite.getDate());
 			if (prerequisite.getLocation() != null)
 				txtLocation.setText(prerequisite.getLocation());
 		}
@@ -55,8 +55,8 @@ public class PrerequisiteController extends Controller implements Initializable 
 		if (prerequisite.getType().equals(Type.CHECK)) {
 			prerequisite.setMet(chkCheck.isSelected());
 		} else {
-			if (dteDate.getValue() != null)
-				prerequisite.setDateEarned(dteDate.getValue().toString());
+			if (dteDate.getText() != null)
+				prerequisite.setDateEarned(dteDate.getText());
 
 			if (txtLocation.getText() != null)
 				prerequisite.setLocation(txtLocation.getText());

@@ -10,11 +10,11 @@
   <content>
       <VBox>
          <children>
-            <DatePicker fx:id="dteDate" promptText="Date" VBox.vgrow="ALWAYS">
+            <CustomTextField fx:id="dteDate" promptText="Date" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
-            </DatePicker>
+            </CustomTextField>
             <CustomTextField fx:id="txtLocation" promptText="Location" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
