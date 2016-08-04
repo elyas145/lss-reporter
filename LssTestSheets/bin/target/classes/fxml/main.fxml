@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.HiddenSidesPane?>
+
+<StackPane alignment="TOP_LEFT" focusTraversable="true" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.MainController">
+	<children>
+		<HiddenSidesPane fx:id="pane" triggerDistance="20.0">
+			<content>
+				<AnchorPane >
+					<children>
+						<VBox fx:id="lblMenuBackground" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" alignment="CENTER" VBox.vgrow="ALWAYS">
+							<children>
+								<Label fx:id="lblMenu" style="-fx-color: #999999" text="&gt;" visible="false">
+									<font>
+										<Font size="24.0" />
+									</font>
+									<cursor>
+										<Cursor fx:constant="HAND" />
+									</cursor>
+								</Label>
+							</children>
+						</VBox>
+						<VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="0"  fx:id="mainPane" VBox.vgrow="ALWAYS" alignment="CENTER"/>
+					</children>
+				</AnchorPane>
+			</content>
+			<left>
+				<VBox fx:id="menuPane" />
+			</left>
+		</HiddenSidesPane>
+	</children>
+</StackPane>

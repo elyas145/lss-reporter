@@ -1,0 +1,23 @@
+{
+	"facilities":[
+		{
+			"default":true,			
+			"name":"Walter Baker Sports Centre",
+			"area-code":"613",
+			"phone":"580-2424",
+			"extension":"30317",
+			"host":{
+				"fees":false,
+				"name":"Walter Baker Sports Centre",
+				"address": "100 Malvern Drive",
+				"city": "Ottawa",
+				"province": "ON",
+				"postal-code":"K2J 4T2",
+				"area-code": "613",
+				"phone":"580-2424",
+				"extension":"30303"
+			}
+		}
+	
+	]
+}

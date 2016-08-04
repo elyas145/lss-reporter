@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.CourseController">
+   <content>
+      <VBox>
+         <children>
+            <Label text="Course Information">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Label>
+            <HBox>
+               <children>
+                  <CustomTextField fx:id="txtBarcode1" promptText="Barcode 1" />
+                  <CustomTextField fx:id="txtBarcode2" promptText="Barcode 2" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </HBox>
+            <Label text="Payment Information">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </Label>
+            <ComboBox fx:id="cmbPreset" onAction="#presetChanged" promptText="Select Preset ..." />
+            <CheckBox fx:id="chkDefault" mnemonicParsing="false" text="Set payment information as default" />
+            <CheckBox fx:id="chkNewPreset" mnemonicParsing="false" text="Save as new preset" />
+            <CheckBox fx:id="chkExamFees" mnemonicParsing="false" text="Exam Fees Attached (recommended unchecked)">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CustomTextField fx:id="txtHostName" promptText="Host Name" />
+            <CustomTextField fx:id="txtHostAddress" promptText="Street Address" />
+            <CustomTextField fx:id="txtHostCity" promptText="City" />
+            <CustomTextField fx:id="txtHostProvince" promptText="Province" />
+            <CustomTextField fx:id="txtHostPostalCode" promptText="Postal Code" />
+            <HBox>
+               <children>
+                  <CustomTextField fx:id="txtHostAreaCode" prefHeight="25.0" prefWidth="74.0" promptText="Area Code" />
+                  <CustomTextField fx:id="txtHostPhone" promptText="Telephone" />
+                  <CustomTextField fx:id="txtHostExtension" promptText="Extension" />
+               </children>
+            </HBox>
+            <Label text="Exam Information">
+               <padding>
+                  <Insets bottom="5.0" top="20.0" />
+               </padding>
+            </Label>
+            <TabPane fx:id="tabExam" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
+            <CustomTextField fx:id="txtFacilityName" promptText="Facility Name" />
+            <HBox>
+               <children>
+                  <CustomTextField fx:id="txtFacilityAreaCode" prefHeight="25.0" prefWidth="74.0" promptText="Area Code" />
+                  <CustomTextField fx:id="txtFacilityPhone" promptText="Telephone" />
+                  <CustomTextField fx:id="txtFacilityExtension" promptText="Extension" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </VBox>
+   </content>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</ScrollPane>

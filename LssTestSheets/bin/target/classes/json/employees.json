@@ -1,0 +1,18 @@
+{
+	"employees": [{
+		"e-key": 1,
+		"name": "Elyas Syoufi",
+		"id": "SYE 441",
+		"email": "Elyas.Syoufi@gmail.com",
+		"area-code": "613",
+		"phone": "580-2424",
+		"extension": "30317"
+	}, {
+		"e-key": 2,
+		"name": "Fadi Syoufi",
+		"id": "SYF 552",
+		"email": "Fadi.Syoufi@gmail.com",
+		"area-code": "613",
+		"phone": "843-7504"
+	}]
+}
