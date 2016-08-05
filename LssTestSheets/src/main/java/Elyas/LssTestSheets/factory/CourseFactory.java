@@ -234,7 +234,7 @@ public class CourseFactory {
 	public static List<PDDocument> generateTestSheets(Course course, Properties properties) throws IOException {
 
 		final int instructor_pref_size = 12;
-		final int pre_pref_size = 8;
+		final int pre_pref_size = 6;
 
 		List<PDDocument> documents = new ArrayList<>();
 		Queue<Client> clients;
@@ -404,10 +404,12 @@ public class CourseFactory {
 						Prerequisite template = prerequisites.next();
 						Prerequisite prerequisite = client.getPrerequisite(qualification.getName(), template.getName());
 						if (prerequisite.getType().equals(Type.DATE)) {
+							System.out.println("setting date: " + template.getDateEarned());
 							setPDFText(acroForm.getField(template.getDateEarned()), prerequisite.getDateEarned(),
 									pre_pref_size);
 							setPDFText(acroForm.getField(template.getLocation()), prerequisite.getLocation(),
 									pre_pref_size);
+							System.out.println("done");
 						}
 					}
 				}
@@ -575,6 +577,9 @@ public class CourseFactory {
 		int numCharacters = value.length();
 		// System.out.println(field.getFullyQualifiedName() + " width / length:
 		// " + width / numCharacters);
+		if(prefSize <= 6){
+			return ""+prefSize;
+		}
 		if (width / numCharacters < 5) {
 			return "6";
 		} else if (width / numCharacters >= 5 && width / numCharacters < 6) {
