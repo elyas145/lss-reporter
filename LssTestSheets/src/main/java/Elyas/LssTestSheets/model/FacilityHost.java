@@ -1,5 +1,6 @@
 package Elyas.LssTestSheets.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class FacilityHost {
@@ -29,7 +30,7 @@ public class FacilityHost {
 	}
 
 	public String getName() {
-		return name;
+		return StringUtils.capitalize(name);
 	}
 
 	public void setName(String name) {
@@ -37,7 +38,7 @@ public class FacilityHost {
 	}
 
 	public String getAddress() {
-		return address;
+		return StringUtils.capitalize(address);
 	}
 
 	public void setAddress(String address) {
@@ -45,7 +46,7 @@ public class FacilityHost {
 	}
 
 	public String getCity() {
-		return city;
+		return StringUtils.capitalize(city);
 	}
 
 	public void setCity(String city) {
@@ -53,7 +54,7 @@ public class FacilityHost {
 	}
 
 	public String getProvince() {
-		return province;
+		return StringUtils.capitalize(province);
 	}
 
 	public void setProvince(String province) {
@@ -61,7 +62,7 @@ public class FacilityHost {
 	}
 
 	public String getPostalCode() {
-		return postalCode;
+		return postalCode.toUpperCase();
 	}
 
 	public void setPostalCode(String postalCode) {

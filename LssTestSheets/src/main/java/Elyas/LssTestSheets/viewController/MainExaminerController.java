@@ -9,6 +9,8 @@ import java.util.ResourceBundle;
 
 import javax.jws.WebParam.Mode;
 
+import org.apache.commons.lang3.StringUtils;
+
 import Elyas.LssTestSheets.factory.ViewFactory;
 import Elyas.LssTestSheets.factory.ViewFactoryResult;
 import Elyas.LssTestSheets.model.Model;
@@ -36,7 +38,7 @@ public class MainExaminerController extends Controller implements Initializable{
 				Tab parent = (Tab)loader.load();
 				ExaminerController controller = loader.<ExaminerController> getController();
 				controller.setCourse(course);
-				parent.setText(course);
+				parent.setText(StringUtils.capitalize(course));
 				tbpMain.getTabs().add(parent);
 				controllers.add(controller);
 			} catch (IOException e) {

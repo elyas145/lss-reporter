@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
+
 import Elyas.LssTestSheets.factory.ViewFactory;
 import Elyas.LssTestSheets.model.Model;
 import javafx.fxml.FXML;
@@ -32,7 +34,7 @@ public class MainMustSeesController extends Controller implements Initializable 
 				Tab parent = (Tab) loader.load();
 				CourseMustSeesController controller = loader.<CourseMustSeesController> getController();
 				controller.setCourse(course);
-				parent.setText(course);
+				parent.setText(StringUtils.capitalize(course));
 				tbpMain.getTabs().add(parent);
 				controllers.add(controller);
 			} catch (IOException e) {

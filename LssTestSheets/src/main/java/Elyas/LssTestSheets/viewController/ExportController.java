@@ -14,6 +14,7 @@ import javax.jws.WebParam.Mode;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.json.JSONObject;
@@ -229,7 +230,7 @@ public class ExportController extends Controller implements Initializable {
 		String directoryPath = txtDirectory.getText().trim();
 		if (chkExportCourse.isSelected()) {
 			File file = new File(directoryPath + System.getProperty("file.separator")
-					+ Model.getInstance().getCourseName() + ".json");
+					+ StringUtils.capitalize(Model.getInstance().getCourseName()) + ".json");
 			if (file.exists()) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Confirm Replacing a File.");
