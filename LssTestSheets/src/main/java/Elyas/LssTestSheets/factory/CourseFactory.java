@@ -24,6 +24,7 @@ import java.util.Queue;
 import java.util.function.Consumer;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
@@ -641,7 +642,7 @@ public class CourseFactory {
 						int i = 1;
 						for (PDDocument doc : docs) {
 							String dir = directoryPath + System.getProperty("file.separator")
-									+ Model.getInstance().getCourseName() + " Testsheet " + (i++) + ".pdf";
+									+ StringUtils.capitalize(Model.getInstance().getCourseName()) + " Testsheet " + (i++) + ".pdf";
 							File file = new File(dir);
 							if (file.exists()) {
 								final String name = Model.getInstance().getCourseName() + " Testsheet " + (i - 1);

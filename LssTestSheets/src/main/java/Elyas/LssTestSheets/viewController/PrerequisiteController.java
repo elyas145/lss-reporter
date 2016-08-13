@@ -4,6 +4,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
 import org.controlsfx.control.textfield.CustomTextField;
 
 import Elyas.LssTestSheets.model.Prerequisite;
@@ -40,9 +41,9 @@ public class PrerequisiteController extends Controller implements Initializable 
 			if (prerequisite.getDate() != null && !prerequisite.getDate().equals(""))
 				dteDate.setText(prerequisite.getDate());
 			if (prerequisite.getLocation() != null)
-				txtLocation.setText(prerequisite.getLocation());
+				txtLocation.setText(StringUtils.capitalize(prerequisite.getLocation()));
 		}
-		pneMain.setText(prerequisite.getName());
+		pneMain.setText(StringUtils.capitalize(prerequisite.getName()));
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.sound.midi.MetaEventListener;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class MustSee {
@@ -95,8 +96,8 @@ public class MustSee {
 
 	public String toString() {
 		if (instructorEvaluated)
-			return "* " + this.name;
-		return this.name;
+			return "* " + StringUtils.capitalize(this.name);
+		return StringUtils.capitalize(this.name);
 	}
 
 	public MustSee() {

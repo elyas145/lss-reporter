@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -86,7 +87,7 @@ public class Client {
 	}
 
 	public String getName() {
-		return name;
+		return StringUtils.capitalize(name);
 	}
 
 	public Integer getAbsenceCount() {
@@ -99,7 +100,7 @@ public class Client {
 	}
 
 	public String getAddress() {
-		return address;
+		return StringUtils.capitalize(address);
 	}
 
 	public String getFinalAddress() {
@@ -107,7 +108,7 @@ public class Client {
 		if (apartment != null && !apartment.trim().equals("")) {
 			finalAddress += " apt. " + apartment;
 		}
-		return finalAddress;
+		return StringUtils.capitalize(finalAddress);
 	}
 
 	public void setAddress(String address) {
@@ -115,7 +116,7 @@ public class Client {
 	}
 
 	public String getCity() {
-		return city;
+		return StringUtils.capitalize(city);
 	}
 
 	public void setCity(String city) {
@@ -123,7 +124,7 @@ public class Client {
 	}
 
 	public String getPostalCode() {
-		return postalCode;
+		return postalCode.toUpperCase();
 	}
 
 	public void setPostalCode(String postalCode) {
@@ -131,7 +132,7 @@ public class Client {
 	}
 
 	public String getEmail() {
-		return email;
+		return StringUtils.capitalize(email);
 	}
 
 	public void setEmail(String email) {
@@ -183,7 +184,7 @@ public class Client {
 	}
 
 	public String getApartment() {
-		return this.apartment;
+		return StringUtils.capitalize(this.apartment);
 	}
 
 	public void update(Client c) {

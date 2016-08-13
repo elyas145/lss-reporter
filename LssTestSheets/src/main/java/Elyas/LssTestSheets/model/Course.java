@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -143,7 +144,7 @@ public class Course {
 	}
 
 	public String getName() {
-		return this.name.get();
+		return StringUtils.capitalize(this.name.get());
 	}
 
 	public JSONObject toJSON() {

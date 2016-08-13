@@ -1,5 +1,6 @@
 package Elyas.LssTestSheets.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class Employee {
@@ -26,23 +27,23 @@ public class Employee {
 	}
 
 	public String getName() {
-		return name;
+		return StringUtils.capitalize(name);
 	}
 
 	public String getAreaCode() {
-		return areaCode;
+		return StringUtils.capitalize(areaCode);
 	}
 
 	public String getPhone() {
-		return phone;
+		return StringUtils.capitalize(phone);
 	}
 
 	public String getId() {
-		return id;
+		return id.toUpperCase();
 	}
 
 	public String getEmail() {
-		return email;
+		return StringUtils.capitalize(email);
 	}
 
 	public void setName(String name) {
@@ -85,7 +86,7 @@ public class Employee {
 	}
 
 	public String getExtension() {
-		return extension;
+		return StringUtils.capitalize(extension);
 	}
 
 	public JSONObject toJSON() {
