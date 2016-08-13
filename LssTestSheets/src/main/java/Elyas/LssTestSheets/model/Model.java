@@ -368,7 +368,9 @@ public class Model {
 
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
 		public PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication("no-reply-reporter@outlook.com", "WalterBaker2016");
+			
+			
+			return null;
 		}
 	}
 
