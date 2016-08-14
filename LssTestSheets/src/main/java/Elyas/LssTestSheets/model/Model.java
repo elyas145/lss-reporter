@@ -36,6 +36,7 @@ import javax.xml.transform.Templates;
 import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDStream;
+import org.json.JSONObject;
 
 import Elyas.LssTestSheets.factory.CourseFactory;
 import javafx.application.Platform;
@@ -368,9 +369,19 @@ public class Model {
 
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
 		public PasswordAuthentication getPasswordAuthentication() {
-			
-			
-			return null;
+			InputStream is = Model.class.getResourceAsStream("/json/secret.json");
+			if(is == null){
+				return null;
+			}
+			String jsonTxt;
+			try {
+				jsonTxt = IOUtils.toString(is);
+				JSONObject obj = new JSONObject(jsonTxt);
+				return new PasswordAuthentication(obj.optString("user"), obj.optString("password"));
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}	
 		}
 	}
 
