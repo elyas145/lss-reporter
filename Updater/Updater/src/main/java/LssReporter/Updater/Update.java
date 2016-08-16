@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -25,6 +26,7 @@ public class Update {
 	private Message message;
 	private String subject;
 	private int updateNumber;
+	private String description;
 	private List<File> attachments;
 	private List<UpdateInstruction> instructions;
 
@@ -47,6 +49,7 @@ public class Update {
 		this.message = message;
 		this.subject = message.getSubject();
 		this.updateNumber = Integer.valueOf(subject.trim().substring(subject.indexOf(' '), subject.length()).trim());
+		
 	}
 
 	public String getSubject() {
@@ -56,14 +59,18 @@ public class Update {
 	public int getUpdateNumber() {
 		return updateNumber;
 	}
+	public String getDescription(){
+		return description;
+	}
 
 	/**
 	 * applies this update. initUpdate() must to be called first to download
 	 * necessary data from message.
 	 * 
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
-	public void applyUpdate() throws IOException {
+	public void applyUpdate() throws IOException, URISyntaxException {
 		if (instructions == null) {
 			throw new NullPointerException("Update not initialized properly. instructions missing.");
 		}
@@ -87,8 +94,8 @@ public class Update {
 		}
 	}
 
-	private void deleteFile(String path, String fileName) throws FileNotFoundException {
-		File file = new File(path + fileName);
+	private void deleteFile(String path, String fileName) throws FileNotFoundException, URISyntaxException {
+		File file = new File(Update.class.getResource("/").toURI().getSchemeSpecificPart() + path + fileName);
 		if (file.exists()) {
 			file.delete();
 		} else {
@@ -97,8 +104,9 @@ public class Update {
 
 	}
 
-	private void addFile(String path, String fileName) throws IOException {
-		File file = new File(path + fileName);
+	private void addFile(String path, String fileName) throws IOException, URISyntaxException {
+		File file = new File(Update.class.getResource("/").toURI().getSchemeSpecificPart() + path + fileName);
+		System.out.println("file: " + file.getAbsolutePath());
 		file.getParentFile().mkdirs();
 		for (File file2 : attachments) {
 			if (file2.getName().trim().toLowerCase().equals(fileName.trim().toLowerCase())) {
@@ -117,9 +125,10 @@ public class Update {
 	 *             if the message cannot be read.
 	 * @throws IOException
 	 *             if attachments cannot be downloaded.
+	 * @throws URISyntaxException 
 	 */
 
-	public void initUpdate() throws MessagingException, IOException {
+	public void initUpdate() throws MessagingException, IOException, URISyntaxException {
 		String inst = getText(message);
 		if (textIsHtml) {
 			System.out.println("text is html :(");
@@ -130,14 +139,16 @@ public class Update {
 
 	private void parseInstructions(String inst) {
 		instructions = new ArrayList<Update.UpdateInstruction>();
-		JSONArray array = new JSONArray(inst);
+		JSONObject object = new JSONObject(inst);
+		JSONArray array = object.getJSONArray("instructions");
+		description = object.optString("description");
 		for (int i = 0; i < array.length(); i++) {
 			JSONObject instruction = array.getJSONObject(i);
 			instructions.add(new UpdateInstruction(instruction));
 		}
 	}
 
-	private List<File> getAttachments(Message message) throws IOException, MessagingException {
+	private List<File> getAttachments(Message message) throws IOException, MessagingException, URISyntaxException {
 		List<File> attachments = new ArrayList<File>();
 		Multipart multipart = (Multipart) message.getContent();
 		// System.out.println(multipart.getCount());
@@ -149,7 +160,7 @@ public class Update {
 				continue; // dealing with attachments only
 			}
 			InputStream is = bodyPart.getInputStream();
-			File f = new File(Update.class.getResource("/").getPath() + "/tmp/" + bodyPart.getFileName());
+			File f = new File(Update.class.getResource("/").toURI().getSchemeSpecificPart() + "/tmp/" + bodyPart.getFileName());
 			System.out.println("file: " + f.getAbsolutePath());
 			f.getParentFile().mkdirs();
 			f.createNewFile();

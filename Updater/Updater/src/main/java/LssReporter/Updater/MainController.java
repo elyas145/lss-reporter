@@ -3,7 +3,9 @@ package LssReporter.Updater;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -22,12 +24,16 @@ import javax.mail.search.SearchTerm;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.web.WebView;
+import javafx.scene.control.Alert.AlertType;
 
 public class MainController implements Initializable {
 
@@ -37,12 +43,17 @@ public class MainController implements Initializable {
 	ProgressBar prgsProgress;
 	@FXML
 	Button btnStart;
-	public Integer cachedVersion = -1;
+	private Integer cachedVersion = -1;
+	private LocalDate lastUpdate;
+
+	private int dateOffset = 8;
 
 	public void initialize(URL location, ResourceBundle resources) {
 		prgsProgress.setProgress(-1);
 
 		FXWorker<Void, ProgressUpdate, String> thread = new FXWorker<Void, ProgressUpdate, String>(null) {
+
+			private String description;
 
 			@Override
 			public String doInBackground(Void param) {
@@ -56,6 +67,14 @@ public class MainController implements Initializable {
 					props.put("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
 					SMTPAuthenticator auth = new SMTPAuthenticator();
+					auth.getPasswordAuthentication();
+
+					// only update every 8 days.
+					LocalDate nextUpdate = lastUpdate.plusDays(dateOffset);
+					LocalDate today = LocalDate.now();
+					if (!nextUpdate.isBefore(today)) {
+						return "Your application is up to date!";
+					}
 
 					Session session = Session.getDefaultInstance(props);
 					Store store = session.getStore("imap");
@@ -108,44 +127,66 @@ public class MainController implements Initializable {
 					});
 
 					int currentVersion = getCurrentUpdateVersion();
+
+					boolean updatesFound = false;
 					for (int i = 0; i < updates.size(); i++) {
 						Update cUpdate = updates.get(i);
 						if (currentVersion < cUpdate.getUpdateNumber()) {
+							updatesFound = true;
 							onProgressUpdate(
 									new ProgressUpdate("Initializing update " + (i + 1) + " of " + updates.size(),
 											i + 1 / updates.size()));
 							try {
 								cUpdate.initUpdate();
-								onProgressUpdate(
-										new ProgressUpdate("Applying update " + (i + 1) + " of " + updates.size(),
-												i + 1 / updates.size()));
+							} catch (Exception e) {
+								addException("Error upplying update " + cUpdate.getUpdateNumber(), e);
+							}
+						}
+					}
+
+					for (int i = 0; i < updates.size(); i++) {
+						Update cUpdate = updates.get(i);
+						if (currentVersion < cUpdate.getUpdateNumber()) {
+							onProgressUpdate(new ProgressUpdate("Applying update " + (i + 1) + " of " + updates.size(),
+									i + 1 / updates.size()));
+							try {
 								cUpdate.applyUpdate();
+								description += "<br/>" + cUpdate.getDescription();
 								currentVersion = cUpdate.getUpdateNumber();
 							} catch (Exception e) {
 								addException("Error upplying update " + cUpdate.getUpdateNumber(), e);
 							}
 						}
 					}
-					// disconnect
-					folderInbox.close(false);
-					store.close();
 
-					// update the version.
+					// disconnect
+					try {
+						folderInbox.close(false);
+						store.close();
+					} catch (Exception exception) {
+
+					}
+					// update the version and date.
 					if (currentVersion != -1) {
 						InputStream is = MainController.class.getResourceAsStream("/secret.json");
 						String jsonTxt = IOUtils.toString(is);
 						JSONObject obj = new JSONObject(jsonTxt);
 						obj.put("version", "" + currentVersion);
+						obj.put("last_update", today.toString());
+
 						try (PrintWriter out = new PrintWriter(
-								MainController.class.getResource("/secret.json").getPath())) {
+								MainController.class.getResource("/secret.json").toURI().getSchemeSpecificPart())) {
 							out.println(obj.toString(4));
 						}
+					}
+					if (!updatesFound) {
+						return "Your application is up to date!";
 					}
 					return "Successfully installed updates.";
 				} catch (Exception exception) {
 					addException("an unknown error has occured.", exception);
 				}
-				return null;
+				return "an unknown error has occured.";
 			}
 
 			@Override
@@ -162,7 +203,26 @@ public class MainController implements Initializable {
 						exception.printStackTrace();
 					}
 				}
+				if (param != null) {
+					onProgressUpdate(new ProgressUpdate(param, 1));
+				}
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						btnStart.setDisable(false);
+						if (description != null && !description.equals("")) {
+							Alert alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Update Description");
+							alert.setHeaderText("Update Description");
+							WebView webView = new WebView();
+							webView.getEngine().loadContent("<html>" + "update test" + "</html>");
+							webView.setPrefSize(200, 50);
+							alert.getDialogPane().setContent(webView);
+							alert.showAndWait();
+						}
 
+					}
+				});
 			}
 
 		};
@@ -173,7 +233,16 @@ public class MainController implements Initializable {
 
 	@FXML
 	protected void onStartAction(ActionEvent event) {
-
+		try {
+			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+				Runtime.getRuntime().exec(MainController.class.getResource("/").toURI().getSchemeSpecificPart()
+						+ "/jre/bin/java.exe -jar app.jar");
+				System.exit(0);
+			}
+		} catch (IOException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private int getCurrentUpdateVersion() {
@@ -209,6 +278,7 @@ public class MainController implements Initializable {
 				jsonTxt = IOUtils.toString(is);
 				JSONObject obj = new JSONObject(jsonTxt);
 				cachedVersion = Integer.valueOf(obj.optString("version"));
+				lastUpdate = LocalDate.parse(obj.getString("last_update"));
 				return new PasswordAuthentication(obj.optString("user"), obj.optString("password"));
 			} catch (IOException e) {
 				e.printStackTrace();

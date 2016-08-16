@@ -5,7 +5,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -31,6 +34,8 @@ public class App extends Application
 
 	    stage.setScene(scene);
 	    stage.show();
+	    
+	   
 
 		} catch(Exception e) {
 			e.printStackTrace();
