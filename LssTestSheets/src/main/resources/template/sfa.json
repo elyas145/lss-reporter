@@ -66,7 +66,7 @@
 		"day": "Day 1",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned",
 			"location": "Location"
 		}],
@@ -123,7 +123,7 @@
 		"day": "Day 2",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 1",
 			"location": "Location 1"
 		}],
@@ -180,7 +180,7 @@
 		"day": "Day 3",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 3",
 			"location": "Location 3"
 		}],
@@ -237,7 +237,7 @@
 		"day": "Day 4",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 4",
 			"location": "Location 4"
 		}],
@@ -294,7 +294,7 @@
 		"day": "Day 5",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 5",
 			"location": "Location 5"
 		}],
@@ -351,7 +351,7 @@
 		"day": "Day 6",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 6",
 			"location": "Location 6"
 		}],
@@ -408,7 +408,7 @@
 		"day": "Day 7",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 7",
 			"location": "Location 7"
 		}],
@@ -465,7 +465,7 @@
 		"day": "Day 8",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 8",
 			"location": "Location 8"
 		}],
@@ -522,7 +522,7 @@
 		"day": "Day 9",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 9",
 			"location": "Location 9"
 		}],
@@ -579,7 +579,7 @@
 		"day": "Day 10",
 		"prerequisites": [{
 			"key": "1",
-			"name": "Original Standard First Aid",
+			"name": "Original Standard First Aid - Recert",
 			"date-earned": "Date Earned 10",
 			"location": "Location 10"
 		}],

@@ -94,6 +94,20 @@ public class Course {
 		return this.clients.size();
 	}
 
+	public String getBarcodes() {
+		String barcodes = "";
+		if(barcode1 != null && !barcode1.equals("")){
+			barcodes += barcode1;
+		}
+		if(barcode2 != null && !barcode2.equals("") && barcode1 != null && !barcode1.equals("")){
+			barcodes += ", ";
+		}
+		if(barcode2 != null && !barcode2.equals("")){
+			barcodes += barcode2;
+		}
+		return barcodes;
+	}
+
 	public void setClientCount(Long l) {
 		if (l != null)
 			this.clientCount = l;
@@ -136,7 +150,7 @@ public class Course {
 	public ArrayList<Client> getClients() {
 		Collections.sort(clients, new Comparator<Client>() {
 			@Override
-			public int compare(Client o1, Client o2) {				
+			public int compare(Client o1, Client o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});

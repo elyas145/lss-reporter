@@ -5,12 +5,16 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.textfield.CustomTextField;
+
 import Elyas.LssTestSheets.App;
 import Elyas.LssTestSheets.factory.CourseFactory;
 import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,6 +41,12 @@ public class StartController extends Controller implements Initializable {
 
 	@FXML
 	TableColumn<Course, Integer> colClients;
+	
+	@FXML
+	TableColumn<Course, String> colBarcodes;
+	
+	@FXML
+	CustomTextField txtFilterField;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -47,8 +57,30 @@ public class StartController extends Controller implements Initializable {
 		colCourse.setCellValueFactory(new PropertyValueFactory<Course, String>("name"));
 		colExamDate.setCellValueFactory(new PropertyValueFactory<Course, String>("examDate"));
 		colClients.setCellValueFactory(new PropertyValueFactory<Course, Integer>("clientsCount"));
+		colBarcodes.setCellValueFactory(new PropertyValueFactory<Course, String>("barcodes"));
 
-		table.setItems(obsCourses);
+		FilteredList<Course> filteredData = new FilteredList<>(obsCourses, p->true);
+		txtFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(course -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (course.toJSON().toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches.
+                }
+                return false; // Does not match.
+            });
+        });
+		
+		SortedList<Course> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
+		
+		table.setItems(sortedData);
 		table.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
 
 			@Override

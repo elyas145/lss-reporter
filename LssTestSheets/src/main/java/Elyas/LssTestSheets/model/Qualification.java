@@ -175,6 +175,8 @@ public class Qualification {
 	}
 
 	public Exam getExam() {
+		if (exam == null)
+			exam = new Exam();
 		return this.exam;
 	}
 

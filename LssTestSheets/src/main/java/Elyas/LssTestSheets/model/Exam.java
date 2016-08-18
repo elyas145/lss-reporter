@@ -9,26 +9,34 @@ public class Exam {
 	private LocalDate date;
 	private boolean isOriginal;
 
-	public Exam(){
+	public Exam() {
 		date = LocalDate.MAX;
 	}
+
 	public Exam(JSONObject obj) {
 		isOriginal = obj.optBoolean("isOriginal");
 		String jsonDate = obj.optString("date");
-		if(jsonDate != null){
+		if (jsonDate != null) {
 			date = LocalDate.parse(jsonDate);
 		}
-		
+
 	}
+
 	public void setDate(LocalDate value) {
-		if(value != null)
+
+		if (value != null && !this.date.equals(value)) {
 			this.date = value;
-		
+			Model.getInstance().setChanged();
+		}
+
 	}
 
 	public void setOriginal(boolean b) {
-		this.isOriginal = b;
-		
+		if (this.isOriginal != b) {
+			this.isOriginal = b;
+			Model.getInstance().setChanged();
+		}
+
 	}
 
 	public JSONObject toJSON() {
@@ -41,23 +49,25 @@ public class Exam {
 	public LocalDate getDate() {
 		return date;
 	}
-	public boolean equals(Object obj){
-		if(obj instanceof Exam){
-			if(((Exam) obj).toJSON().toString().equals(this.toJSON().toString())){
+
+	public boolean equals(Object obj) {
+		if (obj instanceof Exam) {
+			if (((Exam) obj).toJSON().toString().equals(this.toJSON().toString())) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 	public boolean isOriginal() {
 		return isOriginal;
 	}
+
 	public void validate(Warning warning) {
-		if(date == null || date.equals(LocalDate.MAX)){
+		if (date == null || date.equals(LocalDate.MAX)) {
 			warning.add("Exam date not set.");
 		}
-		
-		
+
 	}
 
 }

@@ -53,7 +53,9 @@ public class ExamController extends Controller implements Initializable{
 		if(dpkExamDate.getValue() != null){
 			qual.setExamDate(dpkExamDate.getValue());
 			qual.getExam().setOriginal(rdbOriginal.isSelected());
-		}		
+		}else{			
+			qual.getExam().setOriginal(rdbOriginal.isSelected());
+		}
 	}
 
 }
