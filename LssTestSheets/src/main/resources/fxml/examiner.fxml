@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
 
 <Tab text="Untitled Tab" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.ExaminerController">
   <content>
@@ -57,7 +58,19 @@
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label text="People" />
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="People" />
+                              <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <CustomTextField fx:id="txtSearch" promptText="search employees" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </HBox>
                         <ListView fx:id="peopleView" prefHeight="302.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
                         <Hyperlink fx:id="lnkNewPerson" onAction="#newPersonAction" text="Add new person" />
                      </children>

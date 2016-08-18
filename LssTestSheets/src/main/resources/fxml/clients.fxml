@@ -7,10 +7,11 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
 
 <VBox alignment="TOP_RIGHT" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.ClientsController">
    <children>
-      <HBox VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
          <children>
             <Hyperlink fx:id="lnkRemove" onAction="#removeClientAction" text="Remove Selected">
                <HBox.margin>
@@ -18,7 +19,15 @@
                </HBox.margin>
             </Hyperlink>
             <Hyperlink fx:id="lnkAdd" onAction="#addClientAction" text="Add Clients" />
+            <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+               <children>
+                  <CustomTextField fx:id="txtSearch" promptText="search name, address, etc." />
+               </children>
+            </HBox>
          </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
       </HBox>
       <Separator VBox.vgrow="ALWAYS" />
       <TableView fx:id="table" onMouseClicked="#onClientSelected" VBox.vgrow="ALWAYS">

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.textfield.CustomTextField;
+
 import Elyas.LssTestSheets.factory.PersonFactory;
 import Elyas.LssTestSheets.factory.ViewFactory;
 import Elyas.LssTestSheets.factory.ViewFactoryResult;
@@ -13,6 +15,8 @@ import Elyas.LssTestSheets.model.Employee;
 import Elyas.LssTestSheets.model.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class ClientsController extends Controller implements Initializable{
+public class ClientsController extends Controller implements Initializable {
 
 	@FXML
 	TableView<Client> table;
@@ -38,57 +42,82 @@ public class ClientsController extends Controller implements Initializable{
 	TableColumn<Client, Integer> colAbsence;
 	@FXML
 	TableColumn<Client, String> colPrerequisites;
-	
+	@FXML
+	CustomTextField txtSearch;
+
 	private ObservableList<Client> obsClients;
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+
 		colName.setCellValueFactory(new PropertyValueFactory<Client, String>("name"));
 		colAbsence.setCellValueFactory(new PropertyValueFactory<Client, Integer>("absenceCount"));
 		colPrerequisites.setCellValueFactory(new PropertyValueFactory<Client, String>("prerequisitesMet"));
-		
+
 		List<Client> clients = Model.getInstance().getClients();
 		obsClients = FXCollections.observableList(clients);
-		table.setItems(obsClients);
+		FilteredList<Client> filteredData = new FilteredList<>(obsClients, p -> true);
+		
+		txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(person -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (person.toJSON().toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches.
+                }
+                return false; // Does not match.
+            });
+        });
+		
+		SortedList<Client> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
+		table.setItems(sortedData);
 	}
-	
+
 	/**
 	 * called when the user requests to add more clients.
+	 * 
 	 * @param event
 	 */
 	@FXML
-	protected void addClientAction(ActionEvent event){
+	protected void addClientAction(ActionEvent event) {
 		this.finishHandler.onFinish(ViewState.STUDENT);
 	}
-	
+
 	@FXML
-	protected void removeClientAction(ActionEvent event){
+	protected void removeClientAction(ActionEvent event) {
 		Client c = table.getSelectionModel().getSelectedItem();
-		if(c == null)
+		if (c == null)
 			return;
 		obsClients.remove(c);
 		Model.getInstance().removeClient(c);
 	}
-	
+
 	/**
 	 * called when the user selects a specific client.
+	 * 
 	 * @param event
 	 */
 	@FXML
-	protected void onClientSelected(MouseEvent event){
+	protected void onClientSelected(MouseEvent event) {
 		Client c = table.getSelectionModel().getSelectedItem();
-		if(c == null)
+		if (c == null)
 			return;
-		
-		if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+
+		if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
 			ViewFactoryResult result = ViewFactory.getView("/fxml/client.fxml");
 			final ClientController controller = (ClientController) result.controller;
 			controller.setClient(c);
 			Scene scene = new Scene(result.parent);
 			final Stage stage = new Stage();
 			stage.setScene(scene);
-			stage.initModality(Modality.APPLICATION_MODAL);  
+			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.show();
 			controller.setStage(stage);
 			controller.setOnFinishHandler(new FinishHandler() {
@@ -97,7 +126,7 @@ public class ClientsController extends Controller implements Initializable{
 					Client client = controller.getClient();
 					if (preCheck(client)) {
 						Model.getInstance().updateClient(client);
-						//work around to update the table.
+						// work around to update the table.
 						table.getColumns().get(0).setVisible(false);
 						table.getColumns().get(0).setVisible(true);
 						stage.close();
@@ -119,16 +148,16 @@ public class ClientsController extends Controller implements Initializable{
 			});
 		}
 	}
-	
+
 	@Override
 	public void finalize() {
-		for(Client c : obsClients){
+		for (Client c : obsClients) {
 			Model.getInstance().updateClient(c);
 		}
 	}
 
 	@Override
-	public ViewState getViewState(){
+	public ViewState getViewState() {
 		return ViewState.STUDENTS;
 	}
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.textfield.CustomTextField;
+
 import Elyas.LssTestSheets.factory.PersonFactory;
 import Elyas.LssTestSheets.factory.ViewFactory;
 import Elyas.LssTestSheets.factory.ViewFactoryResult;
@@ -12,6 +14,8 @@ import Elyas.LssTestSheets.model.Employee;
 import Elyas.LssTestSheets.model.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +33,9 @@ public class ExaminerController extends Controller implements Initializable {
 	private ListView<Employee> examinersView;
 	@FXML
 	private ListView<Employee> peopleView;
+	
+	@FXML
+	private CustomTextField txtSearch;
 
 	private ObservableList<Employee> obsExaminers;
 	private ObservableList<Employee> obsPersons;
@@ -39,7 +46,29 @@ public class ExaminerController extends Controller implements Initializable {
 
 		List<Employee> registeredPersons = PersonFactory.getKnownEmployees();
 		obsPersons = FXCollections.observableList(registeredPersons);
-		peopleView.setItems(obsPersons);
+		FilteredList<Employee> filteredData = new FilteredList<>(obsPersons, p -> true);
+
+		txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(person -> {
+				// If filter text is empty, display all persons.
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+
+				// Compare first name and last name of every person with filter
+				// text.
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				if (person.toJSON().toString().toLowerCase().contains(lowerCaseFilter)) {
+					return true; // Filter matches.
+				}
+				return false; // Does not match.
+			});
+		});
+
+		SortedList<Employee> sortedData = new SortedList<>(filteredData);
+		
+		peopleView.setItems(sortedData);
 
 		List<Employee> instructors = new ArrayList<>();
 		obsExaminers = FXCollections.observableList(instructors);
