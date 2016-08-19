@@ -19,9 +19,13 @@
                </HBox.margin>
             </Hyperlink>
             <Hyperlink fx:id="lnkAdd" onAction="#addClientAction" text="Add Clients" />
+            <Hyperlink onAction="#verifyAddressesAction" text="Verify Addresses" />
             <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                <children>
-                  <CustomTextField fx:id="txtSearch" promptText="search name, address, etc." />
+                  <CustomTextField fx:id="txtSearch" promptText="search name, address, etc.">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin></CustomTextField>
                </children>
             </HBox>
          </children>

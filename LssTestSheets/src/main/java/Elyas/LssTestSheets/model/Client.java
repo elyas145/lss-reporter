@@ -378,4 +378,8 @@ public class Client {
 		}
 		return false;
 	}
+
+	public String getFullAddress() {
+		return getFinalAddress() + ", " + city + ", " + postalCode;
+	}
 }

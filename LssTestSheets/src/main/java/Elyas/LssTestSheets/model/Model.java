@@ -393,4 +393,8 @@ public class Model {
 	public void setChanged() {
 		this.isChanged = true;
 	}
+
+	public ArrayList<Client> getClientsAsCopy() {
+		return new ArrayList<>(course.getClients());
+	}
 }
