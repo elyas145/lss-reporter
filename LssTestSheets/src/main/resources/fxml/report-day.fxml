@@ -3,44 +3,34 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckListView?>
 
 <Tab onCloseRequest="#closeRequested" text="Day 1" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.DayReportController">
-	<content>
-		<TabPane fx:id="mainTab" side="LEFT" tabClosingPolicy="UNAVAILABLE">
-			<tabs>
-				<Tab text="General">
-					<content>
-						<HBox>
-							<children>
-								<VBox>
-									<children>
-										<Label text="Attendace" />
-										<CheckListView fx:id="chkLstAttendance" VBox.vgrow="ALWAYS" />
-									</children>
-									<HBox.margin>
-										<Insets right="5.0" />
-									</HBox.margin>
-								</VBox>
-								<VBox HBox.hgrow="ALWAYS">
-									<children>
-										<Label text="Notes" />
-										<TextArea fx:id="txtGeneralNotes" VBox.vgrow="ALWAYS" />
-									</children>
-								</VBox>
-							</children>
-							<padding>
-								<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-							</padding>
-						</HBox>
-					</content>
-				</Tab>
-				
-			</tabs>
-		</TabPane>
-	</content>
+   <content>
+      <HBox>
+         <children>
+            <VBox>
+               <children>
+                  <Label text="Attendace" />
+                  <CheckListView fx:id="chkLstAttendance" VBox.vgrow="ALWAYS" />
+               </children>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="General Notes" />
+                  <TextArea fx:id="txtGeneralNotes" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </content>
 </Tab>

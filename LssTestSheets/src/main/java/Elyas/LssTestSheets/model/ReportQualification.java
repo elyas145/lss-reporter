@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
+@Deprecated
 public class ReportQualification {
 	private ObservableMap<String, String> notes;
 	private String name;

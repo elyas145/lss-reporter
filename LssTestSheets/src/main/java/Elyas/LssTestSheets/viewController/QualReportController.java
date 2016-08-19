@@ -17,6 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 
+@Deprecated
 public class QualReportController extends Controller implements Initializable {
 
 	@FXML
@@ -35,7 +36,7 @@ public class QualReportController extends Controller implements Initializable {
 	}
 
 	public void setQual(ReportDay parent, ReportQualification qualification) {
-		if (qualification != null){
+		if (qualification != null) {
 			this.qualification = qualification;
 			this.parent = parent;
 		}
@@ -47,17 +48,23 @@ public class QualReportController extends Controller implements Initializable {
 		if (client == null) {
 			return;
 		}
-		if (currentClient != null)
-			Model.getInstance().getReport().setQualNote(parent, qualification, currentClient, txtNotes.getText());
 
-		currentClient = client;
-		txtNotes.setText(Model.getInstance().getReport().getQualNote(parent, qualification, currentClient));
+		if (currentClient != null)
+			// Model.getInstance().getReport().setQualNote(parent,
+			// qualification, currentClient, txtNotes.getText());
+
+			currentClient = client;
+
+		// txtNotes.setText(Model.getInstance().getReport().getQualNote(parent,
+		// qualification, currentClient));
 	}
+
 	@Override
-	public void finalize(){
-		if (currentClient != null){
-			Model.getInstance().getReport().setQualNote(parent, qualification, currentClient, txtNotes.getText());
-	
+	public void finalize() {
+		if (currentClient != null) {
+			// Model.getInstance().getReport().setQualNote(parent,
+			// qualification, currentClient, txtNotes.getText());
+
 		}
 	}
 }

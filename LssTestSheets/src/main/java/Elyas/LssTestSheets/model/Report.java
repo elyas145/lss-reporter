@@ -75,16 +75,6 @@ public class Report {
 
 	}
 
-	public void setQualNote(ReportDay parent, ReportQualification qualification, Client client, String note) {
-		days.get(days.indexOf(parent)).setQualNote(qualification, client, note);
-
-	}
-
-	public String getQualNote(ReportDay day, ReportQualification qualification, Client client) {
-
-		return days.get(days.indexOf(day)).getQualNote(qualification, client);
-	}
-
 	public void addDay(ReportDay day) {
 		days.add(day);
 

@@ -16,7 +16,6 @@ import javafx.collections.ObservableMap;
 public class ReportDay {
 	private ObservableMap<String, Boolean> attendance;
 	private String generalNotes;
-	private List<ReportQualification> qualifications;
 	private int dayNumber;
 
 	public ReportDay(int day) {
@@ -26,16 +25,7 @@ public class ReportDay {
 		for (Client client : Model.getInstance().getClients()) {
 			attendance.put(client.getID(), false);
 		}
-		this.qualifications = new ArrayList<>();
-		for (Qualification qualification : Model.getInstance().getCourse().getQualifications()) {
-			qualifications
-					.add(new ReportQualification(qualification.getName(), new MapChangeListener<String, String>() {
-						@Override
-						public void onChanged(Change<? extends String, ? extends String> change) {
-							Model.getInstance().setChanged();
-						}
-					}));
-		}
+		
 		attendance.addListener(new MapChangeListener<String, Boolean>() {
 			@Override
 			public void onChanged(
@@ -53,20 +43,6 @@ public class ReportDay {
 			attendance.put(id, jsonAttendance.getBoolean(id));
 		}
 		dayNumber = obj.getInt("day");
-		JSONArray jsonQuals = obj.getJSONArray("quals");
-		qualifications = new ArrayList<>();
-		for (int i = 0; i < jsonQuals.length(); i++) {
-			JSONObject jsonQual = jsonQuals.getJSONObject(i);
-			qualifications.add(new ReportQualification(jsonQual, new MapChangeListener<String, String>(){
-
-				@Override
-				public void onChanged(
-						javafx.collections.MapChangeListener.Change<? extends String, ? extends String> change) {
-					Model.getInstance().setChanged();					
-				}				
-			}));
-		}
-
 	}
 
 	public void setNumber(int dayNumber) {
@@ -86,11 +62,7 @@ public class ReportDay {
 		object.put("attendance", att);
 		object.put("general", generalNotes);
 		object.put("day", String.valueOf(dayNumber));
-		JSONArray array = new JSONArray();
-		for (ReportQualification qualification : qualifications) {
-			array.put(qualification.toJSON());
-		}
-		object.put("quals", array);
+
 		return object;
 	}
 
@@ -105,20 +77,6 @@ public class ReportDay {
 
 	public void setAttendance(Client client, boolean isHere) {
 		attendance.put(client.getID(), isHere);
-	}
-
-	public List<ReportQualification> getQualifications() {
-		return this.qualifications;
-	}
-
-	public void setQualNote(ReportQualification qualification, Client client, String note) {
-		qualifications.get(qualifications.indexOf(qualification)).setNote(client, note);
-
-	}
-
-	public String getQualNote(ReportQualification qualification, Client client) {
-
-		return new String(qualifications.get(qualifications.indexOf(qualification)).getNote(client));
 	}
 
 	public int getNumber() {

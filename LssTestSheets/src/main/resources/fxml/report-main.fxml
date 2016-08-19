@@ -42,7 +42,7 @@
                         </VBox>
                         <VBox HBox.hgrow="ALWAYS">
                            <children>
-                              <Label text="Notes" />
+                              <Label text="Client Specific Notes" />
                               <TextArea fx:id="txtGeneralNotes" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>

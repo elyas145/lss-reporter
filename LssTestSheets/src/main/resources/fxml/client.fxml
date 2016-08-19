@@ -41,17 +41,17 @@
                   </Separator>
                   <VBox alignment="CENTER">
                      <children>
-                        <CustomTextField fx:id="txtYear" prefColumnCount="2" promptText="Year">
+                        <CustomTextField fx:id="txtYear" prefColumnCount="2" promptText="YY">
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </CustomTextField>
-                        <CustomTextField fx:id="txtMonth" prefColumnCount="2" promptText="Month">
+                        <CustomTextField fx:id="txtMonth" prefColumnCount="2" promptText="MM">
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </CustomTextField>
-                        <CustomTextField fx:id="txtDay" prefColumnCount="2" promptText="Day" />
+                        <CustomTextField fx:id="txtDay" prefColumnCount="2" promptText="DD" />
                      </children>
                   </VBox>
                </children>

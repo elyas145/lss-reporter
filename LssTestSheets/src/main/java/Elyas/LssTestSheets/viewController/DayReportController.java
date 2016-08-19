@@ -32,21 +32,16 @@ public class DayReportController extends Controller implements Initializable {
 
 	private ReportDay day;
 	@FXML
-	TabPane mainTab;
-	@FXML
 	CheckListView<Client> chkLstAttendance;
 	@FXML
 	TextArea txtGeneralNotes;
 	private ObservableList<Client> obsClients;
-	List<QualReportController> controllers;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		controllers = new ArrayList<>();
 		obsClients = FXCollections.observableList(Model.getInstance().getClients());
 		chkLstAttendance.setItems(obsClients);
-
-		mainTab.getSelectionModel().selectedItemProperty().addListener((ov) -> finalize());
+		
 		chkLstAttendance.getCheckModel().getCheckedItems().addListener(new ListChangeListener<Client>() {
 
 			@Override
@@ -64,9 +59,6 @@ public class DayReportController extends Controller implements Initializable {
 
 	@Override
 	public void finalize() {
-		for (QualReportController controller : controllers) {
-			controller.finalize();
-		}
 		day.setGeneralNote(txtGeneralNotes.getText());
 	}
 
@@ -76,7 +68,7 @@ public class DayReportController extends Controller implements Initializable {
 		alert.setTitle("Confirmation Dialog");
 		alert.setHeaderText(null);
 		alert.setContentText(
-				"Removing a day will remove all notes taken about the students, and any information related to the day. Continue?");
+				"Removing a day will remove all notes, and any information related to the day. Continue?");
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
@@ -102,19 +94,6 @@ public class DayReportController extends Controller implements Initializable {
 						}
 					}
 				}
-			}
-		}
-		for (ReportQualification qualification : day.getQualifications()) {
-			FXMLLoader loader = new FXMLLoader(DayReportController.class.getResource("/fxml/report-qual.fxml"));
-			try {
-				Tab tab = loader.load();
-				QualReportController controller = (QualReportController) loader.getController();
-				controller.setQual(day, qualification);
-				controllers.add(controller);
-				tab.setText(qualification.getName());
-				mainTab.getTabs().add(tab);
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 		txtGeneralNotes.setText(day.getGeneralNotes());
