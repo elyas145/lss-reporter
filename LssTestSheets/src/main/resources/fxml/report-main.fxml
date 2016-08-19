@@ -21,11 +21,14 @@
             <Insets left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </Label>
-      <Button defaultButton="true" mnemonicParsing="false" onAction="#addNewDayAction" text="Add New Day">
+      <HBox>
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
-      </Button>
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#addNewDayAction" text="Add New Day" />
+         </children>
+      </HBox>
       <TabPane fx:id="mainTab">
         <tabs>
           <Tab closable="false" text="General">
