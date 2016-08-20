@@ -247,13 +247,34 @@ public class Client {
 	public String getPrerequisitesMet() {
 		Map<String, Boolean> keys = new HashMap<>();
 
-		for (List<Prerequisite> pres : prerequisites.values()) {
-			for (Prerequisite pre : pres) {
-				if (keys.get(pre.key) == null) {
-					keys.put(pre.key, pre.isMet());
-				} else {
+		for (String qual : prerequisites.keySet()) {
+			for (Prerequisite pre : prerequisites.get(qual)) {
+				if (keys.get(pre.key) == null) { // we have not added this key
+													// before.
+					if (Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
+						// exam is original. only add if pre is original
+						if (!pre.getName().toLowerCase().contains("recert")) {
+							keys.put(pre.key, pre.isMet());
+						}
+					} else {
+						// exam is recert, only add if recert pre
+						if (pre.getName().toLowerCase().contains("recert")) {
+							keys.put(pre.key, pre.isMet());
+						}
+					}
+
+				} else { // we already have this key.
 					if (keys.get(pre.key) && !pre.isMet()) {
-						keys.put(pre.key, false);
+						if (pre.getName().toLowerCase().contains("recert")) {
+							if (!Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
+								keys.put(pre.key, false);
+							}
+						} else {
+							if (Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
+								keys.put(pre.key, false);
+							}
+						}
+
 					}
 				}
 			}
@@ -264,11 +285,24 @@ public class Client {
 			}
 		}
 		boolean isEmpty = true;
-		for(List<Prerequisite> pres : prerequisites.values()){
-			if(!pres.isEmpty())
-				isEmpty = false;
+		for (String qual : prerequisites.keySet()) {
+			if (!prerequisites.get(qual).isEmpty()){
+				
+				for (Prerequisite prerequisite : prerequisites.get(qual)) {
+					if(!Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()){
+						if(prerequisite.getName().toLowerCase().contains("recert")){
+							isEmpty = false;
+						}
+					}else{	//is original
+						if(!prerequisite.getName().toLowerCase().contains("recert")){
+							isEmpty = false;
+						}
+					}
+				}
+			}
+				
 		}
-		if(isEmpty){
+		if (isEmpty) {
 			return "N/A";
 		}
 		return "Not checked";
