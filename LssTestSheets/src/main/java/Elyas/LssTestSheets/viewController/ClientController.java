@@ -17,6 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
 
 public class ClientController extends Controller implements Initializable {
@@ -50,6 +51,11 @@ public class ClientController extends Controller implements Initializable {
 	Button btnCancel;
 	@FXML
 	Label lblAdded;
+	@FXML
+	RadioButton rdbMale;
+	@FXML
+	RadioButton rdbFemale;
+	
 	private Stage stage;
 	private Client currentClient;
 
@@ -243,6 +249,7 @@ public class ClientController extends Controller implements Initializable {
 		c.setPostalCode(txtPostalCode.getText());
 		c.setYear(txtYear.getText());
 		c.setApartment(txtApt.getText());
+		c.setMale(rdbMale.isSelected());
 		return c;
 	}
 
@@ -264,6 +271,8 @@ public class ClientController extends Controller implements Initializable {
 		this.txtPhone.setText(c.getPhone());
 		this.txtPostalCode.setText(c.getPostalCode());
 		this.txtYear.setText(c.getYear());
+		this.rdbMale.setSelected(c.isMale());
+		this.rdbFemale.setSelected(!c.isMale());
 
 	}
 

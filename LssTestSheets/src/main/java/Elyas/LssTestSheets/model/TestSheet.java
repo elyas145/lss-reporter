@@ -92,6 +92,8 @@ public class TestSheet {
 
 	public class Student {
 		String name;
+		String firstName;
+		String lastName;
 		String address;
 		String city;
 		String postalCode;
@@ -106,7 +108,9 @@ public class TestSheet {
 		private ArrayList<MustSee> mustSees;
 
 		public Student(JSONObject obj) {
-			name = (String) obj.get("name");
+			name = obj.optString("name");
+			firstName = obj.optString("first-name");
+			lastName = obj.optString("last-name");
 			address = (String) obj.get("address");
 			city = (String) obj.get("city");
 			postalCode = (String) obj.get("postal-code");
@@ -136,6 +140,14 @@ public class TestSheet {
 
 		public String getName() {
 			return name;
+		}
+
+		public String getLastName() {
+			return lastName;
+		}
+
+		public String getFirstName() {
+			return firstName;
 		}
 
 		public String getAddress() {

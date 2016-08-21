@@ -3,6 +3,7 @@
 		{"name":"Bronze Cross", "pdf":"/pdf/bronze-cross.pdf", "template":"/template/bronze-cross.json"},
 		{"name":"Standard First Aid", "pdf":"/pdf/sfa.pdf", "template":"/template/sfa.json"},
 		{"name":"Bronze Medallion", "pdf":"/pdf/bronze-med.pdf", "template":"/template/bronze-med.json"},
+		{"name":"National Lifeguard - Pool", "pdf":"/pdf/nls-pool.pdf", "template":"/template/nls-pool.json"},
 		{"name":"Emergency First Aid", "pdf":"/pdf/efa.pdf", "template":"/template/efa.json"}
 	]
 }

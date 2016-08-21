@@ -13,19 +13,20 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 public class Client {
-	String name = "";
-	String address = "";
-	String city = "";
-	String postalCode = "";
-	String email = "";
-	String phone = "";
-	String year = "";
-	String month = "";
-	String day = "";
-	Map<String, List<Prerequisite>> prerequisites;
-	Map<String, List<MustSee>> mustSees;
+	private String name = "";
+	private String address = "";
+	private String city = "";
+	private String postalCode = "";
+	private String email = "";
+	private String phone = "";
+	private String year = "";
+	private String month = "";
+	private String day = "";
+	private Map<String, List<Prerequisite>> prerequisites;
+	private Map<String, List<MustSee>> mustSees;
 	private String id = "";
 	private String apartment = "";
+	private boolean isMale;
 
 	public Client() {
 		prerequisites = new HashMap<>();
@@ -43,6 +44,7 @@ public class Client {
 		month = obj.getString("month");
 		day = obj.getString("day");
 		id = obj.getString("id");
+		isMale = obj.optBoolean("is-male");
 		prerequisites = new HashMap<>();
 		mustSees = new HashMap<>();
 		for (Qualification qualification : qualifications) {
@@ -358,6 +360,7 @@ public class Client {
 		object.put("month", month);
 		object.put("day", day);
 		object.put("id", id);
+		object.put("is-male", isMale);
 
 		for (String qual : prerequisites.keySet()) {
 			JSONArray pres = new JSONArray();
@@ -415,5 +418,13 @@ public class Client {
 
 	public String getFullAddress() {
 		return getFinalAddress() + ", " + city + ", " + postalCode;
+	}
+
+	public void setMale(boolean selected) {
+		isMale = selected;
+	}
+
+	public boolean isMale() {
+		return isMale;
 	}
 }

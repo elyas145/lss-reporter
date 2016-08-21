@@ -21,13 +21,13 @@ public class Test {
 		TestSheet testSheet = null;
 		Qualification qual = null;
 		for (Qualification qualification : qualifications) {
-			if (qualification.getName().equals("Emergency First Aid")) {
+			if (qualification.getName().equals("National Lifeguard - Pool")) {
 				course.addQualification(qualification);
 				qualification.addExaminer(PersonFactory.getKnownEmployees().get(0));
 				qualification.addInstructor(PersonFactory.getKnownEmployees().get(1));
 				qualification.setExamDate(LocalDate.parse("2007-12-13"));
 				qual = qualification;
-				qual.setTestSheetPath("/pdf/efa.pdf", "/template/efa.json");
+				qual.setTestSheetPath("/pdf/nls-pool.pdf", "/template/nls-pool.json");
 				testSheet = qual.getTestSheet();
 			}
 		}
@@ -48,17 +48,18 @@ public class Test {
 			client.setName("name " + i);
 			client.setPhone("phone " + i);
 			client.setPostalCode("postal " + i);
+			client.setMale(i % 2 == 0);
 			course.addClient(client);
 
 			for (Prerequisite prerequisite : client.getPrerequisites(qual.getName())) {
 				if (prerequisite.getType().equals(Type.DATE)) {
-					if(i<10){
-						prerequisite.setDateEarned("2007-08-0" + (i+1));
-					}else{
-						prerequisite.setDateEarned("2007-08-" + (i+1));
+					if (i < 10) {
+						prerequisite.setDateEarned("2007-08-0" + (i + 1));
+					} else {
+						prerequisite.setDateEarned("2007-08-" + (i + 1));
 					}
 					prerequisite.setLocation("location " + i);
-				}else{
+				} else {
 					prerequisite.setMet(true);
 				}
 

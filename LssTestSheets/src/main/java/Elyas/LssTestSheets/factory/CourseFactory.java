@@ -324,31 +324,39 @@ public class CourseFactory {
 				while (iterator.hasNext() && !clients.isEmpty()) {
 					// System.out.println("-----begin iteration-----\nclients
 					// left: " + clients.size());
-					
+
 					Student student = iterator.next();
 					Client client = clients.poll();
-					try{
-					// System.out.println("student number: " +
-					// student.getName());					
-					setPDFText(acroForm.getField(student.getName()), client.getName(), instructor_pref_size);
-					if (testSheet.hasApartment()) {
-						setPDFText(acroForm.getField(student.getAddress()), client.getAddress(), instructor_pref_size);
-						setPDFText(acroForm.getField(student.getApartment()), client.getApartment(),
+					try {
+						if (student.getName() == null) {
+							// test sheet has first and last name.
+							String first = client.getName().trim().substring(0, client.getName().lastIndexOf(' '));
+							String last = client.getName().trim().substring(client.getName().lastIndexOf(' ') + 1,
+									client.getName().length());
+							setPDFText(acroForm.getField(student.getFirstName()), first, instructor_pref_size);
+							setPDFText(acroForm.getField(student.getLastName()), last, instructor_pref_size);
+						} else {
+							setPDFText(acroForm.getField(student.getName()), client.getName(), instructor_pref_size);
+						}
+						if (testSheet.hasApartment()) {
+							setPDFText(acroForm.getField(student.getAddress()), client.getAddress(),
+									instructor_pref_size);
+							setPDFText(acroForm.getField(student.getApartment()), client.getApartment(),
+									instructor_pref_size);
+						} else {
+							setPDFText(acroForm.getField(student.getAddress()), client.getFinalAddress(),
+									instructor_pref_size);
+						}
+						setPDFText(acroForm.getField(student.getCity()), client.getCity(), instructor_pref_size);
+						setPDFText(acroForm.getField(student.getPostalCode()), client.getPostalCode(),
 								instructor_pref_size);
-					} else {
-						setPDFText(acroForm.getField(student.getAddress()), client.getFinalAddress(),
-								instructor_pref_size);
-					}
-					setPDFText(acroForm.getField(student.getCity()), client.getCity(), instructor_pref_size);
-					setPDFText(acroForm.getField(student.getPostalCode()), client.getPostalCode(),
-							instructor_pref_size);
-					setPDFText(acroForm.getField(student.getEmail()), client.getEmail(), instructor_pref_size);
-					setPDFText(acroForm.getField(student.getPhone()), client.getPhone(), instructor_pref_size);
+						setPDFText(acroForm.getField(student.getEmail()), client.getEmail(), instructor_pref_size);
+						setPDFText(acroForm.getField(student.getPhone()), client.getPhone(), instructor_pref_size);
 
-					acroForm.getField(student.getYear()).setValue(client.getYear());
-					acroForm.getField(student.getMonth()).setValue(client.getMonth());
-					acroForm.getField(student.getDay()).setValue(client.getDay());
-					}catch (Exception e) {
+						acroForm.getField(student.getYear()).setValue(client.getYear());
+						acroForm.getField(student.getMonth()).setValue(client.getMonth());
+						acroForm.getField(student.getDay()).setValue(client.getDay());
+					} catch (Exception e) {
 						System.out.println("---------------- client info set error -----------------");
 						System.out.println("name: " + student.getName());
 
@@ -363,7 +371,8 @@ public class CourseFactory {
 							if (see.isAppEvaluated()) {
 
 								see.evaluate(client, qualification.getName());
-								//System.out.println(client.getName() + " " + see.getItem() + ": " + see.isCompleted());
+								// System.out.println(client.getName() + " " +
+								// see.getItem() + ": " + see.isCompleted());
 							}
 
 							if (see.isCompleted()) {
@@ -578,8 +587,8 @@ public class CourseFactory {
 		int numCharacters = value.length();
 		// System.out.println(field.getFullyQualifiedName() + " width / length:
 		// " + width / numCharacters);
-		if(prefSize <= 6){
-			return ""+prefSize;
+		if (prefSize <= 6) {
+			return "" + prefSize;
 		}
 		if (width / numCharacters < 5) {
 			return "6";
@@ -642,7 +651,8 @@ public class CourseFactory {
 						int i = 1;
 						for (PDDocument doc : docs) {
 							String dir = directoryPath + System.getProperty("file.separator")
-									+ StringUtils.capitalize(Model.getInstance().getCourseName()) + " Testsheet " + (i++) + ".pdf";
+									+ StringUtils.capitalize(Model.getInstance().getCourseName()) + " Testsheet "
+									+ (i++) + ".pdf";
 							File file = new File(dir);
 							if (file.exists()) {
 								final String name = Model.getInstance().getCourseName() + " Testsheet " + (i - 1);
