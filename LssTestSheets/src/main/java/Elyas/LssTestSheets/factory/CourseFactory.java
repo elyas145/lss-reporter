@@ -328,7 +328,7 @@ public class CourseFactory {
 					Student student = iterator.next();
 					Client client = clients.poll();
 					try {
-						if (student.getName() == null) {
+						if (student.getName().trim().equals("")) {
 							// test sheet has first and last name.
 							String first = client.getName().trim().substring(0, client.getName().lastIndexOf(' '));
 							String last = client.getName().trim().substring(client.getName().lastIndexOf(' ') + 1,
@@ -347,6 +347,10 @@ public class CourseFactory {
 							setPDFText(acroForm.getField(student.getAddress()), client.getFinalAddress(),
 									instructor_pref_size);
 						}
+
+						if (!student.getProvince().equals("")) {
+							acroForm.getField(student.getProvince()).setValue(client.getProvince());
+						}
 						setPDFText(acroForm.getField(student.getCity()), client.getCity(), instructor_pref_size);
 						setPDFText(acroForm.getField(student.getPostalCode()), client.getPostalCode(),
 								instructor_pref_size);
@@ -356,11 +360,24 @@ public class CourseFactory {
 						acroForm.getField(student.getYear()).setValue(client.getYear());
 						acroForm.getField(student.getMonth()).setValue(client.getMonth());
 						acroForm.getField(student.getDay()).setValue(client.getDay());
+
+						if (!student.getGendre().equals("")) {
+							String value;
+							if (client.isMale()) {
+								value = student.getMaleValue();
+							} else {
+								value = student.getFemaleValue();
+							}
+							acroForm.getField(student.getGendre()).setValue(value);
+						}
+
 					} catch (Exception e) {
 						System.out.println("---------------- client info set error -----------------");
 						System.out.println("name: " + student.getName());
+						System.out.println("first name: " + student.getFirstName());
+						System.out.println("last name: " + student.getLastName());
 
-						// e.printStackTrace();
+						e.printStackTrace();
 					}
 					Iterator<MustSee> mustSees = student.getMustSees().iterator();
 					while (mustSees.hasNext()) {
@@ -406,7 +423,7 @@ public class CourseFactory {
 							System.out.println("---------------- must see set error -----------------");
 							System.out.println("name: " + template.getField());
 
-							// e.printStackTrace();
+							e.printStackTrace();
 						}
 					}
 					Iterator<Prerequisite> prerequisites = student.getPrerequisites().iterator();
@@ -414,12 +431,12 @@ public class CourseFactory {
 						Prerequisite template = prerequisites.next();
 						Prerequisite prerequisite = client.getPrerequisite(qualification.getName(), template.getName());
 						if (prerequisite.getType().equals(Type.DATE)) {
-							System.out.println("setting date: " + template.getDateEarned());
+
 							setPDFText(acroForm.getField(template.getDateEarned()), prerequisite.getDateEarned(),
 									pre_pref_size);
 							setPDFText(acroForm.getField(template.getLocation()), prerequisite.getLocation(),
 									pre_pref_size);
-							System.out.println("done");
+
 						}
 					}
 				}
@@ -430,20 +447,30 @@ public class CourseFactory {
 						course.getInstructorsIDs(qualification), instructor_pref_size);
 				setPDFText(acroForm.getField(testSheet.getInstructor().getEmail()),
 						course.getInstructorsEmails(qualification), instructor_pref_size);
-				acroForm.getField(testSheet.getInstructor().getAreaCode())
-						.setValue(course.getInstructorsAreaCode(qualification));
-				setPDFText(acroForm.getField(testSheet.getInstructor().getPhone()),
-						course.getInstructorsPhone(qualification), instructor_pref_size);
+				if (testSheet.getInstructor().getAreaCode().equals("")) {
+					setPDFText(acroForm.getField(testSheet.getInstructor().getPhone()),
+							course.getInstructorsPhoneWithAreaCode(qualification), instructor_pref_size);
+				} else {
+					acroForm.getField(testSheet.getInstructor().getAreaCode())
+							.setValue(course.getInstructorsAreaCode(qualification));
+					setPDFText(acroForm.getField(testSheet.getInstructor().getPhone()),
+							course.getInstructorsPhone(qualification), instructor_pref_size);
+				}
 
 				// exam info
 
 				setPDFText(acroForm.getField(testSheet.getExam().getFacilityName()), course.getFacility().getName(),
 						instructor_pref_size);
-				acroForm.getField(testSheet.getExam().getFacilityAreaCode())
-						.setValue(course.getFacility().getAreaCode());
 
-				setPDFText(acroForm.getField(testSheet.getExam().getFacilityPhone()),
-						course.getFacility().getFinalPhone(), instructor_pref_size);
+				if (testSheet.getExam().getFacilityAreaCode().equals("")) {
+					setPDFText(acroForm.getField(testSheet.getExam().getFacilityPhone()),
+							course.getFacility().getFinalPhoneWithAreaCode(), instructor_pref_size);
+				} else {
+					acroForm.getField(testSheet.getExam().getFacilityAreaCode())
+							.setValue(course.getFacility().getAreaCode());
+					setPDFText(acroForm.getField(testSheet.getExam().getFacilityPhone()),
+							course.getFacility().getFinalPhone(), instructor_pref_size);
+				}
 
 				if (qualification.getExam() != null) {
 					if (course.getQualification(qualification.getName()).getExam().isOriginal()) {
@@ -491,10 +518,16 @@ public class CourseFactory {
 				setPDFText(acroForm.getField(testSheet.getHost().getName()), course.getFacility().getHost().getName(),
 						instructor_pref_size);
 
-				acroForm.getField(testSheet.getHost().getAreaCode())
-						.setValue(course.getFacility().getHost().getAreaCode());
-				setPDFText(acroForm.getField(testSheet.getHost().getPhone()),
-						course.getFacility().getHost().getFinalPhone(), instructor_pref_size);
+				if (testSheet.getHost().getAreaCode().equals("")) {
+					setPDFText(acroForm.getField(testSheet.getHost().getPhone()),
+							course.getFacility().getHost().getFinalPhoneWithAreaCode(), instructor_pref_size);
+				} else {
+					acroForm.getField(testSheet.getHost().getAreaCode())
+							.setValue(course.getFacility().getHost().getAreaCode());
+					setPDFText(acroForm.getField(testSheet.getHost().getPhone()),
+							course.getFacility().getHost().getFinalPhone(), instructor_pref_size);
+				}
+
 				setPDFText(acroForm.getField(testSheet.getHost().getStreet()),
 						course.getFacility().getHost().getAddress(), instructor_pref_size);
 				setPDFText(acroForm.getField(testSheet.getHost().getCity()), course.getFacility().getHost().getCity(),
@@ -511,10 +544,18 @@ public class CourseFactory {
 						course.getQualification(qualification.getName()).getExaminersIDs(), instructor_pref_size);
 				setPDFText(acroForm.getField(testSheet.getExaminer().getEmail()),
 						course.getQualification(qualification.getName()).getExaminersEmails(), instructor_pref_size);
-				acroForm.getField(testSheet.getExaminer().getAreaCode())
-						.setValue(course.getQualification(qualification.getName()).getExaminersAreaCode());
-				setPDFText(acroForm.getField(testSheet.getExaminer().getPhone()),
-						course.getQualification(qualification.getName()).getExaminersPhones(), instructor_pref_size);
+
+				if (testSheet.getInstructor().getAreaCode().equals("")) {
+					setPDFText(acroForm.getField(testSheet.getExaminer().getPhone()),
+							course.getQualification(qualification.getName()).getExaminersPhonesWithAreaCode(),
+							instructor_pref_size);
+				} else {
+					acroForm.getField(testSheet.getExaminer().getAreaCode())
+							.setValue(course.getQualification(qualification.getName()).getExaminersAreaCode());
+					setPDFText(acroForm.getField(testSheet.getExaminer().getPhone()),
+							course.getQualification(qualification.getName()).getExaminersPhones(),
+							instructor_pref_size);
+				}
 
 				if (properties.getProperty(TestSheetProperties.FLATTEN.name(), true + "").equals(true + "")
 						|| properties.getProperty(TestSheetProperties.GENERATE_SINGLE_FILE.name(), true + "")

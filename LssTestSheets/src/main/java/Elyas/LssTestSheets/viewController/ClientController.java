@@ -27,6 +27,8 @@ public class ClientController extends Controller implements Initializable {
 	@FXML
 	CustomTextField txtAddress;
 	@FXML
+	CustomTextField txtProvince;
+	@FXML
 	CustomTextField txtCity;
 	@FXML
 	CustomTextField txtPostalCode;
@@ -101,6 +103,9 @@ public class ClientController extends Controller implements Initializable {
 		}
 		if (txtCity.getText().trim().equals("")) {
 			error += "City not valid.\n";
+		}
+		if(txtProvince.getText().equals("") || txtProvince.getText().length() != 2){
+			error += "Province not valid.\n";
 		}
 
 		String postal = ""; 
@@ -229,6 +234,7 @@ public class ClientController extends Controller implements Initializable {
 		this.txtPostalCode.setText("");
 		this.txtYear.setText("");
 		this.txtApt.setText("");
+		this.txtProvince.setText("ON");
 	}
 
 	Client getClient() {
@@ -250,6 +256,7 @@ public class ClientController extends Controller implements Initializable {
 		c.setYear(txtYear.getText());
 		c.setApartment(txtApt.getText());
 		c.setMale(rdbMale.isSelected());
+		c.setProvince(txtProvince.getText());
 		return c;
 	}
 
@@ -273,6 +280,7 @@ public class ClientController extends Controller implements Initializable {
 		this.txtYear.setText(c.getYear());
 		this.rdbMale.setSelected(c.isMale());
 		this.rdbFemale.setSelected(!c.isMale());
+		this.txtProvince.setText(c.getProvince());
 
 	}
 

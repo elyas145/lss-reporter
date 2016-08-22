@@ -96,13 +96,13 @@ public class Course {
 
 	public String getBarcodes() {
 		String barcodes = "";
-		if(barcode1 != null && !barcode1.equals("")){
+		if (barcode1 != null && !barcode1.equals("")) {
 			barcodes += barcode1;
 		}
-		if(barcode2 != null && !barcode2.equals("") && barcode1 != null && !barcode1.equals("")){
+		if (barcode2 != null && !barcode2.equals("") && barcode1 != null && !barcode1.equals("")) {
 			barcodes += ", ";
 		}
-		if(barcode2 != null && !barcode2.equals("")){
+		if (barcode2 != null && !barcode2.equals("")) {
 			barcodes += barcode2;
 		}
 		return barcodes;
@@ -457,6 +457,24 @@ public class Course {
 				names += employee.getFinalPhone();
 			} else {
 				names += employee.getFinalPhone() + ", ";
+			}
+			i++;
+		}
+		return names;
+	}
+
+	public String getInstructorsPhoneWithAreaCode(Qualification qualification) {
+		String names = "";
+		int i = 0;
+		List<Employee> employees = qualifications.get(qualifications.indexOf(qualification)).getInstructors();
+		if (employees == null || employees.isEmpty())
+			return "";
+
+		for (Employee employee : employees) {
+			if (i == employees.size() - 1) {
+				names += "(" + employee.getAreaCode() + ") " + employee.getFinalPhone();
+			} else {
+				names += "(" + employee.getAreaCode() + ") " + employee.getFinalPhone() + ", ";
 			}
 			i++;
 		}

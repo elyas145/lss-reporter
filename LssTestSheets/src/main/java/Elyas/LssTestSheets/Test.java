@@ -45,10 +45,11 @@ public class Test {
 			client.setMustSees(qual.getName(), testSheet.getClientMustSees());
 			client.setID(i + "");
 			client.setMonth("m" + i);
-			client.setName("name " + i);
+			client.setName("name" + i + " last"+i);
 			client.setPhone("phone " + i);
 			client.setPostalCode("postal " + i);
 			client.setMale(i % 2 == 0);
+			client.setProvince("ON"+i);
 			course.addClient(client);
 
 			for (Prerequisite prerequisite : client.getPrerequisites(qual.getName())) {
@@ -69,7 +70,7 @@ public class Test {
 			client.setInstructorItems(qual.getName(), true);
 
 		}
-		course.setName("Emergency First Aid");
+		course.setName("National Lifeguard - Pool");
 		CourseFactory.exportInfo(true, false, null, "/Users/elyas/Desktop", null, course);
 	}
 }

@@ -128,36 +128,44 @@ public class FacilityHost {
 	}
 
 	public void validate(Warning warning) {
-		if(name == null || name.trim().equals("")){
+		if (name == null || name.trim().equals("")) {
 			warning.add("Host name not specified.");
 		}
-		if(areaCode == null || areaCode.trim().equals("")){
+		if (areaCode == null || areaCode.trim().equals("")) {
 			warning.add("Host area Code not specified.");
 		}
-		if(phone == null || phone.trim().equals("")){
+		if (phone == null || phone.trim().equals("")) {
 			warning.add("Host phone not specified.");
 		}
-		if(extension == null || extension.trim().equals("")){
+		if (extension == null || extension.trim().equals("")) {
 			warning.add("Host extension not specified.");
 		}
-		if(postalCode == null || postalCode.trim().equals("")){
+		if (postalCode == null || postalCode.trim().equals("")) {
 			warning.add("Host postal code not specified.");
 		}
-		if(address == null || address.trim().equals("")){
+		if (address == null || address.trim().equals("")) {
 			warning.add("Host address not specified.");
 		}
-		if(city == null || city.trim().equals("")){
+		if (city == null || city.trim().equals("")) {
 			warning.add("Host city not specified.");
 		}
-		if(province == null || province.trim().equals("")){
+		if (province == null || province.trim().equals("")) {
 			warning.add("Host province not specified.");
 		}
 	}
 
 	public String getFinalPhone() {
 		String finalPhone = new String(phone);
-		if(extension != null && !extension.equals("")){
-			finalPhone += " ext."+extension;
+		if (extension != null && !extension.equals("")) {
+			finalPhone += " ext." + extension;
+		}
+		return finalPhone;
+	}
+
+	public String getFinalPhoneWithAreaCode() {
+		String finalPhone = new String("(" + areaCode + ") " + phone);
+		if (extension != null && !extension.equals("")) {
+			finalPhone += " ext." + extension;
 		}
 		return finalPhone;
 	}

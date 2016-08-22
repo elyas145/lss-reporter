@@ -103,6 +103,10 @@ public class TestSheet {
 		String month;
 		String day;
 		String apartment;
+		String gendre = null;
+		String maleValue;
+		String femaleValue;
+		String province;
 
 		private ArrayList<Prerequisite> prerequisites;
 		private ArrayList<MustSee> mustSees;
@@ -112,6 +116,7 @@ public class TestSheet {
 			firstName = obj.optString("first-name");
 			lastName = obj.optString("last-name");
 			address = (String) obj.get("address");
+			province = obj.optString("province");
 			city = (String) obj.get("city");
 			postalCode = (String) obj.get("postal-code");
 			email = (String) obj.get("email");
@@ -120,6 +125,12 @@ public class TestSheet {
 			month = (String) obj.get("month");
 			day = (String) obj.get("day");
 			apartment = obj.optString("apartment");
+			JSONObject objGendre = obj.optJSONObject("gendre");
+			if(objGendre != null){
+				gendre = objGendre.getString("field");
+				maleValue = objGendre.getString("male-value");
+				femaleValue = objGendre.getString("female-value");
+			}
 			JSONArray pres = obj.optJSONArray("prerequisites");
 			prerequisites = new ArrayList<>();
 			if (pres != null) {
@@ -194,6 +205,22 @@ public class TestSheet {
 			return apartment;
 		}
 
+		public String getGendre() {
+			return gendre;
+		}
+		
+		public String getFemaleValue() {
+			return femaleValue;
+		}
+		
+		public String getMaleValue() {
+			return maleValue;
+		}
+
+		public String getProvince() {
+			return province;
+		}
+
 	}
 
 	public class Examiner {
@@ -208,7 +235,7 @@ public class TestSheet {
 			name = (String) obj.get("name");
 			id = (String) obj.get("id");
 			email = (String) obj.get("email");
-			areaCode = (String) obj.get("area-code");
+			areaCode = obj.optString("area-code");
 			phone = (String) obj.get("phone");
 		}
 
@@ -261,7 +288,7 @@ public class TestSheet {
 		public Host(JSONObject obj) {
 			payment = new Payment((JSONObject) obj.get("payment"));
 			name = (String) obj.get("host-name");
-			areaCode = (String) obj.get("host-area-code");
+			areaCode =  obj.optString("host-area-code");
 			phone = (String) obj.get("host-phone");
 			address = (String) obj.get("host-address");
 			province = (String) obj.get("host-province");
@@ -322,7 +349,7 @@ public class TestSheet {
 			setName((String) obj.get("name"));
 			id = (String) obj.get("id");
 			email = (String) obj.get("email");
-			areaCode = (String) obj.get("area-code");
+			areaCode = obj.optString("area-code");
 			phone = (String) obj.get("phone");
 		}
 
@@ -425,7 +452,7 @@ public class TestSheet {
 			day = (String) obj.get("day");
 			type = new Type((JSONObject) obj.get("type"));
 			facilityName = (String) obj.get("facility-name");
-			facilityAreaCode = (String) obj.get("facility-area-code");
+			facilityAreaCode = obj.optString("facility-area-code");
 			facilityPhone = (String) obj.get("facility-phone");
 		}
 

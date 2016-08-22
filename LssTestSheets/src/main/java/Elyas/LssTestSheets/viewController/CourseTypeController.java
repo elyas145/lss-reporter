@@ -1,6 +1,7 @@
 package Elyas.LssTestSheets.viewController;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -8,14 +9,11 @@ import java.util.ResourceBundle;
 import org.controlsfx.control.CheckListView;
 
 import Elyas.LssTestSheets.factory.CourseFactory;
-import Elyas.LssTestSheets.model.Client;
-import Elyas.LssTestSheets.model.Course;
 import Elyas.LssTestSheets.model.Model;
 import Elyas.LssTestSheets.model.Qualification;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
 public class CourseTypeController extends Controller implements Initializable {
@@ -29,6 +27,13 @@ public class CourseTypeController extends Controller implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		List<Qualification> courses = CourseFactory.getSupportedQualifications();
+		courses.sort(new Comparator<Qualification>() {
+
+			@Override
+			public int compare(Qualification o1, Qualification o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
 		lstCourses.getItems().addAll(courses);
 
 	}

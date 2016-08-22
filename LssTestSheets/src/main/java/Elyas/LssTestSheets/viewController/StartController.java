@@ -102,7 +102,10 @@ public class StartController extends Controller implements Initializable {
 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Course File");
-		File file = fileChooser.showOpenDialog(App.getMainStage());		
+		File file = fileChooser.showOpenDialog(App.getMainStage());	
+		if(file == null)
+			return;
+		
 		Course course = CourseFactory.getFullCourse(file);
 		if(course != null){
 			Model.getInstance().setCourse(course);			

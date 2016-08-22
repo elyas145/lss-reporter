@@ -29,6 +29,7 @@
                         <HBox>
                            <children>
                               <CustomTextField fx:id="txtCity" promptText="City" />
+                              <CustomTextField fx:id="txtProvince" prefColumnCount="2" promptText="Provnice" text="ON" />
                               <CustomTextField fx:id="txtPostalCode" promptText="Postal Code" />
                            </children>
                         </HBox>
@@ -64,6 +65,7 @@
                   </Separator>
                   <VBox alignment="CENTER">
                      <children>
+                        <Label text="Date of Birth" />
                         <CustomTextField fx:id="txtYear" prefColumnCount="2" promptText="YY">
                            <VBox.margin>
                               <Insets bottom="5.0" />

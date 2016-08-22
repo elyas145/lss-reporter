@@ -30,29 +30,29 @@ public class Qualification {
 
 	public Qualification(JSONObject obj) {
 		JSONObject jsonExam = obj.optJSONObject("exam");
-		if(jsonExam != null){
+		if (jsonExam != null) {
 			exam = new Exam(jsonExam);
 		}
 		name = new SimpleStringProperty(obj.getString("name"));
-		
+
 		JSONArray jsonInstructors = obj.optJSONArray("instructors");
 		instructors = new ArrayList<>();
-		if(jsonInstructors != null){
+		if (jsonInstructors != null) {
 			for (int i = 0; i < jsonInstructors.length(); i++) {
 				JSONObject jsonInstructor = jsonInstructors.getJSONObject(i);
 				instructors.add(new Employee(jsonInstructor));
 			}
 		}
-		
+
 		JSONArray jsonExaminers = obj.optJSONArray("examiners");
 		examiners = new ArrayList<>();
-		if(jsonExaminers != null){
+		if (jsonExaminers != null) {
 			for (int i = 0; i < jsonExaminers.length(); i++) {
 				JSONObject jsonExaminer = jsonExaminers.getJSONObject(i);
 				examiners.add(new Employee(jsonExaminer));
 			}
 		}
-		
+
 		testSheet = CourseFactory.getTestSheetByName(this);
 	}
 
@@ -286,6 +286,18 @@ public class Qualification {
 		}
 	}
 
+	public String getExaminersPhonesWithAreaCode() {
+		String phones = "";
+		int i = 0;
+		for (Employee employee : examiners) {
+			if (i++ == examiners.size() - 1) {
+				phones += "(" + employee.getAreaCode() + ") " + employee.getFinalPhone();
+			} else {
+				phones += "(" + employee.getAreaCode() + ") " + employee.getFinalPhone() + ", ";
+			}
+		}
+		return phones;
+	}
 
 	private SimpleStringProperty name;
 	private ArrayList<Employee> instructors;
@@ -295,6 +307,5 @@ public class Qualification {
 	private TestSheet testSheet;
 	private String pdfPath;
 	private ChangeHandler changeHandler;
-	
 
 }

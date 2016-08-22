@@ -27,6 +27,7 @@ public class Client {
 	private String id = "";
 	private String apartment = "";
 	private boolean isMale;
+	private String province = "";
 
 	public Client() {
 		prerequisites = new HashMap<>();
@@ -45,6 +46,7 @@ public class Client {
 		day = obj.getString("day");
 		id = obj.getString("id");
 		isMale = obj.optBoolean("is-male");
+		province = obj.optString("province");
 		prerequisites = new HashMap<>();
 		mustSees = new HashMap<>();
 		for (Qualification qualification : qualifications) {
@@ -201,6 +203,7 @@ public class Client {
 		this.prerequisites = c.prerequisites;
 		this.year = c.year;
 		this.apartment = c.apartment;
+		this.province = c.province;
 	}
 
 	public void setID(String id) {
@@ -342,9 +345,11 @@ public class Client {
 		if (day == null || day.trim().equals("")) {
 			warning.add(name + " day of birth not specified.");
 		}
-
+		if (province == null || province.trim().equals("")) {
+			warning.add(name + " province not specified.");
+		}
 		if (getPrerequisitesMet().equals("Not checked")) {
-			warning.add(name + "prerequisites not checked / met");
+			warning.add(name + " prerequisites not checked / met");
 		}
 	}
 
@@ -361,7 +366,7 @@ public class Client {
 		object.put("day", day);
 		object.put("id", id);
 		object.put("is-male", isMale);
-
+		object.put("province", province);
 		for (String qual : prerequisites.keySet()) {
 			JSONArray pres = new JSONArray();
 			for (Prerequisite prerequisite : prerequisites.get(qual)) {
@@ -411,7 +416,7 @@ public class Client {
 			return client.address.equals(address) && client.apartment.equals(apartment) && client.city.equals(city)
 					&& client.day.equals(day) && client.email.equals(email) && client.id.equals(id)
 					&& client.month.equals(month) && client.name.equals(name) && client.phone.equals(phone)
-					&& client.postalCode.equals(postalCode) && client.year.equals(year);
+					&& client.postalCode.equals(postalCode) && client.year.equals(year) && client.province.equals(province);
 		}
 		return false;
 	}
@@ -426,5 +431,13 @@ public class Client {
 
 	public boolean isMale() {
 		return isMale;
+	}
+
+	public void setProvince(String text) {
+		this.province = text;
+		
+	}
+	public String getProvince(){
+		return this.province;
 	}
 }

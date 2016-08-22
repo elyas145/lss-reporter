@@ -123,4 +123,9 @@ public class Facility {
 
 	}
 
+	public String getFinalPhoneWithAreaCode() {
+
+		return "(" + areaCode + ") " + getFinalPhone();
+	}
+
 }

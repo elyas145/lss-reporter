@@ -79,6 +79,7 @@ public class MainController implements Initializable {
 		menuPane.getChildren().add(sideMenu.parent);
 
 		pane.setTriggerDistance(0);
+		Model.getInstance().setChanged(false);
 	}
 
 	protected void menuItemSelected(SideMenuAction action) {
