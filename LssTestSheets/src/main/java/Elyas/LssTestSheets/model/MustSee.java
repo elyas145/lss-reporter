@@ -121,20 +121,11 @@ public class MustSee {
 				}
 			}
 		} else if (item.equals("prereqs")) {
-			Map<String, Boolean> keys = new HashMap<>();
-			for (Prerequisite prerequisite : client.getPrerequisites(course)) {
-				if (!keys.containsKey(prerequisite.key)) {
-					keys.put(prerequisite.key, prerequisite.isMet());
-				} else {
-					if (!prerequisite.met) {
-						keys.put(prerequisite.key, prerequisite.isMet());
-					}
-				}
-			}
-			isCompleted = false;
-			for (Boolean key : keys.values()) {
-				if (key)
-					isCompleted = true;
+			String met = client.getPrerequisitesMet(course).toLowerCase();
+			if (met.equals("checked") || met.equals("n/a")){
+				isCompleted = true;
+			}else{
+				isCompleted = false;
 			}
 		}
 

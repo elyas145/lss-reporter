@@ -418,6 +418,10 @@ public class CourseFactory {
 										.getProperty(TestSheetProperties.FAILED_RESULT.name()).equals(true + "")) {
 									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
 								}
+								if (see.getItem().toLowerCase().equals("prereqs") && properties
+										.getProperty(TestSheetProperties.FAILED_RESULT.name()).equals(true + "")) {
+									acroForm.getField(template.getField()).setValue(testSheet.getFailValue(template));
+								}
 							}
 						} catch (Exception e) {
 							System.out.println("---------------- must see set error -----------------");

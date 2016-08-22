@@ -251,40 +251,54 @@ public class Client {
 	}
 
 	public String getPrerequisitesMet() {
-		Map<String, Boolean> keys = new HashMap<>();
-
+		String result = "N/A";
 		for (String qual : prerequisites.keySet()) {
-			for (Prerequisite pre : prerequisites.get(qual)) {
-				if (keys.get(pre.key) == null) { // we have not added this key
-													// before.
-					if (Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
-						// exam is original. only add if pre is original
-						if (!pre.getName().toLowerCase().contains("recert")) {
-							keys.put(pre.key, pre.isMet());
-						}
-					} else {
-						// exam is recert, only add if recert pre
-						if (pre.getName().toLowerCase().contains("recert")) {
-							keys.put(pre.key, pre.isMet());
-						}
-					}
-
-				} else { // we already have this key.
-					if (keys.get(pre.key) && !pre.isMet()) {
-						if (pre.getName().toLowerCase().contains("recert")) {
-							if (!Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
-								keys.put(pre.key, false);
-							}
-						} else {
-							if (Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
-								keys.put(pre.key, false);
-							}
-						}
-
-					}
+			String met = getPrerequisitesMet(qual).toLowerCase();
+			if (met.equals("not checked")) {
+				result = "Not Checked";
+			} else if (met.equals("checked")) {
+				if (result.equals("N/A")) {
+					result = "Checked";
 				}
 			}
 		}
+		return result;
+	}
+
+	public String getPrerequisitesMet(String course) {
+		Map<String, Boolean> keys = new HashMap<>();
+
+		for (Prerequisite pre : prerequisites.get(course)) {
+			if (keys.get(pre.key) == null) { // we have not added this key
+												// before.
+				if (Model.getInstance().getCourse().getQualification(course).getExam().isOriginal()) {
+					// exam is original. only add if pre is original
+					if (!pre.getName().toLowerCase().contains("recert")) {
+						keys.put(pre.key, pre.isMet());
+					}
+				} else {
+					// exam is recert, only add if recert pre
+					if (pre.getName().toLowerCase().contains("recert")) {
+						keys.put(pre.key, pre.isMet());
+					}
+				}
+
+			} else { // we already have this key.
+				if (keys.get(pre.key) && !pre.isMet()) {
+					if (pre.getName().toLowerCase().contains("recert")) {
+						if (!Model.getInstance().getCourse().getQualification(course).getExam().isOriginal()) {
+							keys.put(pre.key, false);
+						}
+					} else {
+						if (Model.getInstance().getCourse().getQualification(course).getExam().isOriginal()) {
+							keys.put(pre.key, false);
+						}
+					}
+
+				}
+			}
+		}
+
 		for (String key : keys.keySet()) {
 			if (keys.get(key)) {
 				return "Checked";
@@ -292,21 +306,21 @@ public class Client {
 		}
 		boolean isEmpty = true;
 		for (String qual : prerequisites.keySet()) {
-			if (!prerequisites.get(qual).isEmpty()){
-				
+			if (!prerequisites.get(qual).isEmpty()) {
+
 				for (Prerequisite prerequisite : prerequisites.get(qual)) {
-					if(!Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()){
-						if(prerequisite.getName().toLowerCase().contains("recert")){
+					if (!Model.getInstance().getCourse().getQualification(qual).getExam().isOriginal()) {
+						if (prerequisite.getName().toLowerCase().contains("recert")) {
 							isEmpty = false;
 						}
-					}else{	//is original
-						if(!prerequisite.getName().toLowerCase().contains("recert")){
+					} else { // is original
+						if (!prerequisite.getName().toLowerCase().contains("recert")) {
 							isEmpty = false;
 						}
 					}
 				}
 			}
-				
+
 		}
 		if (isEmpty) {
 			return "N/A";
@@ -418,7 +432,8 @@ public class Client {
 			return client.address.equals(address) && client.apartment.equals(apartment) && client.city.equals(city)
 					&& client.day.equals(day) && client.email.equals(email) && client.id.equals(id)
 					&& client.month.equals(month) && client.name.equals(name) && client.phone.equals(phone)
-					&& client.postalCode.equals(postalCode) && client.year.equals(year) && client.province.equals(province);
+					&& client.postalCode.equals(postalCode) && client.year.equals(year)
+					&& client.province.equals(province);
 		}
 		return false;
 	}
@@ -437,9 +452,10 @@ public class Client {
 
 	public void setProvince(String text) {
 		this.province = text;
-		
+
 	}
-	public String getProvince(){
+
+	public String getProvince() {
 		return this.province;
 	}
 }
