@@ -21,13 +21,13 @@ public class Test {
 		TestSheet testSheet = null;
 		Qualification qual = null;
 		for (Qualification qualification : qualifications) {
-			if (qualification.getName().equals("National Lifeguard - Pool")) {
+			if (qualification.getName().equals("Airway Management")) {
 				course.addQualification(qualification);
 				qualification.addExaminer(PersonFactory.getKnownEmployees().get(0));
 				qualification.addInstructor(PersonFactory.getKnownEmployees().get(1));
 				qualification.setExamDate(LocalDate.parse("2007-12-13"));
 				qual = qualification;
-				qual.setTestSheetPath("/pdf/nls-pool.pdf", "/template/nls-pool.json");
+				qual.setTestSheetPath("/pdf/airway.pdf", "/template/airway.json");
 				testSheet = qual.getTestSheet();
 			}
 		}
@@ -70,7 +70,7 @@ public class Test {
 			client.setInstructorItems(qual.getName(), true);
 
 		}
-		course.setName("National Lifeguard - Pool");
+		course.setName("Airway Management");
 		CourseFactory.exportInfo(true, false, null, "/Users/elyas/Desktop", null, course);
 	}
 }

@@ -130,6 +130,8 @@ public class TestSheet {
 				gendre = objGendre.getString("field");
 				maleValue = objGendre.getString("male-value");
 				femaleValue = objGendre.getString("female-value");
+			}else{
+				gendre = "";
 			}
 			JSONArray pres = obj.optJSONArray("prerequisites");
 			prerequisites = new ArrayList<>();

@@ -4,6 +4,7 @@
 		{"name":"Standard First Aid", "pdf":"/pdf/sfa.pdf", "template":"/template/sfa.json"},
 		{"name":"Bronze Medallion", "pdf":"/pdf/bronze-med.pdf", "template":"/template/bronze-med.json"},
 		{"name":"National Lifeguard - Pool", "pdf":"/pdf/nls-pool.pdf", "template":"/template/nls-pool.json"},
+		{"name":"Airway Management", "pdf":"/pdf/airway.pdf", "template":"/template/airway.json"},
 		{"name":"Emergency First Aid", "pdf":"/pdf/efa.pdf", "template":"/template/efa.json"}
 	]
 }
