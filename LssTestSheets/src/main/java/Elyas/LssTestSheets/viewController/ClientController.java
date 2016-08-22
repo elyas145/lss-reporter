@@ -235,6 +235,7 @@ public class ClientController extends Controller implements Initializable {
 		this.txtYear.setText("");
 		this.txtApt.setText("");
 		this.txtProvince.setText("ON");
+		this.txtApt.setText("");
 	}
 
 	Client getClient() {
@@ -281,6 +282,7 @@ public class ClientController extends Controller implements Initializable {
 		this.rdbMale.setSelected(c.isMale());
 		this.rdbFemale.setSelected(!c.isMale());
 		this.txtProvince.setText(c.getProvince());
+		this.txtApt.setText(c.getApartment());
 
 	}
 

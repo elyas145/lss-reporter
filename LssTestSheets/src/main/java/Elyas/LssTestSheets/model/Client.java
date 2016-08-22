@@ -47,6 +47,7 @@ public class Client {
 		id = obj.getString("id");
 		isMale = obj.optBoolean("is-male");
 		province = obj.optString("province");
+		apartment = obj.optString("apartment");
 		prerequisites = new HashMap<>();
 		mustSees = new HashMap<>();
 		for (Qualification qualification : qualifications) {
@@ -367,6 +368,7 @@ public class Client {
 		object.put("id", id);
 		object.put("is-male", isMale);
 		object.put("province", province);
+		object.put("apartment", apartment);
 		for (String qual : prerequisites.keySet()) {
 			JSONArray pres = new JSONArray();
 			for (Prerequisite prerequisite : prerequisites.get(qual)) {
