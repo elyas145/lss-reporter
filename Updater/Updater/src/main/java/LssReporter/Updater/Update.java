@@ -26,7 +26,8 @@ public class Update {
 	private Message message;
 	private String subject;
 	private int updateNumber;
-	private String description;
+	private String description_en;
+	private String description_fr;
 	private List<File> attachments;
 	private List<UpdateInstruction> instructions;
 
@@ -49,7 +50,7 @@ public class Update {
 		this.message = message;
 		this.subject = message.getSubject();
 		this.updateNumber = Integer.valueOf(subject.trim().substring(subject.indexOf(' '), subject.length()).trim());
-		
+
 	}
 
 	public String getSubject() {
@@ -59,8 +60,19 @@ public class Update {
 	public int getUpdateNumber() {
 		return updateNumber;
 	}
-	public String getDescription(){
-		return description;
+
+	public String getDescription(Language lang) {
+		switch (lang) {
+		case EN_CA:
+			return description_en;
+		case FR_CA:
+			if (description_fr.equals("")) {
+				return description_en;
+			}
+			return description_fr;
+		default:
+			return description_en;
+		}
 	}
 
 	/**
@@ -68,7 +80,7 @@ public class Update {
 	 * necessary data from message.
 	 * 
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	public void applyUpdate() throws IOException, URISyntaxException {
 		if (instructions == null) {
@@ -125,7 +137,7 @@ public class Update {
 	 *             if the message cannot be read.
 	 * @throws IOException
 	 *             if attachments cannot be downloaded.
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 
 	public void initUpdate() throws MessagingException, IOException, URISyntaxException {
@@ -141,7 +153,11 @@ public class Update {
 		instructions = new ArrayList<Update.UpdateInstruction>();
 		JSONObject object = new JSONObject(inst);
 		JSONArray array = object.getJSONArray("instructions");
-		description = object.optString("description");
+		description_en = object.optString("description-en");
+		description_fr = object.optString("description-fr");
+		if (description_en.equals("") && description_fr.equals("")) {
+			description_en = object.optString("description");
+		}
 		for (int i = 0; i < array.length(); i++) {
 			JSONObject instruction = array.getJSONObject(i);
 			instructions.add(new UpdateInstruction(instruction));
@@ -160,7 +176,8 @@ public class Update {
 				continue; // dealing with attachments only
 			}
 			InputStream is = bodyPart.getInputStream();
-			File f = new File(Update.class.getResource("/").toURI().getSchemeSpecificPart() + "/tmp/" + bodyPart.getFileName());
+			File f = new File(
+					Update.class.getResource("/").toURI().getSchemeSpecificPart() + "/tmp/" + bodyPart.getFileName());
 			System.out.println("file: " + f.getAbsolutePath());
 			f.getParentFile().mkdirs();
 			f.createNewFile();

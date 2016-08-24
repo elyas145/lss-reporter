@@ -1,5 +1,6 @@
 package LssReporter.Updater;
 
+import java.awt.Desktop.Action;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -32,8 +34,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.web.WebView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.transform.Translate;
 
 public class MainController implements Initializable {
 
@@ -43,17 +48,28 @@ public class MainController implements Initializable {
 	ProgressBar prgsProgress;
 	@FXML
 	Button btnStart;
+	@FXML
+	ToggleButton tglEnglish;
+	@FXML
+	ToggleButton tglFrench;
+	@FXML
+	Label lblTitle;
+	@FXML
+	ProgressIndicator prgsLang;
+	
 	private Integer cachedVersion = -1;
 	private LocalDate lastUpdate;
 
 	private int dateOffset = 8;
+	private String language;
+	private String currentStatus;
 
 	public void initialize(URL location, ResourceBundle resources) {
 		prgsProgress.setProgress(-1);
 
 		FXWorker<Void, ProgressUpdate, String> thread = new FXWorker<Void, ProgressUpdate, String>(null) {
 
-			private String description;
+			private String description = "";
 
 			@Override
 			public String doInBackground(Void param) {
@@ -151,7 +167,7 @@ public class MainController implements Initializable {
 									i + 1 / updates.size()));
 							try {
 								cUpdate.applyUpdate();
-								description += "<br/>" + cUpdate.getDescription();
+								description += "<br/>" + cUpdate.getDescription(Dictionary.currentLang());
 								currentVersion = cUpdate.getUpdateNumber();
 							} catch (Exception e) {
 								addException("Error upplying update " + cUpdate.getUpdateNumber(), e);
@@ -191,7 +207,8 @@ public class MainController implements Initializable {
 
 			@Override
 			public void updateProgress(ProgressUpdate param) {
-				lblStatus.setText(param.getMessage());
+				lblStatus.setText(Dictionary.get(param.getMessage()));
+				currentStatus = param.getMessage();
 				prgsProgress.setProgress(param.getProgress());
 
 			}
@@ -205,6 +222,7 @@ public class MainController implements Initializable {
 				}
 				if (param != null) {
 					onProgressUpdate(new ProgressUpdate(param, 1));
+					currentStatus = param;
 				}
 				Platform.runLater(new Runnable() {
 					@Override
@@ -212,10 +230,10 @@ public class MainController implements Initializable {
 						btnStart.setDisable(false);
 						if (description != null && !description.equals("")) {
 							Alert alert = new Alert(AlertType.INFORMATION);
-							alert.setTitle("Update Description");
-							alert.setHeaderText("Update Description");
+							alert.setTitle(Dictionary.get("alert.update-description"));
+							alert.setHeaderText(Dictionary.get("alert.update-description"));
 							WebView webView = new WebView();
-							webView.getEngine().loadContent("<html>" + "update test" + "</html>");
+							webView.getEngine().loadContent("<html>" + description + "</html>");
 							webView.setPrefSize(200, 50);
 							alert.getDialogPane().setContent(webView);
 							alert.showAndWait();
@@ -231,6 +249,69 @@ public class MainController implements Initializable {
 
 	}
 
+	@FXML
+	protected void onEnglishAction(ActionEvent event){
+		changeLanguage("english");
+	}
+	@FXML
+	protected void onFrenchAction(ActionEvent event){
+		changeLanguage("french");
+	}
+	private void changeLanguage(String lang) {
+		if(lang.equals("english")){
+			tglFrench.setSelected(false);
+			tglEnglish.setSelected(true);
+			this.language = "en";
+		}else{
+			tglFrench.setSelected(true);
+			tglEnglish.setSelected(false);
+			this.language = "fr";
+		}
+		FXWorker<String, String, String> languageChanger = new FXWorker<String, String, String>(null){
+			
+			@Override
+			public String doInBackground(String param){
+				onProgressUpdate(null);
+				try{
+				if(param.equals("en")){
+				Dictionary.setLanguage(Language.EN_CA);
+				}else{
+					Dictionary.setLanguage(Language.FR_CA);
+				}
+				}catch (Exception e){
+					addException("an error occured while changing the language.", e);
+				}
+				return "Successfully set the new language.";
+				
+			}
+			@Override
+			public void updateProgress(String param){
+				prgsLang.setVisible(true);
+			}
+			@Override
+			public void onFinish(String param, final List<Exception> exceptions){
+				Platform.runLater(new Runnable() {					
+					@Override
+					public void run() {
+						prgsLang.setVisible(false);
+						if(!exceptions.isEmpty()){
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setContentText("an error occured while changing the language.");
+							alert.showAndWait();
+						}
+						translate();
+					}
+
+					
+				});
+			}
+		};
+		
+	}
+	public void translate() {
+		lblStatus.setText(Dictionary.get(currentStatus));
+		
+	}
 	@FXML
 	protected void onStartAction(ActionEvent event) {
 		try {
