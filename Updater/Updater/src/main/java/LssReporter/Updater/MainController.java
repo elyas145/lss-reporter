@@ -211,7 +211,7 @@ public class MainController implements Initializable {
 
 			@Override
 			public void updateProgress(ProgressUpdate param) {
-				lblStatus.setText(Dictionary.get(param.getMessage()));
+				lblStatus.setText(param.getMessage());
 				currentStatus = param.getMessage();
 				prgsProgress.setProgress(param.getProgress());
 
@@ -324,19 +324,27 @@ public class MainController implements Initializable {
 	@FXML
 	protected void onStartAction(ActionEvent event) {
 		try {
-			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+			String name = System.getProperty("os.name").toLowerCase();
+			if (name.contains("windows")) {
 				Runtime.getRuntime().exec(MainController.class.getResource("/").toURI().getSchemeSpecificPart()
 						+ "/jre/bin/java.exe -jar app.jar");
 				System.exit(0);
-			}else{
-				Runtime.getRuntime().exec(MainController.class.getResource("/").toURI().getSchemeSpecificPart()
-						+ "/jre/bin/java.exe -jar app.jar");
+			} else if (name.contains("mac")) {
+
+				String cmd[] = { MainController.class.getResource("/jre/bin/java").toURI().getSchemeSpecificPart(), "-jar", MainController.class.getResource("/app.jar").toURI().getSchemeSpecificPart()};
+				ProcessBuilder builder = new ProcessBuilder();
+				builder.command(cmd);
+				Process process = builder.start();
+
+				if (process == null || !process.isAlive()) {
+					throw new Exception();
+				}
 				System.exit(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText("Unable to start the application.");
+			alert.setContentText("Unable to start the application. your system may not be supported.");
 			alert.showAndWait();
 		}
 	}

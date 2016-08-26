@@ -23,7 +23,7 @@ public class App extends Application
 			FXMLLoader ldr = new FXMLLoader(getClass()
 	                .getResource("/fxml/main.fxml"));
 	    Parent root = (Parent) ldr.load();
-	    MainController appCtrl = (MainController) ldr.getController();
+	    final MainController appCtrl = (MainController) ldr.getController();
 
 	    Scene scene = new Scene(root, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
 	    
