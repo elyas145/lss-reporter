@@ -56,7 +56,7 @@ public class MainController implements Initializable {
 	Label lblTitle;
 	@FXML
 	ProgressIndicator prgsLang;
-	
+
 	private Integer cachedVersion = -1;
 	private LocalDate lastUpdate;
 
@@ -65,6 +65,10 @@ public class MainController implements Initializable {
 	private String currentStatus;
 
 	public void initialize(URL location, ResourceBundle resources) {
+		// disable language switching until implemented
+		tglEnglish.setDisable(true);
+		tglFrench.setDisable(true);
+
 		prgsProgress.setProgress(-1);
 
 		FXWorker<Void, ProgressUpdate, String> thread = new FXWorker<Void, ProgressUpdate, String>(null) {
@@ -250,51 +254,55 @@ public class MainController implements Initializable {
 	}
 
 	@FXML
-	protected void onEnglishAction(ActionEvent event){
+	protected void onEnglishAction(ActionEvent event) {
 		changeLanguage("english");
 	}
+
 	@FXML
-	protected void onFrenchAction(ActionEvent event){
+	protected void onFrenchAction(ActionEvent event) {
 		changeLanguage("french");
 	}
+
 	private void changeLanguage(String lang) {
-		if(lang.equals("english")){
+		if (lang.equals("english")) {
 			tglFrench.setSelected(false);
 			tglEnglish.setSelected(true);
 			this.language = "en";
-		}else{
+		} else {
 			tglFrench.setSelected(true);
 			tglEnglish.setSelected(false);
 			this.language = "fr";
 		}
-		FXWorker<String, String, String> languageChanger = new FXWorker<String, String, String>(null){
-			
+		FXWorker<String, String, String> languageChanger = new FXWorker<String, String, String>(null) {
+
 			@Override
-			public String doInBackground(String param){
+			public String doInBackground(String param) {
 				onProgressUpdate(null);
-				try{
-				if(param.equals("en")){
-				Dictionary.setLanguage(Language.EN_CA);
-				}else{
-					Dictionary.setLanguage(Language.FR_CA);
-				}
-				}catch (Exception e){
+				try {
+					if (param.equals("en")) {
+						Dictionary.setLanguage(Language.EN_CA);
+					} else {
+						Dictionary.setLanguage(Language.FR_CA);
+					}
+				} catch (Exception e) {
 					addException("an error occured while changing the language.", e);
 				}
 				return "Successfully set the new language.";
-				
+
 			}
+
 			@Override
-			public void updateProgress(String param){
+			public void updateProgress(String param) {
 				prgsLang.setVisible(true);
 			}
+
 			@Override
-			public void onFinish(String param, final List<Exception> exceptions){
-				Platform.runLater(new Runnable() {					
+			public void onFinish(String param, final List<Exception> exceptions) {
+				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
 						prgsLang.setVisible(false);
-						if(!exceptions.isEmpty()){
+						if (!exceptions.isEmpty()) {
 							Alert alert = new Alert(AlertType.ERROR);
 							alert.setContentText("an error occured while changing the language.");
 							alert.showAndWait();
@@ -302,16 +310,17 @@ public class MainController implements Initializable {
 						translate();
 					}
 
-					
 				});
 			}
 		};
-		
+
 	}
+
 	public void translate() {
 		lblStatus.setText(Dictionary.get(currentStatus));
-		
+
 	}
+
 	@FXML
 	protected void onStartAction(ActionEvent event) {
 		try {
@@ -319,10 +328,16 @@ public class MainController implements Initializable {
 				Runtime.getRuntime().exec(MainController.class.getResource("/").toURI().getSchemeSpecificPart()
 						+ "/jre/bin/java.exe -jar app.jar");
 				System.exit(0);
+			}else{
+				Runtime.getRuntime().exec(MainController.class.getResource("/").toURI().getSchemeSpecificPart()
+						+ "/jre/bin/java.exe -jar app.jar");
+				System.exit(0);
 			}
-		} catch (IOException | URISyntaxException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText("Unable to start the application.");
+			alert.showAndWait();
 		}
 	}
 
