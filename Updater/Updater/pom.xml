@@ -54,6 +54,7 @@
   				<configuration>
   					<mainClass>LssReporter.Updater.App</mainClass>
   					<jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk</jrePath>
+  					<iconFile>LifeSaver.icns</iconFile>
   				</configuration>
   				<executions>
   					<execution>

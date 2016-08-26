@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -22,6 +23,7 @@ public class App extends Application
 	@Override
 	public void start(Stage stage) {
 		mainStage = stage;
+		stage.getIcons().add(new Image(App.class.getResourceAsStream("/LifeSaver.png")));
 		try {
 			FXMLLoader ldr = new FXMLLoader(getClass()
 	                .getResource("/main.fxml"));

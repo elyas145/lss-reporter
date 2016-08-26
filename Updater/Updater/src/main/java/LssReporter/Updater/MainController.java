@@ -330,8 +330,8 @@ public class MainController implements Initializable {
 						+ "/jre/bin/java.exe -jar app.jar");
 				System.exit(0);
 			} else if (name.contains("mac")) {
-
-				String cmd[] = { MainController.class.getResource("/jre/bin/java").toURI().getSchemeSpecificPart(), "-jar", MainController.class.getResource("/app.jar").toURI().getSchemeSpecificPart()};
+				String cmd[] = {MainController.class.getResource("/").toURI().getSchemeSpecificPart()
+						+ "../../../../plugins/JRE/Contents/Home/jre/bin/java","-jar",MainController.class.getResource("/app.jar").toURI().getSchemeSpecificPart()};
 				ProcessBuilder builder = new ProcessBuilder();
 				builder.command(cmd);
 				Process process = builder.start();
