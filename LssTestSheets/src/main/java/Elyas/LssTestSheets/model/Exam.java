@@ -7,7 +7,7 @@ import org.json.JSONObject;
 public class Exam {
 
 	private LocalDate date;
-	private boolean isOriginal;
+	private boolean isOriginal = true;
 
 	public Exam() {
 		date = LocalDate.MAX;
@@ -26,7 +26,7 @@ public class Exam {
 
 		if (value != null && !this.date.equals(value)) {
 			this.date = value;
-			Model.getInstance().setChanged();
+			Model.getInstance().setChanged("Exam Date Changed.");
 		}
 
 	}
@@ -34,7 +34,7 @@ public class Exam {
 	public void setOriginal(boolean b) {
 		if (this.isOriginal != b) {
 			this.isOriginal = b;
-			Model.getInstance().setChanged();
+			Model.getInstance().setChanged("Exam Originality Changed.");
 		}
 
 	}

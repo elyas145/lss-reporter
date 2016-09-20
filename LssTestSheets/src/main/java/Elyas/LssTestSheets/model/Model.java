@@ -54,17 +54,17 @@ public class Model {
 	}
 
 	private Model() {
-
+		changes = new ArrayList<>();
 	}
 
 	private Course course;
 	private boolean isChanged;
 	private boolean externalCourse;
-
+	private List<String> changes;
 	public void setCourse(Course c) {
 		this.course = c;
-		c.setOnChange(() -> {
-			isChanged = true;
+		c.setOnChange((String change) -> {
+			instance.setChanged(change);
 		});
 	}
 
@@ -160,7 +160,7 @@ public class Model {
 	}
 
 	public interface ChangeHandler {
-		public void onChange();
+		public void onChange(String change);
 	}
 
 	public void addClient(Client c) {
@@ -214,7 +214,7 @@ public class Model {
 	public void setQualifications(Collection<Qualification> c) {
 		if (course == null) {
 			course = new Course(c);
-			course.setOnChange(() -> {
+			course.setOnChange((String change) -> {
 				isChanged = true;
 			});
 		} else
@@ -390,7 +390,8 @@ public class Model {
 
 	}
 
-	public void setChanged() {
+	public void setChanged(String change) {
+		changes.add(change+"\n");
 		this.isChanged = true;
 	}
 
@@ -398,7 +399,22 @@ public class Model {
 		return new ArrayList<>(course.getClients());
 	}
 
-	public void setChanged(boolean b) {
+	public void setChanged(boolean b, String change) {
+		if(change != null){
+			changes.add(change+"\n");
+		}
+		
+		if(!b){
+			changes.clear();
+		}
 		this.isChanged = b;
+	}
+
+	public String getChangesAsString() {
+		String str = "";
+		for(String change : changes){
+			str += change;
+		}
+		return str;
 	}
 }

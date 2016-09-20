@@ -4,15 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class FacilityHost {
-	private String name;
-	private String address;
-	private String city;
-	private String province;
-	private String postalCode;
-	private String areaCode;
-	private String phone;
-	private String extension;
-	private boolean fees;
+	private String name = "";
+	private String address = "";
+	private String city = "";
+	private String province = "";
+	private String postalCode = "";
+	private String areaCode = "";
+	private String phone = "";
+	private String extension = "";
+	private boolean fees = false;
 
 	public FacilityHost(JSONObject obj) {
 		setExamFees(obj.optBoolean("fees"));

@@ -30,7 +30,7 @@ public class ReportDay {
 			@Override
 			public void onChanged(
 					javafx.collections.MapChangeListener.Change<? extends String, ? extends Boolean> change) {
-				Model.getInstance().setChanged();
+				Model.getInstance().setChanged("Attendance Changed.");
 			}
 		});
 	}
@@ -71,7 +71,7 @@ public class ReportDay {
 			return;
 		}
 		this.generalNotes = text;
-		Model.getInstance().setChanged();
+		Model.getInstance().setChanged("General Notes Changed.");
 
 	}
 

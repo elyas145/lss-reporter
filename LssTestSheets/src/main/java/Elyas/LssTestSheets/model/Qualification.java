@@ -22,8 +22,8 @@ public class Qualification {
 		examiners = new ArrayList<>();
 		changeHandler = new ChangeHandler() {
 			@Override
-			public void onChange() {
-
+			public void onChange(String change) {
+				Model.getInstance().setChanged(change);
 			}
 		};
 	}
@@ -83,38 +83,38 @@ public class Qualification {
 
 	public void setInstructors(Collection<Employee> i) {
 		this.instructors = new ArrayList<>(i);
-		changeHandler.onChange();
+		changeHandler.onChange("Instructors Changed for "+ this.getName()+".");
 	}
 
 	public void setExaminers(ObservableList<Employee> i) {
 		this.examiners = new ArrayList<>(i);
-		changeHandler.onChange();
+		changeHandler.onChange("Examiners Changed for "+ this.getName()+".");
 	}
 
 	public void setExam(Exam exam) {
 		this.exam = exam;
-		changeHandler.onChange();
+		changeHandler.onChange("Exam Changed for "+ this.getName()+".");
 	}
 
 	public void addExaminer(Employee e) {
 		examiners.add(e);
-		changeHandler.onChange();
+		changeHandler.onChange("Examiner added for "+ this.getName()+".");
 
 	}
 
 	public void removeExaminer(Employee e) {
 		examiners.remove(e);
-		changeHandler.onChange();
+		changeHandler.onChange("Examiner Removed for "+ this.getName()+".");
 	}
 
 	public void removeInstructor(Employee e) {
 		instructors.remove(e);
-		changeHandler.onChange();
+		changeHandler.onChange("Instructors Removed for "+ this.getName()+".");
 	}
 
 	public void addInstructor(Employee e) {
 		instructors.add(e);
-		changeHandler.onChange();
+		changeHandler.onChange("Instructor Added for "+ this.getName()+".");
 	}
 
 	public String getName() {

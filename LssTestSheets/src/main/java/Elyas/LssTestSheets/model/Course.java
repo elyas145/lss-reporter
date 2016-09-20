@@ -28,8 +28,8 @@ public class Course {
 		report = new Report();
 		changeHandler = new ChangeHandler() {
 			@Override
-			public void onChange() {
-
+			public void onChange(String change) {
+				Model.getInstance().setChanged(change);
 			}
 		};
 	}
@@ -41,8 +41,8 @@ public class Course {
 		report = new Report();
 		changeHandler = new ChangeHandler() {
 			@Override
-			public void onChange() {
-
+			public void onChange(String change) {
+				Model.getInstance().setChanged(change);
 			}
 		};
 		String n = "";
@@ -116,7 +116,6 @@ public class Course {
 	public void setName(String name) {
 		if (!this.name.get().equals(name)) {
 			this.name.set(name);
-			changeHandler.onChange();
 		}
 	}
 
@@ -128,7 +127,7 @@ public class Course {
 	public void setFacility(Facility f) {
 		if (this.facility == null || !this.facility.equals(f)) {
 			this.facility = f;
-			changeHandler.onChange();
+			changeHandler.onChange("Course Facility Changed.");
 		}
 
 	}
@@ -136,14 +135,14 @@ public class Course {
 	public void setBarcodeOne(String text) {
 		if (this.barcode1 == null || !this.barcode1.equals(text)) {
 			this.barcode1 = text;
-			changeHandler.onChange();
+			changeHandler.onChange("Barcode One Changed");
 		}
 	}
 
 	public void setBarcodeTwo(String text) {
 		if (this.barcode2 == null || !this.barcode2.equals(text)) {
 			this.barcode2 = text;
-			changeHandler.onChange();
+			changeHandler.onChange("Barcode Two Changed");
 		}
 	}
 
@@ -213,7 +212,7 @@ public class Course {
 			c.setPrerequisites(qualification.getName(), qualification.getPrerequisites());
 		}
 
-		changeHandler.onChange();
+		changeHandler.onChange("Client, "+c.getName()+", Added to Course.");
 	}
 
 	public void setOnChange(ChangeHandler handler) {
@@ -225,7 +224,7 @@ public class Course {
 		if (clients == null || c == null)
 			return;
 		clients.remove(c);
-		changeHandler.onChange();
+		changeHandler.onChange("Client, "+c.getName()+", Removed From Course.");
 	}
 
 	public void updateClient(Client c) {
@@ -235,7 +234,7 @@ public class Course {
 			if (client.getID().equals(c.getID())) {
 				if (!client.equals(c)) {
 					client.update(c);
-					changeHandler.onChange();
+					changeHandler.onChange("Client, "+c.getName()+", Updated.");
 				}
 			}
 		}
@@ -245,8 +244,8 @@ public class Course {
 	public void addQualification(Qualification qualification) {
 		if (qualification != null)
 			this.qualifications.add(qualification);
-		qualification.setonChangeListener(() -> {
-			changeHandler.onChange();
+		qualification.setonChangeListener((String change) -> {
+			changeHandler.onChange(change);
 		});
 
 	}
@@ -304,8 +303,8 @@ public class Course {
 	public void setQualifications(Collection<Qualification> c) {
 		this.qualifications = new ArrayList<>(c);
 		for (Qualification qualification : c) {
-			qualification.setonChangeListener(() -> {
-				changeHandler.onChange();
+			qualification.setonChangeListener((String change) -> {
+				changeHandler.onChange(change);
 			});
 		}
 

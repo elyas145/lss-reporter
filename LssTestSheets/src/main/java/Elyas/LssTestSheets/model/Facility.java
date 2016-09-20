@@ -4,12 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 public class Facility {
-	private String name;
-	private String areaCode;
-	private String phone;
-	private String extension;
+	private String name = "";
+	private String areaCode = "";
+	private String phone = "";
+	private String extension = "";
 	private FacilityHost host;
-	private boolean isDefault;
+	private boolean isDefault = false;
 
 	public Facility(JSONObject obj) {
 		if (obj != null) {
@@ -31,10 +31,14 @@ public class Facility {
 	}
 
 	public void setName(String name) {
+		
 		this.name = name;
 	}
 
 	public String getAreaCode() {
+		if(areaCode == null){
+			return "";
+		}
 		return areaCode.toUpperCase();
 	}
 
@@ -79,6 +83,9 @@ public class Facility {
 	}
 
 	public boolean equals(Object other) {
+		if(other == null){
+			return false;
+		}
 		if (other instanceof Facility) {
 			Facility facility = (Facility) other;
 			return facility.isDefault == isDefault && facility.name.equals(this.name)

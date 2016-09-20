@@ -73,7 +73,7 @@ public class DayReportController extends Controller implements Initializable {
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			finishHandler.onFinish(null);
-			Model.getInstance().setChanged();
+			Model.getInstance().setChanged("Day Removed.");
 		} else {
 			event.consume();
 		}

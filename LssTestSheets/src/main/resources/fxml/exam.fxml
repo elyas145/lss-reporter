@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
 
 <Tab text="Untitled Tab" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Elyas.LssTestSheets.viewController.ExamController">
    <content>
       <HBox alignment="CENTER_LEFT" fillHeight="false">
          <children>
-            <DatePicker fx:id="dpkExamDate" promptText="Exam Date" />
-            <RadioButton fx:id="rdbOriginal" mnemonicParsing="false" selected="true" text="Original">
+            <CustomTextField fx:id="txtYear" prefColumnCount="2" promptText="YY" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </CustomTextField>
+            <CustomTextField fx:id="txtMonth" prefColumnCount="2" promptText="MM" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </CustomTextField>
+            <CustomTextField fx:id="txtDay" prefColumnCount="2" promptText="DD" HBox.hgrow="NEVER" />
+            <Separator orientation="VERTICAL" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </Separator>
+            <RadioButton fx:id="rdbOriginal" mnemonicParsing="false" selected="true" text="Original" HBox.hgrow="NEVER">
                <toggleGroup>
-                  <ToggleGroup fx:id="exam" />
+                  <ToggleGroup fx:id="exam1" />
                </toggleGroup>
                <padding>
                   <Insets left="5.0" right="5.0" />
@@ -23,7 +39,7 @@
                   <Insets top="5.0" />
                </HBox.margin>
             </RadioButton>
-            <RadioButton fx:id="rdbRecert" mnemonicParsing="false" text="Recert" toggleGroup="$exam">
+            <RadioButton fx:id="rdbRecert" mnemonicParsing="false" text="Recert" toggleGroup="$exam1" HBox.hgrow="NEVER">
                <padding>
                   <Insets left="5.0" />
                </padding>
@@ -31,6 +47,11 @@
                   <Insets top="5.0" />
                </HBox.margin>
             </RadioButton>
+            <CustomTextField fx:id="txtExamLocation" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </CustomTextField>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

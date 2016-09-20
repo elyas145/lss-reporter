@@ -47,7 +47,7 @@ public class MainController implements Initializable {
 
 	private SideMenuController menuController;
 	private ViewFactoryResult currentView;
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -79,7 +79,7 @@ public class MainController implements Initializable {
 		menuPane.getChildren().add(sideMenu.parent);
 
 		pane.setTriggerDistance(0);
-		Model.getInstance().setChanged(false);
+		Model.getInstance().setChanged(false, null);
 	}
 
 	protected void menuItemSelected(SideMenuAction action) {
@@ -129,9 +129,9 @@ public class MainController implements Initializable {
 	 * have updated the model already.
 	 */
 	protected void viewFinished(ViewState nextState) {
-		if(currentView != null)
+		if (currentView != null)
 			currentView.controller.finalize();
-		
+
 		if (ViewState.isMenuState(nextState)) {
 			pane.setTriggerDistance(20);
 			lblMenu.setVisible(true);
@@ -161,7 +161,8 @@ public class MainController implements Initializable {
 
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Changes Detected");
-			alert.setContentText("Do you want to save the changes?  Cancel revokes the " + "exit request.");
+			alert.setContentText("Do you want to save the changes?  Cancel revokes the "
+					+ "exit request. your changes are: \n\n" + Model.getInstance().getChangesAsString());
 
 			ButtonType btnYes = new ButtonType("Yes");
 			ButtonType btnNo = new ButtonType("No");

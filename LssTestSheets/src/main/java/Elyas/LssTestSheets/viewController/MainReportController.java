@@ -81,7 +81,7 @@ public class MainReportController extends Controller implements Initializable {
 
 		ReportDay day = new ReportDay(dayNumber++);
 		Model.getInstance().getReport().addDay(day);
-		Model.getInstance().setChanged();
+		Model.getInstance().setChanged("New Report Day Added.");
 		addDay(day);
 	}
 

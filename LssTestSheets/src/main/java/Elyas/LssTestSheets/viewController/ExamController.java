@@ -1,9 +1,11 @@
 package Elyas.LssTestSheets.viewController;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
+import org.controlsfx.control.textfield.CustomTextField;
 
 import Elyas.LssTestSheets.model.Exam;
 import Elyas.LssTestSheets.model.Qualification;
@@ -14,11 +16,18 @@ import javafx.scene.control.RadioButton;
 
 public class ExamController extends Controller implements Initializable{
 	@FXML
-	DatePicker dpkExamDate;
+	CustomTextField txtYear;
+	@FXML
+	CustomTextField txtMonth;
+	@FXML
+	CustomTextField txtDay;
 	@FXML
 	RadioButton rdbOriginal;
 	@FXML
 	RadioButton rdbRecert;
+	@FXML
+	CustomTextField txtExamLocation;
+	
 	private Qualification qual;
 	
 	@Override
@@ -28,7 +37,13 @@ public class ExamController extends Controller implements Initializable{
 	
 	public Exam getExam(){
 		Exam exam = new Exam();
-		exam.setDate(dpkExamDate.getValue());
+		LocalDate date;
+		try{
+			date = LocalDate.parse(txtYear.getText()+"-"+txtMonth.getText()+"-"+txtDay.getText());
+		}catch(Exception e){
+			date = null;
+		}
+		exam.setDate(date);
 		exam.setOriginal(rdbOriginal.isSelected());
 		return exam;
 				
@@ -39,7 +54,17 @@ public class ExamController extends Controller implements Initializable{
 		if(qual.getExam() != null){
 			Exam exam = qual.getExam();
 			if(exam.getDate() != null){
-				dpkExamDate.setValue(exam.getDate());
+				LocalDate date = exam.getDate();
+				if(!date.equals(LocalDate.MAX)){
+					txtYear.setText(date.getYear()+"");
+					txtMonth.setText(date.getMonthValue()+"");
+					txtDay.setText(date.getDayOfMonth()+"");
+				}else{
+					txtYear.setText("");
+					txtMonth.setText("");
+					txtDay.setText("");
+				}
+				
 			}
 			if (exam.isOriginal()) {
 				rdbOriginal.setSelected(true);
@@ -50,12 +75,10 @@ public class ExamController extends Controller implements Initializable{
 	}
 	@Override
 	public void finalize(){
-		if(dpkExamDate.getValue() != null){
-			qual.setExamDate(dpkExamDate.getValue());
-			qual.getExam().setOriginal(rdbOriginal.isSelected());
-		}else{			
-			qual.getExam().setOriginal(rdbOriginal.isSelected());
-		}
+		Exam exam = getExam();
+		qual.setExamDate(exam.getDate());
+		qual.getExam().setOriginal(exam.isOriginal());
+		
 	}
 
 }
