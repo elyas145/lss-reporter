@@ -8,6 +8,7 @@ public class Exam {
 
 	private LocalDate date;
 	private boolean isOriginal = true;
+	private String location = "";
 
 	public Exam() {
 		date = LocalDate.MAX;
@@ -15,6 +16,7 @@ public class Exam {
 
 	public Exam(JSONObject obj) {
 		isOriginal = obj.optBoolean("isOriginal");
+		location = obj.optString("location");
 		String jsonDate = obj.optString("date");
 		if (jsonDate != null) {
 			date = LocalDate.parse(jsonDate);
@@ -26,7 +28,7 @@ public class Exam {
 
 		if (value != null && !this.date.equals(value)) {
 			this.date = value;
-			Model.getInstance().setChanged("Exam Date Changed.");
+			
 		}
 
 	}
@@ -34,7 +36,6 @@ public class Exam {
 	public void setOriginal(boolean b) {
 		if (this.isOriginal != b) {
 			this.isOriginal = b;
-			Model.getInstance().setChanged("Exam Originality Changed.");
 		}
 
 	}
@@ -43,6 +44,7 @@ public class Exam {
 		JSONObject object = new JSONObject();
 		object.put("date", date.toString());
 		object.put("isOriginal", isOriginal);
+		object.put("location", location);
 		return object;
 	}
 
@@ -52,7 +54,8 @@ public class Exam {
 
 	public boolean equals(Object obj) {
 		if (obj instanceof Exam) {
-			if (((Exam) obj).toJSON().toString().equals(this.toJSON().toString())) {
+			Exam other = (Exam) obj;
+			if (other.isOriginal == this.isOriginal && other.date.equals(this.date) && other.location.equals(this.location)) {
 				return true;
 			}
 		}
@@ -68,6 +71,16 @@ public class Exam {
 			warning.add("Exam date not set.");
 		}
 
+	}
+
+	public void setLocation(String loc){
+		if(location == null || location.equals(loc)){
+			return;
+		}
+		location = loc;
+	}
+	public String getLocation() {
+		return location;
 	}
 
 }

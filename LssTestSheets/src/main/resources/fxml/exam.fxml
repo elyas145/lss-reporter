@@ -36,7 +36,7 @@
                   <Insets left="5.0" right="5.0" />
                </padding>
                <HBox.margin>
-                  <Insets top="5.0" />
+                  <Insets />
                </HBox.margin>
             </RadioButton>
             <RadioButton fx:id="rdbRecert" mnemonicParsing="false" text="Recert" toggleGroup="$exam1" HBox.hgrow="NEVER">
@@ -44,17 +44,22 @@
                   <Insets left="5.0" />
                </padding>
                <HBox.margin>
-                  <Insets top="5.0" />
+                  <Insets />
                </HBox.margin>
             </RadioButton>
-            <CustomTextField fx:id="txtExamLocation" HBox.hgrow="ALWAYS">
+            <Separator orientation="VERTICAL" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </Separator>
+            <CustomTextField fx:id="txtExamLocation" promptText="Exam Location" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>
             </CustomTextField>
          </children>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" top="5.0" />
          </padding>
       </HBox>
    </content>

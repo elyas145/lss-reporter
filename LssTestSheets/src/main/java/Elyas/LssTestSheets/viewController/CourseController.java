@@ -150,6 +150,12 @@ public class CourseController extends Controller implements Initializable {
 		this.txtFacilityAreaCode.setText(facility.getAreaCode());
 		this.txtFacilityPhone.setText(facility.getPhone());
 		this.txtFacilityExtension.setText(facility.getExtension());
+		
+		for(ExamController controller : this.exams){
+			if(controller.getExamLocation() == "" || controller.getExamLocation().trim().equals("")){
+				controller.setExamLocation(facility.getName());
+			}
+		}
 	}
 
 	@Override

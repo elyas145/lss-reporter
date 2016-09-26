@@ -54,6 +54,12 @@ public class Qualification {
 		}
 
 		testSheet = CourseFactory.getTestSheetByName(this);
+		changeHandler = new ChangeHandler() {
+			@Override
+			public void onChange(String change) {
+				Model.getInstance().setChanged(change);
+			}
+		};
 	}
 
 	public JSONObject toJSON() {
@@ -92,8 +98,11 @@ public class Qualification {
 	}
 
 	public void setExam(Exam exam) {
+		if(this.exam != null && this.exam.equals(exam)){
+			return;
+		}
 		this.exam = exam;
-		changeHandler.onChange("Exam Changed for "+ this.getName()+".");
+		changeHandler.onChange("Exam Changed.");
 	}
 
 	public void addExaminer(Employee e) {

@@ -8,7 +8,9 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.controlsfx.control.textfield.CustomTextField;
 
 import Elyas.LssTestSheets.model.Exam;
+import Elyas.LssTestSheets.model.Model;
 import Elyas.LssTestSheets.model.Qualification;
+import Elyas.LssTestSheets.util.DateUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
@@ -39,12 +41,13 @@ public class ExamController extends Controller implements Initializable{
 		Exam exam = new Exam();
 		LocalDate date;
 		try{
-			date = LocalDate.parse(txtYear.getText()+"-"+txtMonth.getText()+"-"+txtDay.getText());
+			date = LocalDate.parse(DateUtil.prettyYear(txtYear.getText())+"-"+txtMonth.getText()+"-"+txtDay.getText());
 		}catch(Exception e){
 			date = null;
 		}
 		exam.setDate(date);
 		exam.setOriginal(rdbOriginal.isSelected());
+		exam.setLocation(txtExamLocation.getText());
 		return exam;
 				
 	}
@@ -56,15 +59,23 @@ public class ExamController extends Controller implements Initializable{
 			if(exam.getDate() != null){
 				LocalDate date = exam.getDate();
 				if(!date.equals(LocalDate.MAX)){
-					txtYear.setText(date.getYear()+"");
-					txtMonth.setText(date.getMonthValue()+"");
-					txtDay.setText(date.getDayOfMonth()+"");
+					txtYear.setText(DateUtil.prettyYear(date));
+					txtMonth.setText(DateUtil.prettyMonthNumber(date));
+					txtDay.setText(DateUtil.prettyDayNumber(date));
 				}else{
 					txtYear.setText("");
 					txtMonth.setText("");
 					txtDay.setText("");
 				}
 				
+			}
+			if(exam.getLocation() != null){
+				this.txtExamLocation.setText(exam.getLocation());
+			}else{
+				String facility = Model.getInstance().getCourse().getFacility().getName();
+				if(facility != null){
+					this.txtExamLocation.setText(facility);
+				}
 			}
 			if (exam.isOriginal()) {
 				rdbOriginal.setSelected(true);
@@ -76,8 +87,15 @@ public class ExamController extends Controller implements Initializable{
 	@Override
 	public void finalize(){
 		Exam exam = getExam();
-		qual.setExamDate(exam.getDate());
-		qual.getExam().setOriginal(exam.isOriginal());
+		qual.setExam(exam);	
+	}
+
+	public String getExamLocation() {
+		return this.txtExamLocation.getText();
+	}
+
+	public void setExamLocation(String name) {
+		this.txtExamLocation.setText(name);
 		
 	}
 

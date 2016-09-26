@@ -59,13 +59,15 @@
                   <CustomTextField fx:id="txtHostPhone" promptText="Telephone" />
                   <CustomTextField fx:id="txtHostExtension" promptText="Extension" />
                </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </HBox>
-            <Label text="Exam Information">
+            <Label text="Facility Information">
                <padding>
                   <Insets bottom="5.0" top="20.0" />
                </padding>
             </Label>
-            <TabPane fx:id="tabExam" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
             <CustomTextField fx:id="txtFacilityName" promptText="Facility Name" />
             <HBox>
                <children>
@@ -74,6 +76,12 @@
                   <CustomTextField fx:id="txtFacilityExtension" promptText="Extension" />
                </children>
             </HBox>
+            <Label text="Exam Information">
+               <padding>
+                  <Insets bottom="5.0" top="20.0" />
+               </padding>
+            </Label>
+            <TabPane fx:id="tabExam" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

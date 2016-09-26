@@ -13,8 +13,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -54,13 +56,13 @@ public class Model {
 	}
 
 	private Model() {
-		changes = new ArrayList<>();
+		changes = new HashSet<>();
 	}
 
 	private Course course;
 	private boolean isChanged;
 	private boolean externalCourse;
-	private List<String> changes;
+	private Set<String> changes;
 	public void setCourse(Course c) {
 		this.course = c;
 		c.setOnChange((String change) -> {
