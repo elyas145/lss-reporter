@@ -51,7 +51,7 @@ public class MainReportController extends Controller implements Initializable {
 			}
 			dayNumber++;
 		}
-		mainTab.getSelectionModel().selectedItemProperty().addListener((ov) -> finalize());
+		mainTab.getSelectionModel().selectedItemProperty().addListener((ov) -> finalizeView());
 
 	}
 
@@ -105,13 +105,14 @@ public class MainReportController extends Controller implements Initializable {
 	}
 
 	@Override
-	public void finalize() {
+	public boolean finalizeView() {
 		for (DayReportController day : dayControllers) {
-			day.finalize();
+			day.finalizeView();
 		}
 		if (currentClient != null) {
 			Model.getInstance().getReport().setGeneralNote(currentClient, txtGeneralNotes.getText());
 		}
+		return true;
 	}
 
 }

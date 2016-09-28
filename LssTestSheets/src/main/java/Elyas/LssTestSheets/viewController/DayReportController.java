@@ -58,8 +58,9 @@ public class DayReportController extends Controller implements Initializable {
 	}
 
 	@Override
-	public void finalize() {
+	public boolean finalizeView() {
 		day.setGeneralNote(txtGeneralNotes.getText());
+		return true;
 	}
 
 	@FXML

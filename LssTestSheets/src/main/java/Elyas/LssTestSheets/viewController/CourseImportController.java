@@ -32,11 +32,6 @@ public class CourseImportController extends Controller implements Initializable 
 
 	}
 
-	@Override
-	public void finalize() {
-
-	}
-
 	@FXML
 	protected void okAction(ActionEvent event) {
 		if (chkImportCourse.isSelected()) {

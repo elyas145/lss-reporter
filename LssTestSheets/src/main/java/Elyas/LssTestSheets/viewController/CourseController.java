@@ -159,7 +159,7 @@ public class CourseController extends Controller implements Initializable {
 	}
 
 	@Override
-	public void finalize() {
+	public boolean finalizeView() {
 		Facility f = new Facility();
 		f.setAreaCode(this.txtFacilityAreaCode.getText());
 		f.setName(this.txtFacilityName.getText());
@@ -216,8 +216,9 @@ public class CourseController extends Controller implements Initializable {
 		}
 
 		for (ExamController examController : exams) {
-			examController.finalize();
+			examController.finalizeView();
 		}
+		return true;
 	}
 
 }

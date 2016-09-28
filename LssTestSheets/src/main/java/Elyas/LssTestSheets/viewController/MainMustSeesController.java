@@ -29,7 +29,7 @@ public class MainMustSeesController extends Controller implements Initializable 
 		controllers = new ArrayList<>();
 		for (String course : courses) {
 			FXMLLoader loader = new FXMLLoader(ViewFactory.class.getResource("/fxml/must-sees-course.fxml"));
-			tbpMain.getSelectionModel().selectedItemProperty().addListener(ov->finalize());
+			tbpMain.getSelectionModel().selectedItemProperty().addListener(ov->finalizeView());
 			try {
 				Tab parent = (Tab) loader.load();
 				CourseMustSeesController controller = loader.<CourseMustSeesController> getController();
@@ -43,10 +43,11 @@ public class MainMustSeesController extends Controller implements Initializable 
 		}
 	}
 	@Override
-	public void finalize(){
+	public boolean finalizeView(){
 		for(CourseMustSeesController controller : controllers){
-			controller.finalize();
+			controller.finalizeView();
 		}
+		return true;
 	}
 
 }

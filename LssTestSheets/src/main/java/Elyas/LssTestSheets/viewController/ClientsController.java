@@ -320,10 +320,11 @@ public class ClientsController extends Controller implements Initializable {
 	}
 
 	@Override
-	public void finalize() {
+	public boolean finalizeView() {
 		for (Client c : obsClients) {
 			Model.getInstance().updateClient(c);
 		}
+		return true;
 	}
 
 	@Override

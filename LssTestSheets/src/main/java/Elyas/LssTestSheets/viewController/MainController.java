@@ -57,8 +57,12 @@ public class MainController implements Initializable {
 		result.controller.setOnFinishHandler(new FinishHandler() {
 			@Override
 			public void onFinish(ViewState state) {
-				result.controller.finalize();
-				viewFinished(state);
+				if (result.controller.finalizeView()) {
+					viewFinished(state);
+				} else {
+					displayFinalizeError();
+				}
+
 			}
 		});
 		mainPane.getChildren().add(result.parent);
@@ -80,6 +84,18 @@ public class MainController implements Initializable {
 
 		pane.setTriggerDistance(0);
 		Model.getInstance().setChanged(false, null);
+	}
+
+	protected void displayFinalizeError() {
+		displayError("There is an error in the entries you made. please fix them before switching the view.");
+
+	}
+
+	private void displayError(String error) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setContentText(error);
+		alert.showAndWait();
+
 	}
 
 	protected void menuItemSelected(SideMenuAction action) {
@@ -108,13 +124,20 @@ public class MainController implements Initializable {
 			nextState = ViewState.TEST_SHEETS;
 			break;
 		case SAVE_EXIT:
-			currentView.controller.finalize();
-			Model.getInstance().save();
-			System.exit(0);
+			if (currentView.controller.finalizeView()) {
+				Model.getInstance().save();
+				System.exit(0);
+			} else {
+				displayFinalizeError();
+			}
 			return;
 		case SAVE:
-			currentView.controller.finalize();
-			Model.getInstance().save();
+			if (currentView.controller.finalizeView()) {
+				Model.getInstance().save();
+			} else {
+				displayFinalizeError();
+			}
+
 			return;
 		default:
 			return;
@@ -129,8 +152,12 @@ public class MainController implements Initializable {
 	 * have updated the model already.
 	 */
 	protected void viewFinished(ViewState nextState) {
-		if (currentView != null)
-			currentView.controller.finalize();
+		if (currentView != null){
+			if(!currentView.controller.finalizeView()){
+				displayFinalizeError();
+				return;
+			}
+		}
 
 		if (ViewState.isMenuState(nextState)) {
 			pane.setTriggerDistance(20);
@@ -145,8 +172,12 @@ public class MainController implements Initializable {
 		result.controller.setOnFinishHandler(new FinishHandler() {
 			@Override
 			public void onFinish(ViewState state) {
-				result.controller.finalize();
-				viewFinished(state);
+				if (result.controller.finalizeView()) {
+					viewFinished(state);
+				} else {
+					displayFinalizeError();
+				}
+
 			}
 		});
 		currentView = result;
@@ -156,28 +187,33 @@ public class MainController implements Initializable {
 	}
 
 	public boolean shutdown() {
-		currentView.controller.finalize();
-		if (Model.getInstance().isChanged()) {
+		if (currentView.controller.finalizeView()) {
 
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Changes Detected");
-			alert.setContentText("Do you want to save the changes?  Cancel revokes the "
-					+ "exit request. your changes are: \n\n" + Model.getInstance().getChangesAsString());
+			if (Model.getInstance().isChanged()) {
 
-			ButtonType btnYes = new ButtonType("Yes");
-			ButtonType btnNo = new ButtonType("No");
-			ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-			alert.getButtonTypes().setAll(btnYes, btnNo, btnCancel);
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Changes Detected");
+				alert.setContentText("Do you want to save the changes?  Cancel revokes the "
+						+ "exit request. your changes are: \n\n" + Model.getInstance().getChangesAsString());
 
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == btnYes) {
-				Model.getInstance().save();
-			} else if (result.get() == btnNo) {
+				ButtonType btnYes = new ButtonType("Yes");
+				ButtonType btnNo = new ButtonType("No");
+				ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+				alert.getButtonTypes().setAll(btnYes, btnNo, btnCancel);
 
-			} else {
-				return false;
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == btnYes) {
+					Model.getInstance().save();
+				} else if (result.get() == btnNo) {
+
+				} else {
+					return false;
+				}
 			}
+			return true;
+		} else {
+			displayFinalizeError();
+			return false;
 		}
-		return true;
 	}
 }

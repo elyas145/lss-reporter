@@ -20,8 +20,8 @@ public abstract class Controller {
 	 * instance is about to be destroyed. this method should save the changed
 	 * data, and get ready to be destroyed.
 	 */
-	public void finalize() {
-
+	public boolean finalizeView() {
+		return true;
 	}
 
 	public ViewState getViewState(){

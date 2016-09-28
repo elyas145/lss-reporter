@@ -285,9 +285,4 @@ public class ClientController extends Controller implements Initializable {
 		this.txtApt.setText(c.getApartment());
 
 	}
-
-	@Override
-	public void finalize() {
-
-	}
 }

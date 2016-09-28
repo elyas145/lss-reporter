@@ -43,11 +43,6 @@ public class TestSheetExportController extends Controller implements Initializab
 
 	}
 
-	@Override
-	public void finalize() {
-
-	}
-
 	@FXML
 	protected void onCancelAction(ActionEvent event) {
 		canceled = true;

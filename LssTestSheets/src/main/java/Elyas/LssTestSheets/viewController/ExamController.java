@@ -85,9 +85,10 @@ public class ExamController extends Controller implements Initializable{
 		}
 	}
 	@Override
-	public void finalize(){
+	public boolean finalizeView(){
 		Exam exam = getExam();
 		qual.setExam(exam);	
+		return true;
 	}
 
 	public String getExamLocation() {

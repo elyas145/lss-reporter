@@ -46,11 +46,6 @@ public class PrerequisiteController extends Controller implements Initializable 
 		pneMain.setText(StringUtils.capitalize(prerequisite.getName()));
 	}
 
-	@Override
-	public void finalize() {
-
-	}
-
 	public Prerequisite getPrerequisite() {
 
 		if (prerequisite.getType().equals(Type.CHECK)) {

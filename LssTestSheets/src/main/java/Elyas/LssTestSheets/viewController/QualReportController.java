@@ -60,11 +60,12 @@ public class QualReportController extends Controller implements Initializable {
 	}
 
 	@Override
-	public void finalize() {
+	public boolean finalizeView() {
 		if (currentClient != null) {
 			// Model.getInstance().getReport().setQualNote(parent,
 			// qualification, currentClient, txtNotes.getText());
 
 		}
+		return true;
 	}
 }

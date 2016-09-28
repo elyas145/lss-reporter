@@ -234,10 +234,10 @@ public class CourseMustSeesController extends Controller implements Initializabl
 	}
 
 	@Override
-	public void finalize() {
+	public boolean finalizeView() {
 		for (PrerequisiteController prerequisiteController : currentPrerequisites) {
 			prerequisiteController.getPrerequisite();
 		}
-
+		return true;
 	}
 }
