@@ -57,7 +57,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		currentPrerequisites = new ArrayList<>();
-		
+
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 		boolean passAllInstructor = true;
 		boolean passAllExaminer = true;
 		for (Client client : obsClients) {
-			
+
 			for (MustSee see : client.getMustSees(course)) {
 				if (see.isInstructorEvaluated() && !see.isCompleted()) {
 					passAllInstructor = false;
@@ -86,8 +86,8 @@ public class CourseMustSeesController extends Controller implements Initializabl
 				}
 			}
 		}
-		if(obsClients.size() > 0){
-			if(obsClients.get(0).getPrerequisites(name).size() == 0){
+		if (obsClients.size() > 0) {
+			if (obsClients.get(0).getPrerequisites(name).size() == 0) {
 				titlePrereqs.setVisible(false);
 			}
 		}
@@ -114,7 +114,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 		for (MustSee see : obsCurrentMustSees) {
 			if (see.isCompleted())
 				chkLstMustSees.getCheckModel().check(see);
-			
+
 			if (see.isInstructorEvaluated() && !see.isCompleted()) {
 				passInstructor = false;
 			}
@@ -157,8 +157,13 @@ public class CourseMustSeesController extends Controller implements Initializabl
 			@Override
 			public void onChanged(ListChangeListener.Change<? extends MustSee> c) {
 				while (c.next()) {
-					c.getAddedSubList().get(0).setCompleted(c.wasAdded());
-					Model.getInstance().setChanged("Must Sees Changed.");
+					if (!c.getAddedSubList().isEmpty()) {
+						c.getAddedSubList().get(0).setCompleted(c.wasAdded());
+						Model.getInstance().setChanged("Must Sees Changed.");
+					} else if (!c.getRemoved().isEmpty()) {
+						c.getRemoved().get(0).setCompleted(c.wasAdded());
+						Model.getInstance().setChanged("Must Sees Changed.");
+					}
 				}
 			}
 		});
@@ -207,7 +212,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 
 	@FXML
 	protected void passInstructorAction(ActionEvent event) {
-		if(currentClient == null){
+		if (currentClient == null) {
 			return;
 		}
 		for (MustSee see : currentClient.getMustSees(course)) {
@@ -221,7 +226,7 @@ public class CourseMustSeesController extends Controller implements Initializabl
 
 	@FXML
 	protected void passExaminerAction(ActionEvent event) {
-		if(currentClient == null){
+		if (currentClient == null) {
 			return;
 		}
 		for (MustSee see : currentClient.getMustSees(course)) {

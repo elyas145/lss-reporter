@@ -17,7 +17,7 @@
 					<children>
 						<VBox fx:id="lblMenuBackground" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" alignment="CENTER" VBox.vgrow="ALWAYS">
 							<children>
-								<Label fx:id="lblMenu" style="-fx-color: #999999" text="&gt;" visible="false">
+								<Label fx:id="lblMenu" style="-fx-color:#fdfefe" text="&gt;" visible="false">
 									<font>
 										<Font size="24.0" />
 									</font>
