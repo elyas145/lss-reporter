@@ -69,6 +69,16 @@ public class MainController implements Initializable {
 		tglEnglish.setDisable(true);
 		tglFrench.setDisable(true);
 
+		// only update every 8 days.
+		LocalDate nextUpdate = lastUpdate.plusDays(dateOffset);
+		LocalDate today = LocalDate.now();
+
+		if (!nextUpdate.isBefore(today)) {
+			lblStatus.setText("Your application is up to date!");
+		} else {
+			checkUpdates();
+		}
+
 		prgsProgress.setProgress(-1);
 
 		FXWorker<Void, ProgressUpdate, String> thread = new FXWorker<Void, ProgressUpdate, String>(null) {
@@ -78,131 +88,7 @@ public class MainController implements Initializable {
 			@Override
 			public String doInBackground(Void param) {
 				try {
-					System.out.println("do in background called.");
-					Properties props = new Properties();
-					props.put("mail.imap.host", "imap-mail.outlook.com");
-					props.put("mail.imap.auth", "true");
-					props.put("mail.imap.port", "993");
-					props.put("mail.imap.starttls.enable", "true");
-					props.put("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
-					SMTPAuthenticator auth = new SMTPAuthenticator();
-					auth.getPasswordAuthentication();
-
-					// only update every 8 days.
-					LocalDate nextUpdate = lastUpdate.plusDays(dateOffset);
-					LocalDate today = LocalDate.now();
-					if (!nextUpdate.isBefore(today)) {
-						return "Your application is up to date!";
-					}
-
-					Session session = Session.getDefaultInstance(props);
-					Store store = session.getStore("imap");
-					PasswordAuthentication authentication = auth.getPasswordAuthentication();
-					store.connect(authentication.getUserName(), authentication.getPassword());
-
-					Folder folderInbox = store.getFolder("INBOX");
-					folderInbox.open(Folder.READ_ONLY);
-
-					SearchTerm searchCondition = new SearchTerm() {
-						private static final long serialVersionUID = -8159023234781467178L;
-
-						@Override
-						public boolean match(Message message) {
-							try {
-								if (message.getSubject().contains("update")
-										&& message.getFrom()[0].toString().contains("elyas.syoufi@gmail.com")) {
-									return true;
-								}
-							} catch (MessagingException ex) {
-								addException("Error reading update.", ex);
-							}
-							return false;
-						}
-					};
-
-					Message[] foundMessages = folderInbox.search(searchCondition);
-					List<Update> updates = new ArrayList<Update>();
-					onProgressUpdate(new ProgressUpdate("Found " + foundMessages.length + " potential update(s).", -1));
-
-					for (int i = 0; i < foundMessages.length; i++) {
-						Message message = foundMessages[i];
-						String subject = message.getSubject();
-						System.out.println("Found message #" + i + ": " + subject);
-						updates.add(new Update(message));
-					}
-
-					// sort the updates list.
-					updates.sort(new Comparator<Update>() {
-
-						public int compare(Update o1, Update o2) {
-							if (o1.getUpdateNumber() < o2.getUpdateNumber()) {
-								return -1;
-							}
-							if (o1.getUpdateNumber() > o2.getUpdateNumber()) {
-								return 1;
-							}
-							return 0;
-						}
-					});
-
-					int currentVersion = getCurrentUpdateVersion();
-
-					boolean updatesFound = false;
-					for (int i = 0; i < updates.size(); i++) {
-						Update cUpdate = updates.get(i);
-						if (currentVersion < cUpdate.getUpdateNumber()) {
-							updatesFound = true;
-							onProgressUpdate(
-									new ProgressUpdate("Initializing update " + (i + 1) + " of " + updates.size(),
-											i + 1 / updates.size()));
-							try {
-								cUpdate.initUpdate();
-							} catch (Exception e) {
-								addException("Error upplying update " + cUpdate.getUpdateNumber(), e);
-							}
-						}
-					}
-
-					for (int i = 0; i < updates.size(); i++) {
-						Update cUpdate = updates.get(i);
-						if (currentVersion < cUpdate.getUpdateNumber()) {
-							onProgressUpdate(new ProgressUpdate("Applying update " + (i + 1) + " of " + updates.size(),
-									i + 1 / updates.size()));
-							try {
-								cUpdate.applyUpdate();
-								description += "<br/>" + cUpdate.getDescription(Dictionary.currentLang());
-								currentVersion = cUpdate.getUpdateNumber();
-							} catch (Exception e) {
-								addException("Error upplying update " + cUpdate.getUpdateNumber(), e);
-							}
-						}
-					}
-
-					// disconnect
-					try {
-						folderInbox.close(false);
-						store.close();
-					} catch (Exception exception) {
-
-					}
-					// update the version and date.
-					if (currentVersion != -1) {
-						InputStream is = MainController.class.getResourceAsStream("/secret.json");
-						String jsonTxt = IOUtils.toString(is);
-						JSONObject obj = new JSONObject(jsonTxt);
-						obj.put("version", "" + currentVersion);
-						obj.put("last_update", today.toString());
-
-						try (PrintWriter out = new PrintWriter(
-								MainController.class.getResource("/secret.json").toURI().getSchemeSpecificPart())) {
-							out.println(obj.toString(4));
-						}
-					}
-					if (!updatesFound) {
-						return "Your application is up to date!";
-					}
-					return "Successfully installed updates.";
+					
 				} catch (Exception exception) {
 					addException("an unknown error has occured.", exception);
 				}
@@ -250,6 +136,10 @@ public class MainController implements Initializable {
 		};
 
 		thread.start();
+
+	}
+
+	private void checkUpdates() {
 
 	}
 
@@ -330,8 +220,10 @@ public class MainController implements Initializable {
 						+ "/jre/bin/java.exe -jar app.jar");
 				System.exit(0);
 			} else if (name.contains("mac")) {
-				String cmd[] = {MainController.class.getResource("/").toURI().getSchemeSpecificPart()
-						+ "../../../../plugins/JRE/Contents/Home/jre/bin/java","-jar",MainController.class.getResource("/app.jar").toURI().getSchemeSpecificPart()};
+				String cmd[] = {
+						MainController.class.getResource("/").toURI().getSchemeSpecificPart()
+								+ "../../../../plugins/JRE/Contents/Home/jre/bin/java",
+						"-jar", MainController.class.getResource("/app.jar").toURI().getSchemeSpecificPart() };
 				ProcessBuilder builder = new ProcessBuilder();
 				builder.command(cmd);
 				Process process = builder.start();
@@ -362,33 +254,13 @@ public class MainController implements Initializable {
 				jsonTxt = IOUtils.toString(is);
 				JSONObject obj = new JSONObject(jsonTxt);
 				cachedVersion = Integer.valueOf(obj.optString("version"));
-
+				lastUpdate = LocalDate.parse(obj.getString("last_update"));
 			} catch (IOException e) {
 				e.printStackTrace();
 				return -1;
 			}
 		}
 		return cachedVersion;
-	}
-
-	private class SMTPAuthenticator extends javax.mail.Authenticator {
-		public PasswordAuthentication getPasswordAuthentication() {
-			InputStream is = MainController.class.getResourceAsStream("/secret.json");
-			if (is == null) {
-				return null;
-			}
-			String jsonTxt;
-			try {
-				jsonTxt = IOUtils.toString(is);
-				JSONObject obj = new JSONObject(jsonTxt);
-				cachedVersion = Integer.valueOf(obj.optString("version"));
-				lastUpdate = LocalDate.parse(obj.getString("last_update"));
-				return new PasswordAuthentication(obj.optString("user"), obj.optString("password"));
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
 	}
 
 	public class ProgressUpdate {
